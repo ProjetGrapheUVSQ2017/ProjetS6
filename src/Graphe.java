@@ -1,4 +1,10 @@
 import java.awt.Point;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -55,11 +61,39 @@ public abstract class Graphe implements Serializable {
 	/** Gestion des fichiers **/
 	
 	public void sauvegarder(String fichier){
-		//TODO: Ecrire la sauvegarde
+		try{
+			FileOutputStream fos = new FileOutputStream(fichier);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(this);
+			oos.close();
+			}
+			catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 	
 	public static Graphe charger(String fichier){
-		//TODO: Ecrire le chargement
-		return null;
+		Graphe newGraphe = null;
+		try{
+			FileInputStream fis = new FileInputStream(fichier);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			newGraphe = (Graphe) ois.readObject();
+			ois.close();
+			System.out.println("Graphe.load : " + newGraphe.toString());
+			return newGraphe;
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return newGraphe;
 	}
 }
