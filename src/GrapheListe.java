@@ -14,7 +14,7 @@ public class GrapheListe extends Graphe {
 	private static final long serialVersionUID = -1405896813221493308L;
 	
 	/**
-	 * Crée un Graphe sous forme de liste vide
+	 * Crï¿½e un Graphe sous forme de liste vide
 	 * @author Damien
 	 */
 	public GrapheListe(){
@@ -35,11 +35,10 @@ public class GrapheListe extends Graphe {
 	@Override
 	public void addSommet(Sommet s) {
 		sommets.add(s);
-
 	}
 
 	/**
-	 * Ajoute un sommet se trouvant à l'adresse p au graphe
+	 * Ajoute un sommet se trouvant ï¿½ l'adresse p au graphe
 	 * @author Damien
 	 */
 	@Override
@@ -48,21 +47,24 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Ajoute un arc entre le Sommet d et le Sommet a au graphe
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * Ajoute un arc entre le Sommet d et le Sommet a au graphe</br>
+	 * VÃ©rifie si les sommets d et a font partie du graphe.
+	 * @param d : Sommet de dï¿½part de l'arc
+	 * @param a : Sommet d'arrivï¿½e de l'arc
 	 * @author Damien
 	 */
 	@Override
 	public void addArc(Sommet d, Sommet a) {
-		arcs.add(new Arc(d, a));
+		if(sommets.contains(d) && sommets.contains(a)){
+			arcs.add(new Arc(d, a));
+		}
 
 	}
 
 	/**
 	 * On cherche l'arc correspondant et on le supprime de la liste d'arcs, le GC s'occupe du reste.
-	 * @param d : Sommet de départ de l'arc à supprimer
-	 * @param a : Sommet d'arrivé de l'arc à supprimer
+	 * @param d : Sommet de dï¿½part de l'arc ï¿½ supprimer
+	 * @param a : Sommet d'arrivï¿½ de l'arc ï¿½ supprimer
 	 * @author Damien
 	 */
 	@Override
@@ -76,7 +78,7 @@ public class GrapheListe extends Graphe {
 
 	/**
 	 * Supprime l'arc id dans le graphe
-	 * @param id : Identifiant de l'arc à supprimer
+	 * @param id : Identifiant de l'arc ï¿½ supprimer
 	 * @author Damien
 	 */
 	@Override
@@ -106,8 +108,8 @@ public class GrapheListe extends Graphe {
 
 	/**
 	 * Renvoie vrai si l'arc existe dans le graphe, faux sinon
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d : Sommet de dï¿½part de l'arc
+	 * @param a : Sommet d'arrivï¿½e de l'arc
 	 * @return boolean
 	 * @author Damien
 	 */
@@ -122,9 +124,9 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Renvoie le sommet identifié par id.</br>
+	 * Renvoie le sommet identifiï¿½ par id.</br>
 	 * Renvoi null si le sommet n'existe pas dans le graphe.
-	 * @param id : Identifiant du sommet recherché
+	 * @param id : Identifiant du sommet recherchï¿½
 	 * @return Sommet
 	 * @author Damien
 	 */
@@ -139,10 +141,10 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Renvoi l'arc identifié par d et a.</br>
+	 * Renvoi l'arc identifiï¿½ par d et a.</br>
 	 * Renvoi null si l'arc n'existe pas.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d : Sommet de dï¿½part de l'arc
+	 * @param a : Sommet d'arrivï¿½e de l'arc
 	 * @return Arc
 	 * @author Damien
 	 */
@@ -157,7 +159,7 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Renvoi l'arc identifié par id.</br>
+	 * Renvoi l'arc identifiï¿½ par id.</br>
 	 * Renvoi null si l'arc n'existe pas.
 	 * @param id : Identifiant de l'arc
 	 * @return Arc
@@ -174,7 +176,7 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Changement du format du graphe vers le format GrapheMatrice, représentant le graphe sous forme de matrice d'adjacence.
+	 * Changement du format du graphe vers le format GrapheMatrice, reprï¿½sentant le graphe sous forme de matrice d'adjacence.
 	 * @return Graphe : Le nouveau graphe sous forme de GrapheMatrice
 	 * @see GrapheMatrice
 	 * @author Damien
@@ -186,7 +188,7 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Crée un sous-graphe composé des sommets donnés dans s et des arcs entre eux.
+	 * Crï¿½e un sous-graphe composï¿½ des sommets donnï¿½s dans s et des arcs entre eux.
 	 * @param s : Une ArrayList de sommet qui composeront le nouveau graphe
 	 * @author Damien
 	 * @see ArrayList
