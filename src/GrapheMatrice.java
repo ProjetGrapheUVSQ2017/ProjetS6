@@ -119,6 +119,9 @@ public class GrapheMatrice extends Graphe {
 	@Override
 	public void deleteSommet(int id){
 		//TODO: Refaire les IDs
+//		for(int i = 0; i<graphe.length-1; i++){
+//			
+//		}
 		for(Sommet act : sommets){
 			if(act.getId() == id){
 				sommets.remove(act);
