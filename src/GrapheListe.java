@@ -34,7 +34,10 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void addSommet(Sommet s) {
-		sommets.add(s);
+		if(s != null){
+			sommets.add(s);
+			this.setNbSommets(getNbSommets()+1);
+		}
 	}
 
 	/**
@@ -44,6 +47,7 @@ public class GrapheListe extends Graphe {
 	@Override
 	public void addSommet(Point p) {
 		sommets.add(new Sommet(p));
+		this.setNbSommets(getNbSommets()+1);
 	}
 
 	/**
