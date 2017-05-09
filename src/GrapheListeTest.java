@@ -43,9 +43,12 @@ public class GrapheListeTest {
 	public void testAjoutArc(){
 		graphe.addSommet(new Point(10, 11));
 		Sommet s = graphe.getSommet(0);
+		Sommet s1 = new Sommet(new Point(11, 12));
+		graphe.addSommet(s1);
 		assertTrue("Le sommet s n'existe pas", s != null);
-		graphe.addArc(s, s);
-		assertTrue("L'arc (s,s) n'existe pas.", graphe.existArc(s, s));
+		assertTrue("Le sommet s1 n'existe pas", s1 != null);
+		graphe.addArc(s, s1);
+		assertTrue("L'arc (s,s1) n'existe pas.", graphe.existArc(s, s1));
 	}
 	
 	@Test
@@ -55,6 +58,11 @@ public class GrapheListeTest {
 		
 		Sommet d = graphe.getSommet(0);
 		Sommet a = graphe.getSommet(1);
+		
+		//TODO: Le Système d'ID non fonctionnel sur les sommets fausse les résultats !
+		
+		assertNotNull("d est null", d);
+		assertNotNull("a est null", a);
 		
 		assertFalse("Sommet départ et sommet arrivée sont les mêmes", d.equals(a));
 		
