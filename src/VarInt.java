@@ -5,6 +5,7 @@ public class VarInt extends Variable{
 	public  VarInt(int val){
 		this.val=val;
 	}
+	@Override
 	public int getInt(){
 		return this.val;
 	}
@@ -21,5 +22,15 @@ public class VarInt extends Variable{
 	public String toString() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public String getString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public float getFloat() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

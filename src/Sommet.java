@@ -62,5 +62,8 @@ public class Sommet {
 	public void setID(int id){
 		this.id = id;
 	}
-	
+	public ArrayList<Sommet> liste_voisins_pere_et_fils() {
+		return null;
+		
+	}
 }
