@@ -69,7 +69,7 @@ public class GrapheListeTest {
 		graphe.addArc(d, a);
 		assertTrue("Arc non crée correctement", graphe.existArc(d, a));
 		graphe.deleteArc(d, a);
-		assertFalse("Arc supprimé correctement", graphe.existArc(d, a));
+		assertFalse("Arc non supprimé correctement", graphe.existArc(d, a));
 	}
 
 }

@@ -73,10 +73,15 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void deleteArc(Sommet d, Sommet a) {
+		Arc aSupprimer = null;
 		for(Arc act : arcs){
 			if(act.getSommetDepart().equals(d) && act.getSommetArrivee().equals(a)){
-				arcs.remove(act);
+				aSupprimer = act;
 			}
+		}
+		
+		if(aSupprimer != null){
+			arcs.remove(aSupprimer);
 		}
 	}
 
@@ -106,7 +111,9 @@ public class GrapheListe extends Graphe {
 		for(Sommet s : sommets){
 			if(s.getId() == id){
 				sommets.remove(s);
+				this.setNbSommets(getNbSommets()-1);
 			}
+			
 		}
 	}
 
@@ -130,18 +137,13 @@ public class GrapheListe extends Graphe {
 	/**
 	 * Renvoie le sommet identifiï¿½ par id.</br>
 	 * Renvoi null si le sommet n'existe pas dans le graphe.
-	 * @param id : Identifiant du sommet recherchï¿½
+	 * @param id : Identifiant du sommet recherché dans la liste
 	 * @return Sommet
 	 * @author Damien
 	 */
 	@Override
 	public Sommet getSommet(int id) {
-		for(Sommet s : sommets){
-			if(s.getId() == id){
-				return s;
-			}
-		}
-		return null;
+		return this.sommets.get(id);
 	}
 
 	/**
