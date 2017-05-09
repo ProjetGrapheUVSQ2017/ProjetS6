@@ -263,4 +263,10 @@ public class GrapheMatrice extends Graphe {
 		return false;
 	}
 
+
+	@Override
+	public ArrayList<Sommet> get_liste_de_sommet() {
+		return sommets;
+	}
+
 }

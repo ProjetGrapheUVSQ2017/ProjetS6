@@ -13,6 +13,9 @@ public void setId(int id){
 }
 public abstract int getTypeVar();
 public abstract String toString();
+public abstract int getInt();
+public abstract String getString();
+public abstract float getFloat();
 public boolean isPoids(){
 	if(this.poids)
 		return true;

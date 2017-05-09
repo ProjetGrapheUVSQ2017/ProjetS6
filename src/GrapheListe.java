@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.util.ArrayList;
 
+import java.awt.Color;
 /**
  * Classe stockant le graphe sous forme de liste de sommets et de liste d'arcs.
  * @author Damien
@@ -26,6 +27,7 @@ public class GrapheListe extends Graphe {
 		sommets = new ArrayList<Sommet>();
 		arcs = new ArrayList<Arc>();
 		//TODO: Il fait quoi ce constructeur ?
+		// Rep : Il copie l'ancienne graphe liste dans une nouvelle
 	}
 
 	/**
@@ -237,8 +239,90 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean dsatur() {
-		// TODO Auto-generated method stub
-		return false;
+		ArrayList<Sommet> acolo = this.get_liste_de_sommet();
+		Sommet max1 = null;
+		Sommet max2 = null;
+		int nbcolor=0;
+		int nbcolormax=0;
+		int nbarc=0;
+		int nbarcmax=0;
+		Sommet actu, max;
+		int color=0;
+		boolean change=true;
+		ArrayList<Sommet> liste_voisins;
+	
+
+		
+		//mettre la couleur à 0 pour tous les sommets (on stocke ça à la fin de la liste des variables)
+		for (int h=0; h<this.get_liste_de_sommet().size();h++){
+			this.getSommet(h).addVar(new VarInt(0));
+		}
+		
+		while (!acolo.isEmpty()) {
+			for (int i=0; i<acolo.size();i++) {
+				actu=acolo.get(i);
+				nbarc=0;
+				nbcolor=0;
+				for (int j=0;j<(liste_voisins=actu.liste_voisins_pere_et_fils()).size();j++) {
+					if ( !liste_voisins.get(j).getVar(liste_voisins.size()-1).equals(new VarInt(0)) ){
+					nbcolor=nbcolor+1;
+					}
+				}
+				nbarc=liste_voisins.size();
+				if (nbcolor>nbcolormax) {
+					max1=actu;
+					nbcolormax=nbcolor;
+				}
+				if (nbarc>nbarcmax){
+					nbarcmax=nbarc;
+					max2=actu;
+				}
+			}
+			
+			if (nbcolormax==0){
+				max=max2;
+			}
+			else {
+				max=max1;
+			}
+			
+			liste_voisins=max.liste_voisins_pere_et_fils();
+			Sommet recup;
+			Variable entier;
+			int compare;
+			while (change) {
+				change =false;
+				for (int k=0; k<liste_voisins.size();k++){
+					recup= liste_voisins.get(k);
+					entier=recup.getVar(recup.getList().size()-1);
+					compare=entier.getInt();
+					if (compare==color){
+						color=color++;
+						change=true;
+					}
+					
+					
+				}
+			}
+			
+			for (int z=0;z<acolo.size();z++) {
+				if (max==acolo.get(z)) {
+					acolo.remove(z);
+					break;
+				}
+			}
+			
+		}
+		
+		
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là où je stockais la couleur)
+		for (int g=0;g<this.get_liste_de_sommet().size();g++) {
+			this.get_liste_de_sommet().get(g).setCouleur(new Color(255% (this.get_liste_de_sommet().get(g).getList().size() -1), 255, 255));
+			this.get_liste_de_sommet().get(g).removeVar(this.get_liste_de_sommet().get(g).getList().size() -1);
+			
+		}
+		
+		return true;
 	}
 
 	@Override
@@ -251,6 +335,13 @@ public class GrapheListe extends Graphe {
 	public boolean tarjan() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public ArrayList<Sommet> get_liste_de_sommet() {
+		return sommets;
+	
 	}
 
 }

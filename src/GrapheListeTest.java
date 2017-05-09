@@ -71,5 +71,6 @@ public class GrapheListeTest {
 		graphe.deleteArc(d, a);
 		assertFalse("Arc non supprimé correctement", graphe.existArc(d, a));
 	}
+	
 
 }
