@@ -72,5 +72,10 @@ public class GrapheListeTest {
 		assertFalse("Arc non supprimé correctement", graphe.existArc(d, a));
 	}
 	
+	@Test
+	public void testDSATUR(){
+		//TODO: Test de l'algorithme de DSatur
+		assertTrue("Test non implémenté", false);
+	}
 
 }
