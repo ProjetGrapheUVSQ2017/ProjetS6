@@ -97,4 +97,6 @@ public abstract class Graphe implements Serializable {
 		
 		return newGraphe;
 	}
+
+	public abstract ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s);
 }
