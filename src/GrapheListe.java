@@ -344,4 +344,23 @@ public class GrapheListe extends Graphe {
 	
 	}
 
+	/**
+	 * Renvoie une liste de Sommet contenant les sommets reliés par un arc à s
+	 * La liste est vide si s n'a aucuns voisins.
+	 * @author Damien
+	 */
+	@Override
+	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
+		ArrayList<Sommet> res = new ArrayList<Sommet>();
+		for(Arc act : arcs){
+			if(act.getSommetArrivee().equals(s)){
+				res.add(act.getSommetDepart());
+			}
+			else if(act.getSommetDepart().equals(s)){
+				res.add(act.getSommetArrivee());
+			}
+		}
+		return res;
+	}
+
 }

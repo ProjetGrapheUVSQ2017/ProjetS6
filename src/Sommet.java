@@ -81,9 +81,5 @@ public class Sommet {
 		this.id = id;
 	}
 	
-	public ArrayList<Sommet> liste_voisins_pere_et_fils() {
-		return null;
-		//TODO: Explication des besoins de cette méthode pour impémentation.
-		
-	}
+
 }
