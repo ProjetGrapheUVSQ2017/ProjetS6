@@ -269,4 +269,10 @@ public class GrapheMatrice extends Graphe {
 		return sommets;
 	}
 
+	@Override
+	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

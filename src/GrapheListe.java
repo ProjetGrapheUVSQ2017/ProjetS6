@@ -32,24 +32,26 @@ public class GrapheListe extends Graphe {
 
 	/**
 	 * Ajoute le sommet s au graphe
-	 * @author Damien
+	 * @author Damien, Madeleine
 	 */
 	@Override
 	public void addSommet(Sommet s) {
 		if(s != null){
 			sommets.add(s);
 			this.setNbSommets(getNbSommets()+1);
+			sommets.get(getNbSommets()-1).setID(getNbSommets());
 		}
 	}
 
 	/**
 	 * Ajoute un sommet se trouvant ï¿½ l'adresse p au graphe
-	 * @author Damien
+	 * @author Damien, Madeleine
 	 */
 	@Override
 	public void addSommet(Point p) {
 		sommets.add(new Sommet(p));
 		this.setNbSommets(getNbSommets()+1);
+		sommets.get(getNbSommets()-1).setID(getNbSommets());
 	}
 
 	/**
@@ -239,7 +241,7 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean dsatur() {
-		ArrayList<Sommet> acolo = this.get_liste_de_sommet();
+		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
 		Sommet max1 = null;
 		Sommet max2 = null;
 		int nbcolor=0;
@@ -253,71 +255,98 @@ public class GrapheListe extends Graphe {
 	
 
 		
+
 		//mettre la couleur à 0 pour tous les sommets (on stocke ça à la fin de la liste des variables)
 		for (int h=0; h<this.get_liste_de_sommet().size();h++){
 			this.getSommet(h).addVar(new VarInt(0));
 		}
 		
 		while (!acolo.isEmpty()) {
+			
+			nbcolormax=0;
+			nbarcmax=0;
+			
+			
 			for (int i=0; i<acolo.size();i++) {
+				System.out.println("dans le premier for");
 				actu=acolo.get(i);
 				nbarc=0;
 				nbcolor=0;
-				for (int j=0;j<(liste_voisins=actu.liste_voisins_pere_et_fils()).size();j++) {
-					if ( !liste_voisins.get(j).getVar(liste_voisins.size()-1).equals(new VarInt(0)) ){
+				for (int j=0;j<(liste_voisins=liste_voisins_pere_et_fils(actu)).size();j++) {
+					if ( liste_voisins.get(j).getVar(liste_voisins.get(j).getList().size()-1).getInt()!=0 ){
 					nbcolor=nbcolor+1;
 					}
 				}
+				
 				nbarc=liste_voisins.size();
-				if (nbcolor>nbcolormax) {
+				if (nbcolor>=nbcolormax) {
 					max1=actu;
 					nbcolormax=nbcolor;
 				}
-				if (nbarc>nbarcmax){
+				if (nbarc>=nbarcmax){
 					nbarcmax=nbarc;
 					max2=actu;
 				}
 			}
-			
+			System.out.println("nb color ?");
+			System.out.println(nbcolormax);
 			if (nbcolormax==0){
 				max=max2;
+				System.out.println("max=maxarc");
 			}
 			else {
 				max=max1;
+				System.out.println("max=maxcouleur");
 			}
 			
-			liste_voisins=max.liste_voisins_pere_et_fils();
-			Sommet recup;
-			Variable entier;
+			System.out.println("le sommet choisi ici est :");
+			System.out.println(max.getId());
+			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
+			color=0;
 			while (change) {
 				change =false;
 				for (int k=0; k<liste_voisins.size();k++){
-					recup= liste_voisins.get(k);
-					entier=recup.getVar(recup.getList().size()-1);
-					compare=entier.getInt();
+					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
+					System.out.println("voisin :");
+					System.out.println(liste_voisins.get(k).getId());
+					System.out.println(compare);
 					if (compare==color){
-						color=color++;
+						color=color+1;
+						System.out.println("couleur changé");
 						change=true;
 					}
-					
-					
 				}
 			}
 			
+			change=true;
+			System.out.println("sommet numéro traité");
+			System.out.println(max.getId());
+			System.out.println(sommets.size());
+			System.out.println(this.getSommet(max.getId()-1).getList().size());
+			
+			
+			this.getSommet(max.getId()-1).setVar(this.getSommet(max.getId()-1).getList().size()-1, new VarInt(color));
+			System.out.println(this.getSommet(max.getId()-1).getVar(this.getSommet(max.getId()-1).getList().size()-1).getInt());
+			System.out.println("taille liste avant :");
+			System.out.println(acolo.size());
 			for (int z=0;z<acolo.size();z++) {
-				if (max==acolo.get(z)) {
+				if (max.equals(acolo.get(z))) {
+					System.out.println("on remoove: ");
+					System.out.println(acolo.get(z).getId());
 					acolo.remove(z);
-					break;
 				}
 			}
-			
+			System.out.println("taille liste apres :");
+			System.out.println(acolo.size());
 		}
-		
+
+			
+
 		
 		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là où je stockais la couleur)
 		for (int g=0;g<this.get_liste_de_sommet().size();g++) {
-			this.get_liste_de_sommet().get(g).setCouleur(new Color(255% (this.get_liste_de_sommet().get(g).getList().size() -1), 255, 255));
+			this.get_liste_de_sommet().get(g).setCouleur(new Color(255% ((this.get_liste_de_sommet().get(g).getList().size() -1)+1), 255, 255));
 			this.get_liste_de_sommet().get(g).removeVar(this.get_liste_de_sommet().get(g).getList().size() -1);
 			
 		}

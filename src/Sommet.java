@@ -34,7 +34,6 @@ public class Sommet {
 	public Sommet(Point coords){
 		this.coords = coords;
 		this.variables = new ArrayList<Variable>();
-		//TODO: Ajouter une prise en compte des ID
 	}
 	
 	public int getId(){
