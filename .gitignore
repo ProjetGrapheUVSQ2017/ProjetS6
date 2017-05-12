@@ -17,3 +17,7 @@ hs_err_pid*
 \.project
 
 specifications\.pdf
+
+.idea/
+
+ProjetS6.iml
