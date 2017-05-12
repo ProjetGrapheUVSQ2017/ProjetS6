@@ -13,12 +13,14 @@ public class Arc {
 		this.depart = d;
 		this.arrivee = a;
 		this.variables = new ArrayList<Variable>();
+		this.couleur = Color.BLACK;
 	}
 	
 	public Arc(Sommet d, Sommet a, ArrayList<Variable> var){
 		this.depart = d;
 		this.arrivee = a;
 		this.variables = var;
+		this.couleur = Color.BLACK;
 	}
 
 	public Sommet getSommetDepart() {
@@ -70,7 +72,7 @@ public class Arc {
 	}
 	
 	public float getVarPoids(){
-		//TODO: Renvoyer la première variable poids
+		//TODO: Renvoyer la premiï¿½re variable poids
 		return 0;
 	}
 	

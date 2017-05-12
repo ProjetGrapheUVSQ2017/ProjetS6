@@ -139,7 +139,7 @@ public class GrapheListe extends Graphe {
 	/**
 	 * Renvoie le sommet identifiï¿½ par id.</br>
 	 * Renvoi null si le sommet n'existe pas dans le graphe.
-	 * @param id : Identifiant du sommet recherché dans la liste
+	 * @param id : Identifiant du sommet recherchï¿½ dans la liste
 	 * @return Sommet
 	 * @author Damien
 	 */
@@ -253,7 +253,7 @@ public class GrapheListe extends Graphe {
 	
 
 		
-		//mettre la couleur à 0 pour tous les sommets (on stocke ça à la fin de la liste des variables)
+		//mettre la couleur ï¿½ 0 pour tous les sommets (on stocke ï¿½a ï¿½ la fin de la liste des variables)
 		for (int h=0; h<this.get_liste_de_sommet().size();h++){
 			this.getSommet(h).addVar(new VarInt(0));
 		}
@@ -263,7 +263,7 @@ public class GrapheListe extends Graphe {
 				actu=acolo.get(i);
 				nbarc=0;
 				nbcolor=0;
-				for (int j=0;j<(liste_voisins=actu.liste_voisins_pere_et_fils()).size();j++) {
+				for (int j=0;j<(liste_voisins=this.liste_voisins_pere_et_fils(actu)).size();j++) {
 					if ( !liste_voisins.get(j).getVar(liste_voisins.size()-1).equals(new VarInt(0)) ){
 					nbcolor=nbcolor+1;
 					}
@@ -286,7 +286,7 @@ public class GrapheListe extends Graphe {
 				max=max1;
 			}
 			
-			liste_voisins=max.liste_voisins_pere_et_fils();
+			liste_voisins=this.liste_voisins_pere_et_fils(max);
 			Sommet recup;
 			Variable entier;
 			int compare;
@@ -315,7 +315,7 @@ public class GrapheListe extends Graphe {
 		}
 		
 		
-		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là où je stockais la couleur)
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (lï¿½ oï¿½ je stockais la couleur)
 		for (int g=0;g<this.get_liste_de_sommet().size();g++) {
 			this.get_liste_de_sommet().get(g).setCouleur(new Color(255% (this.get_liste_de_sommet().get(g).getList().size() -1), 255, 255));
 			this.get_liste_de_sommet().get(g).removeVar(this.get_liste_de_sommet().get(g).getList().size() -1);
@@ -340,12 +340,17 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
-		return sommets;
+		return this.sommets;
 	
 	}
 
+	@Override
+	public ArrayList<Arc> get_liste_arc() {
+		return this.arcs;
+	}
+
 	/**
-	 * Renvoie une liste de Sommet contenant les sommets reliés par un arc à s
+	 * Renvoie une liste de Sommet contenant les sommets reliï¿½s par un arc ï¿½ s
 	 * La liste est vide si s n'a aucuns voisins.
 	 * @author Damien
 	 */
