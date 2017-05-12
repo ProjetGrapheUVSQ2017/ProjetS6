@@ -37,6 +37,7 @@ public abstract class Graphe implements Serializable {
 	
 	public abstract void addSommet(Sommet s);
 	public abstract ArrayList<Sommet> get_liste_de_sommet();
+	public abstract ArrayList<Arc> get_liste_arc();
 	public abstract void addSommet(Point p);
 	public abstract void addArc(Sommet d, Sommet a);
 	public abstract void deleteArc(Sommet d, Sommet a);
@@ -49,7 +50,7 @@ public abstract class Graphe implements Serializable {
 	public abstract Graphe changement_format();
 	public abstract void creer_sous_graphe(ArrayList<Sommet> s);
 
-	/** Algorithmes de problèmes de graphe **/
+	/** Algorithmes de problï¿½mes de graphe **/
 	public abstract boolean dijkstra(Sommet d, Sommet a);
 	public abstract boolean bellman_ford(Sommet d, Sommet a);
 	public abstract boolean ford_fulkerson(Sommet d, Sommet a);
