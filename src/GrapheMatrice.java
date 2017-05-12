@@ -114,20 +114,43 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Supprime un sommet et refait les ID de tous les autres pour qu'ils corresondent.
 	 * @param id : Identifiant du sommet
-	 * @author damien
+	 * @author Aziz
 	 */
 	@Override
 	public void deleteSommet(int id){
-		//TODO: Refaire les IDs
-//		for(int i = 0; i<graphe.length-1; i++){
-//			
-//		}
+		/* Supprimer le sommet du tableau */
 		for(Sommet act : sommets){
 			if(act.getId() == id){
 				sommets.remove(act);
+				this.setNbSommets(this.getNbSommets()-1);
 			}
 		}
 
+		/* supprimer les arcs qui sont attachés au sommet*/
+		for(int i = id; i<graphe.length; i++){
+			for(int  j = 0;j<graphe[0].length-1; j++){
+				if(graphe[i][j] != null){
+					this.deleteArc(graphe[i][j].getId());
+					this.setNbArcs(this.getNbArcs()-1);
+				}
+				if(graphe[j][i] != null){
+					this.deleteArc(graphe[j][i].getId());
+					this.setNbArcs(this.getNbArcs()-1);
+				}
+			}
+		}
+		/*  refaire les id des arcs qui viennent après le id du sommet supprimé*/
+		for(int i = 0; i<graphe.length; i++){
+			for(int  j = 0;j<graphe[0].length-1; j++){
+				if(graphe[i][j] != null){
+					graphe[i][j].setId(graphe[i][j].getId()-1);
+				}
+			}
+		}
+		/*il faut aussi refaire les id des sommets qui viennent après le id du sommet supprimé*/
+		for(int i = graphe[0].length; id<i; i--){
+			sommets.get(i).setID(sommets.get(i).getId()-1);
+		}
 	}
 
 	/**
