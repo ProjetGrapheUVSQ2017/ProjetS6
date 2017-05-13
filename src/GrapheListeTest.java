@@ -75,8 +75,14 @@ public class GrapheListeTest {
 	
 	@Test
 	public void testDSATUR(){
-		//TODO: Test de l'algorithme de DSatur
-		assertTrue("Test non impl�ment�", false);
+		Sommet s1 = new Sommet(new Point(11, 12));
+		Sommet s2 = new Sommet(new Point(11, 12));
+		graphe.addSommet(s1);
+		graphe.addSommet(s2);
+		graphe.addArc(s1, s2);
+		graphe.dsatur();
+		assertNotNull("Mauvaise couleur", graphe.getSommet(1).getCouleur());
+		assertFalse("Couleur non diff�rente", graphe.getSommet(0).getCouleur().equals(graphe.getSommet(1).getCouleur()));
 	}
 
 }

@@ -16,8 +16,8 @@ public abstract class Graphe implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	
-	private int nbSommets;
-	private int nbArcs;
+	private int nbSommets=0;
+	private int nbArcs=0;
 	
 	public int getNbSommets(){
 		return nbSommets;
