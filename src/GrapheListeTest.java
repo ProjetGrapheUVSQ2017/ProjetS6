@@ -1,3 +1,4 @@
+import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 import java.awt.Point;
@@ -23,7 +24,7 @@ public class GrapheListeTest {
 	@Test
 	public void testAjoutsommetNull(){
 		graphe.addSommet((Sommet)null);
-		assertTrue("Sommet null ajouté", graphe.getNbSommets() == 0);
+		assertTrue("Sommet null ajoutï¿½", graphe.getNbSommets() == 0);
 	}
 	
 	@Test
@@ -59,17 +60,17 @@ public class GrapheListeTest {
 		Sommet d = graphe.getSommet(0);
 		Sommet a = graphe.getSommet(1);
 		
-		//TODO: Le Système d'ID non fonctionnel sur les sommets fausse les résultats !
+		//TODO: Le Systï¿½me d'ID non fonctionnel sur les sommets fausse les rï¿½sultats !
 		
 		assertNotNull("d est null", d);
 		assertNotNull("a est null", a);
 		
-		assertFalse("Sommet départ et sommet arrivée sont les mêmes", d.equals(a));
+		assertFalse("Sommet dï¿½part et sommet arrivï¿½e sont les mï¿½mes", d.equals(a));
 		
 		graphe.addArc(d, a);
-		assertTrue("Arc non crée correctement", graphe.existArc(d, a));
+		assertTrue("Arc non crï¿½e correctement", graphe.existArc(d, a));
 		graphe.deleteArc(d, a);
-		assertFalse("Arc non supprimé correctement", graphe.existArc(d, a));
+		assertFalse("Arc non supprimï¿½ correctement", graphe.existArc(d, a));
 	}
 	
 	@Test
@@ -81,8 +82,7 @@ public class GrapheListeTest {
 		graphe.addArc(s1, s2);
 		graphe.dsatur();
 		assertNotNull("Mauvaise couleur", graphe.getSommet(1).getCouleur());
-		assertFalse("Couleur non différente", graphe.getSommet(0).getCouleur().equals(graphe.getSommet(1).getCouleur()));
-		
+		assertFalse("Couleur non diffï¿½rente", graphe.getSommet(0).getCouleur().equals(graphe.getSommet(1).getCouleur()));
 	}
 
 }

@@ -50,7 +50,7 @@ public abstract class Graphe implements Serializable {
 	public abstract Graphe changement_format();
 	public abstract void creer_sous_graphe(ArrayList<Sommet> s);
 
-	/** Algorithmes de problèmes de graphe **/
+	/** Algorithmes de problï¿½mes de graphe **/
 	public abstract boolean dijkstra(Sommet d, Sommet a);
 	public abstract boolean bellman_ford(Sommet d, Sommet a);
 	public abstract boolean ford_fulkerson(Sommet d, Sommet a);

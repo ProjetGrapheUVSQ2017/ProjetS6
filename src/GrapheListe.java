@@ -141,7 +141,7 @@ public class GrapheListe extends Graphe {
 	/**
 	 * Renvoie le sommet identifiï¿½ par id.</br>
 	 * Renvoi null si le sommet n'existe pas dans le graphe.
-	 * @param id : Identifiant du sommet recherché dans la liste
+	 * @param id : Identifiant du sommet recherchï¿½ dans la liste
 	 * @return Sommet
 	 * @author Damien
 	 */
@@ -255,8 +255,8 @@ public class GrapheListe extends Graphe {
 	
 
 		
+		//mettre la couleur ï¿½ 0 pour tous les sommets (on stocke ï¿½a ï¿½ la fin de la liste des variables)
 
-		//mettre la couleur à 0 pour tous les sommets (on stocke ça à la fin de la liste des variables)
 		for (int h=0; h<this.get_liste_de_sommet().size();h++){
 			this.getSommet(h).addVar(new VarInt(0));
 		}
@@ -313,14 +313,14 @@ public class GrapheListe extends Graphe {
 					System.out.println(compare);
 					if (compare==color){
 						color=color+1;
-						System.out.println("couleur changé");
+						System.out.println("couleur changï¿½");
 						change=true;
 					}
 				}
 			}
 			
 			change=true;
-			System.out.println("sommet numéro traité");
+			System.out.println("sommet numï¿½ro traitï¿½");
 			System.out.println(max.getId());
 			System.out.println(sommets.size());
 			System.out.println(this.getSommet(max.getId()-1).getList().size());
@@ -344,7 +344,7 @@ public class GrapheListe extends Graphe {
 			
 
 		
-		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là où je stockais la couleur)
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (lï¿½ oï¿½ je stockais la couleur)
 		for (int g=0;g<this.get_liste_de_sommet().size();g++) {
 			this.get_liste_de_sommet().get(g).setCouleur(new Color(255% ((this.get_liste_de_sommet().get(g).getList().size() -1)+1), 255, 255));
 			this.get_liste_de_sommet().get(g).removeVar(this.get_liste_de_sommet().get(g).getList().size() -1);
@@ -369,7 +369,7 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
-		return sommets;
+		return this.sommets;
 	
 	}
 	
@@ -378,8 +378,13 @@ public class GrapheListe extends Graphe {
 		return this.arcs;
 }
 
+	@Override
+	public ArrayList<Arc> get_liste_arc() {
+		return this.arcs;
+	}
+
 	/**
-	 * Renvoie une liste de Sommet contenant les sommets reliés par un arc à s
+	 * Renvoie une liste de Sommet contenant les sommets reliï¿½s par un arc ï¿½ s
 	 * La liste est vide si s n'a aucuns voisins.
 	 * @author Damien
 	 */

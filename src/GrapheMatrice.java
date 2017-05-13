@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 
 /**
- * Classe implémentant un graphe sous forme de matrice d'adjacence.
+ * Classe implÃ©mentant un graphe sous forme de matrice d'adjacence.
  * @see Graphe
  * @author damien
  */
@@ -15,7 +15,7 @@ public class GrapheMatrice extends Graphe {
 	private ArrayList<Sommet> sommets;
 	
 	/**
-	 * Génére un graphe sous forme de matrice vide
+	 * GÃ©nÃ©re un graphe sous forme de matrice vide
 	 * @author damien
 	 */
 	public GrapheMatrice(){
@@ -26,8 +26,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Ajoute un sommet au graphe</br>
 	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
-	 * Et ajoute le sommet à notre liste de sommets composant le graphe.
-	 * @param s : Sommet ajouté au graphe
+	 * Et ajoute le sommet Ã  notre liste de sommets composant le graphe.
+	 * @param s : Sommet ajoutÃ© au graphe
 	 * @author damien
 	 */
 	@Override
@@ -43,8 +43,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Ajoute un sommet au graphe</br>
 	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
-	 * Et ajoute le sommet à notre liste de sommets composant le graphe.</br>
-	 * De plus, cette méthode crée le sommet avec l'adresse donné.
+	 * Et ajoute le sommet Ã  notre liste de sommets composant le graphe.</br>
+	 * De plus, cette mÃ©thode crÃ©e le sommet avec l'adresse donnÃ©.
 	 * @param p : Adresse du nouveau sommet
 	 * @author damien
 	 */
@@ -62,11 +62,11 @@ public class GrapheMatrice extends Graphe {
 
 	
 	/**
-	 * Crée un arc entre les sommets d et a.</br>
-	 * Ne fais rien si l'arc existe déjà.</br>
+	 * CrÃ©e un arc entre les sommets d et a.</br>
+	 * Ne fais rien si l'arc existe dÃ©jÃ .</br>
 	 * Ne fais rien si les sommets ne se trouvent pas dans le graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d : Sommet de dÃ©part de l'arc
+	 * @param a : Sommet d'arrivÃ©e de l'arc
 	 * @author damien
 	 */
 	@Override
@@ -82,8 +82,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Supprime l'arc du tableau.
 	 * </br>Ne fais rien si les sommets d et a n'appartiennent pas au graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d : Sommet de dÃ©part de l'arc
+	 * @param a : Sommet d'arrivÃ©e de l'arc
 	 * @author damien
 	 */
 	@Override
@@ -95,9 +95,9 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Supprime l'arc par ID</br>
-	 * Recherche tous le graphe à la recherche de l'arc</br>
+	 * Recherche tous le graphe Ã  la recherche de l'arc</br>
 	 * Demande plus de ressources que la suppression en donnant les sommets.
-	 * @param id : Identifiant de l'arc à supprimer
+	 * @param id : Identifiant de l'arc Ã  supprimer
 	 * @author damien
 	 */
 	@Override
@@ -114,45 +114,46 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Envoi true si l'arc existe dans le graphe, et false sinon</br>
-	 * Renvoi false aussi si les sommets spécifiés ne font pas partie du graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * Renvoi false aussi si les sommets spÃ©cifiÃ©s ne font pas partie du graphe.
+	 * @param d : Sommet de dÃ©part de l'arc
+	 * @param a : Sommet d'arrivÃ©e de l'arc
 	 * @author Aziz
 	 */
 	@Override
 	public void deleteSommet(int id){
-	/* Supprimer le sommet du tableau */
-	for(Sommet act : sommets){
-		if(act.getId() == id){
-			sommets.remove(act);
-			this.setNbSommets(this.getNbSommets()-1);
+		/* Supprimer le sommet du tableau */
+		for(Sommet act : sommets){
+			if(act.getId() == id){
+				sommets.remove(act);
+				this.setNbSommets(this.getNbSommets()-1);
+			}
 		}
-	}
 
-	/* supprimer les arcs qui sont attach�s au sommet*/
-	for(int i = id; i<graphe.length; i++){
-		for(int  j = 0;j<graphe[0].length-1; j++){
-			if(graphe[i][j] != null){
-				this.deleteArc(graphe[i][j].getId());
-				this.setNbArcs(this.getNbArcs()-1);
-			}
-			if(graphe[j][i] != null){
-				this.deleteArc(graphe[j][i].getId());
-				this.setNbArcs(this.getNbArcs()-1);
-			}
-		}
-	}
-	/*  refaire les id des arcs qui viennent apr�s le id du sommet supprim�*/
-	for(int i = 0; i<graphe.length; i++){
-		for(int  j = 0;j<graphe[0].length-1; j++){
-			if(graphe[i][j] != null){
-				graphe[i][j].setID(graphe[i][j].getId()-1);
+		/* supprimer les arcs qui sont attachés au sommet*/
+		for(int i = id; i<graphe.length; i++){
+			for(int  j = 0;j<graphe[0].length-1; j++){
+				if(graphe[i][j] != null){
+					this.deleteArc(graphe[i][j].getId());
+					this.setNbArcs(this.getNbArcs()-1);
+				}
+				if(graphe[j][i] != null){
+					this.deleteArc(graphe[j][i].getId());
+					this.setNbArcs(this.getNbArcs()-1);
+				}
 			}
 		}
-	}
-	/*il faut aussi refaire les id des sommets qui viennent apr�s le id du sommet supprim�*/
-	for(int i = graphe[0].length; id<i; i--){
-		sommets.get(i).setID(sommets.get(i).getId()-1);
+		/*  refaire les id des arcs qui viennent après le id du sommet supprimé*/
+		for(int i = 0; i<graphe.length; i++){
+			for(int  j = 0;j<graphe[0].length-1; j++){
+				if(graphe[i][j] != null){
+					graphe[i][j].setId(graphe[i][j].getId()-1);
+				}
+			}
+		}
+		/*il faut aussi refaire les id des sommets qui viennent après le id du sommet supprimé*/
+		for(int i = graphe[0].length; id<i; i--){
+			sommets.get(i).setID(sommets.get(i).getId()-1);
+		}
 	}
 }
 	
@@ -160,9 +161,9 @@ public class GrapheMatrice extends Graphe {
 	
 	/**
 	 * Envoi true si l'arc existe dans le graphe, et false sinon</br>
-	 * Renvoi false aussi si les sommets spécifiés ne font pas partie du graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * Renvoi false aussi si les sommets spÃ©cifiÃ©s ne font pas partie du graphe.
+	 * @param d : Sommet de dÃ©part de l'arc
+	 * @param a : Sommet d'arrivÃ©e de l'arc
 	 * @author damien
 	 */
 	@Override
@@ -176,11 +177,11 @@ public class GrapheMatrice extends Graphe {
 }
 
 	/**
-	 * Renvoie le sommet identifié.
+	 * Renvoie le sommet identifiÃ©.
 	 * </br>Renvoie null si le sommet n'existe pas dans le graphe.
-	 * @param id : Identifiant du sommet recherché
+	 * @param id : Identifiant du sommet recherchÃ©
 	 * @author damien
-	 * @return Sommet : Sommet recherché identifié
+	 * @return Sommet : Sommet recherchÃ© identifiÃ©
 	 */
 	@Override
 	public Sommet getSommet(int id) {
@@ -193,10 +194,10 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Renvoie l'arc identifié par les sommets d et a.</br>
+	 * Renvoie l'arc identifiÃ© par les sommets d et a.</br>
 	 * Renvoie null si l'arc n'existe pas ou si les sommets d ou a ne font pas partie du graphe
-	 * @param d : Sommet de départ de l'arc recherché
-	 * @param a : Sommet d'arrivée de l'arc recherché
+	 * @param d : Sommet de dÃ©part de l'arc recherchÃ©
+	 * @param a : Sommet d'arrivÃ©e de l'arc recherchÃ©
 	 * @return Arc
 	 * @author damien
 	 */
@@ -211,11 +212,11 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Renvoie l'arc identifié par l'identifiant.</br>
+	 * Renvoie l'arc identifiÃ© par l'identifiant.</br>
 	 * Renvoie null si l'arc n'existe pas.
-	 * </br>Parcours le graphe pour obtenir l'arc concerné, la recherche en donnant les sommets de départ et d'arrivée est moins couteuses.
-	 * @param d : Sommet de départ de l'arc recherché
-	 * @param a : Sommet d'arrivée de l'arc recherché
+	 * </br>Parcours le graphe pour obtenir l'arc concernÃ©, la recherche en donnant les sommets de dÃ©part et d'arrivÃ©e est moins couteuses.
+	 * @param d : Sommet de dÃ©part de l'arc recherchÃ©
+	 * @param a : Sommet d'arrivÃ©e de l'arc recherchÃ©
 	 * @return Arc
 	 * @author damien
 	 */
@@ -289,6 +290,11 @@ public class GrapheMatrice extends Graphe {
 	public boolean tarjan() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
+		return null;
 	}
 
 

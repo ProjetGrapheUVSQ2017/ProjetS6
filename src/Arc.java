@@ -73,7 +73,7 @@ public class Arc {
 	}
 	
 	public float getVarPoids(){
-		//TODO: Renvoyer la première variable poids
+		//TODO: Renvoyer la premiï¿½re variable poids
 		return 0;
 	}
 	

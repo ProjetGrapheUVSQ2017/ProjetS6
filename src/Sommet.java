@@ -3,18 +3,18 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 /**
- * Classe représentant un sommet du graphe
+ * Classe reprï¿½sentant un sommet du graphe
  * @author Damien
  *
  */
 public class Sommet {
 	/**
-	 * Coordonnées du sommet dans l'espace d'affichage
+	 * Coordonnï¿½es du sommet dans l'espace d'affichage
 	 */
 	private Point coords;
 	/**
 	 * ID unique identifiant le sommet</br>
-	 * ATTENTION : L'id n'est pas utilisé dans l'intégration de liste directement, mais il est extrèmement important dans l'intégration matricielle.
+	 * ATTENTION : L'id n'est pas utilisï¿½ dans l'intï¿½gration de liste directement, mais il est extrï¿½mement important dans l'intï¿½gration matricielle.
 	 */
 	private int id;
 	/**
@@ -22,7 +22,7 @@ public class Sommet {
 	 */
 	private Color couleur;
 	/**
-	 * Liste des variables rattaché au sommet.
+	 * Liste des variables rattachï¿½ au sommet.
 	 */
 	private ArrayList<Variable> variables;
 	
@@ -36,6 +36,7 @@ public class Sommet {
 		this.coords = coords;
 		this.variables = new ArrayList<Variable>();
 		this.couleur = Color.BLACK;
+		//TODO: Ajouter une prise en compte des ID
 	}
 	
 	public int getId(){
