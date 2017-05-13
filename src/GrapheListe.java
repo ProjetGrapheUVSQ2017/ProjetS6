@@ -378,10 +378,6 @@ public class GrapheListe extends Graphe {
 		return this.arcs;
 }
 
-	@Override
-	public ArrayList<Arc> get_liste_arc() {
-		return this.arcs;
-	}
 
 	/**
 	 * Renvoie une liste de Sommet contenant les sommets reli�s par un arc � s
