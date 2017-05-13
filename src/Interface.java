@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
@@ -31,6 +33,8 @@ public class Interface extends JComponent {
 
     public Interface(){
         this.setOpaque(true);
+
+        this.addMouseListener(new GestionSouris());
 
     }
 
@@ -89,7 +93,22 @@ public class Interface extends JComponent {
         g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len}, new int[] {0, -ARR_SIZE/2, ARR_SIZE/2, 0}, 4);
     }
 
-    public class MenuPanel extends JToolBar {
+    private class GestionSouris extends MouseAdapter {
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            Point sourisPoint = e.getPoint();
+            graphe.addSommet(sourisPoint);
+            repaint();
+        }
+    }
+
+    class MenuPanel extends JToolBar {
         private Action action_dsatur = new dsaturAction("Dsatur");
         private JButton dsatur = new JButton(action_dsatur);
         private JComboBox kindCombo = new JComboBox();
@@ -118,7 +137,7 @@ public class Interface extends JComponent {
 
     }
 
-    public class dsaturAction extends AbstractAction{
+    class dsaturAction extends AbstractAction{
         public dsaturAction(String name) {
             super(name);
         }
