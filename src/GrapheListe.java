@@ -2,6 +2,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import java.awt.Color;
+import java.util.Random;
+
 /**
  * Classe stockant le graphe sous forme de liste de sommets et de liste d'arcs.
  * @author Damien
@@ -268,7 +270,6 @@ public class GrapheListe extends Graphe {
 			
 			
 			for (int i=0; i<acolo.size();i++) {
-				System.out.println("dans le premier for");
 				actu=acolo.get(i);
 				nbarc=0;
 				nbcolor=0;
@@ -288,19 +289,13 @@ public class GrapheListe extends Graphe {
 					max2=actu;
 				}
 			}
-			System.out.println("nb color ?");
-			System.out.println(nbcolormax);
 			if (nbcolormax==0){
 				max=max2;
-				System.out.println("max=maxarc");
 			}
 			else {
 				max=max1;
-				System.out.println("max=maxcouleur");
 			}
-			
-			System.out.println("le sommet choisi ici est :");
-			System.out.println(max.getId());
+
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
 			color=0;
@@ -308,46 +303,42 @@ public class GrapheListe extends Graphe {
 				change =false;
 				for (int k=0; k<liste_voisins.size();k++){
 					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
-					System.out.println("voisin :");
-					System.out.println(liste_voisins.get(k).getId());
-					System.out.println(compare);
 					if (compare==color){
 						color=color+1;
-						System.out.println("couleur chang�");
 						change=true;
 					}
 				}
 			}
 			
 			change=true;
-			System.out.println("sommet num�ro trait�");
-			System.out.println(max.getId());
-			System.out.println(sommets.size());
-			System.out.println(this.getSommet(max.getId()-1).getList().size());
-			
 			
 			this.getSommet(max.getId()-1).setVar(this.getSommet(max.getId()-1).getList().size()-1, new VarInt(color));
-			System.out.println(this.getSommet(max.getId()-1).getVar(this.getSommet(max.getId()-1).getList().size()-1).getInt());
-			System.out.println("taille liste avant :");
-			System.out.println(acolo.size());
 			for (int z=0;z<acolo.size();z++) {
 				if (max.equals(acolo.get(z))) {
-					System.out.println("on remoove: ");
-					System.out.println(acolo.get(z).getId());
 					acolo.remove(z);
 				}
 			}
-			System.out.println("taille liste apres :");
-			System.out.println(acolo.size());
 		}
 
 			
 
 		
 		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
-		for (int g=0;g<this.get_liste_de_sommet().size();g++) {
-			this.get_liste_de_sommet().get(g).setCouleur(new Color(255% ((this.get_liste_de_sommet().get(g).getList().size() -1)+1), 255, 255));
-			this.get_liste_de_sommet().get(g).removeVar(this.get_liste_de_sommet().get(g).getList().size() -1);
+		ArrayList<Color> liste_id_color = new ArrayList<Color>();
+		for (int i=0;i<this.get_liste_de_sommet().size();i++) {
+			Random rand = new Random();
+			int id_color = this.getSommet(i).getVar(this.getSommet(i).getList().size()-1).getInt();
+			while(id_color > liste_id_color.size()-1){
+
+				float r = rand.nextFloat();
+				float g = rand.nextFloat();
+				float b = rand.nextFloat();
+				liste_id_color.add(new Color(r,g,b));
+			}
+			System.out.println(id_color);
+
+			this.get_liste_de_sommet().get(i).setCouleur(liste_id_color.get(id_color));
+			this.get_liste_de_sommet().get(i).removeVar(this.get_liste_de_sommet().get(i).getList().size() -1);
 			
 		}
 		
