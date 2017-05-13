@@ -9,6 +9,7 @@ public class Arc {
 	private Color couleur;
 	private ArrayList<Variable> variables;
 	
+	
 	public Arc(Sommet d, Sommet a){
 		this.depart = d;
 		this.arrivee = a;
@@ -75,6 +76,11 @@ public class Arc {
 		//TODO: Renvoyer la premi�re variable poids
 		return 0;
 	}
+	
+	public void setID(int id)
+	{ 
+		this.id = id; 
+		}
 	
 	
 }
