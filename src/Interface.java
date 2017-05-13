@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
@@ -14,7 +17,8 @@ public class Interface extends JComponent {
     private boolean selectionEnCours;
     private MenuPanel control = new MenuPanel();
     private static Graphe graphe;
-    private int rayon_sommet = 15;
+    private static int rayon_sommet = 15;
+    private Sommet sommet_selection;
 
     public static void main(String[] args) throws Exception{
         JFrame f = new JFrame("Graphe");
@@ -32,6 +36,9 @@ public class Interface extends JComponent {
     public Interface(){
         this.setOpaque(true);
 
+        this.addMouseListener(new GestionSouris());
+        this.addMouseMotionListener(new SelectionViaClic());
+
     }
 
     public void run(){
@@ -41,7 +48,6 @@ public class Interface extends JComponent {
         graphe.addSommet(new Point(50,350));
         graphe.addSommet(new Point(250,350));
 
-        graphe.addArc(graphe.getSommet(0),graphe.getSommet(1));
         graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
         graphe.addArc(graphe.getSommet(3),graphe.getSommet(1));
         graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
@@ -89,7 +95,38 @@ public class Interface extends JComponent {
         g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len}, new int[] {0, -ARR_SIZE/2, ARR_SIZE/2, 0}, 4);
     }
 
-    public class MenuPanel extends JToolBar {
+    private class GestionSouris extends MouseAdapter {
+        Point depart;
+        Point arrive;
+        @Override
+        public void mousePressed(MouseEvent e) {
+            depart = e.getPoint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            arrive = e.getPoint();
+            if(getSommetFromPoint(depart) == getSommetFromPoint(arrive)){
+                if(depart.equals(arrive)){
+                    graphe.addSommet(e.getPoint());
+                }
+            }
+            else{
+                graphe.addArc(getSommetFromPoint(depart), getSommetFromPoint(arrive));
+            }
+
+            repaint();
+        }
+
+    }
+
+    private class SelectionViaClic extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent e) {
+        }
+    }
+
+    class MenuPanel extends JToolBar {
         private Action action_dsatur = new dsaturAction("Dsatur");
         private JButton dsatur = new JButton(action_dsatur);
         private JComboBox kindCombo = new JComboBox();
@@ -118,7 +155,7 @@ public class Interface extends JComponent {
 
     }
 
-    public class dsaturAction extends AbstractAction{
+    class dsaturAction extends AbstractAction{
         public dsaturAction(String name) {
             super(name);
         }
@@ -127,5 +164,21 @@ public class Interface extends JComponent {
             graphe.dsatur();
             repaint();
         }
+    }
+
+    private static boolean isPointInSommet(Point p, Sommet s){
+        if(Math.pow(p.x - s.getPoint().x, 2) + Math.pow(p.y - s.getPoint().y, 2) < Math.pow(rayon_sommet, 2)){
+                return true;
+            }
+        return false;
+    }
+
+    private static Sommet getSommetFromPoint(Point p){
+        for(Sommet s : graphe.get_liste_de_sommet()){
+            if(isPointInSommet(p, s)){
+                return s;
+            }
+        }
+        return null;
     }
 }
