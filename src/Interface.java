@@ -1,10 +1,12 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Interface extends JComponent {
@@ -126,11 +128,15 @@ public class Interface extends JComponent {
         }
     }
 
-    class MenuPanel extends JToolBar {
+    class MenuPanel extends JMenuBar {
         private Action action_dsatur = new dsaturAction("Dsatur");
         private Action action_supression_totale = new suppressionTotaleAction("Tout Supprimer");
+        private Action action_ouvrir = new ouvrirAction("Charger");
+        private Action action_sauvegarder = new sauvegarderAction("Sauvegarder");
         private JButton dsatur = new JButton(action_dsatur);
         private JButton suppression_totale = new JButton(action_supression_totale);
+        private JButton ouvrir = new JButton(action_ouvrir);
+        private JButton sauvegarder = new JButton(action_sauvegarder);
         private JComboBox kindCombo = new JComboBox();
         private JPopupMenu popup = new JPopupMenu();
 
@@ -141,6 +147,8 @@ public class Interface extends JComponent {
 
             this.add(dsatur);
             this.add(suppression_totale);
+            this.add(ouvrir);
+            this.add(sauvegarder);
         /* Pour me souvenir du menu popup
         popup.add(new JMenuItem(newNode));
         popup.add(new JMenuItem(color));
@@ -180,6 +188,42 @@ public class Interface extends JComponent {
             graphe.setNbSommets(0);
             graphe.setNbArcs(0);
             repaint();
+        }
+    }
+
+    class ouvrirAction extends AbstractAction{
+        public ouvrirAction(String name) {
+            super(name);
+        }
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Graphe", "graphe");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showOpenDialog(Interface.this);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                graphe = Graphe.charger(file);
+                repaint();
+            }
+        }
+    }
+
+    class sauvegarderAction extends AbstractAction{
+        public sauvegarderAction(String name) {
+            super(name);
+        }
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Graphe", "graphe");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showSaveDialog(Interface.this);
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = new File(chooser.getSelectedFile() + ".graphe");
+                graphe.sauvegarder(file);
+                repaint();
+            }
         }
     }
 

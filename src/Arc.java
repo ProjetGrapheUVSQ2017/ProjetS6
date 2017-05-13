@@ -1,7 +1,8 @@
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Arc {
+public class Arc implements Serializable {
 	
 	private int id;
 	private Sommet depart;
