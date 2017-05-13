@@ -128,7 +128,9 @@ public class Interface extends JComponent {
 
     class MenuPanel extends JToolBar {
         private Action action_dsatur = new dsaturAction("Dsatur");
+        private Action action_supression_totale = new suppressionTotaleAction("Tout Supprimer");
         private JButton dsatur = new JButton(action_dsatur);
+        private JButton suppression_totale = new JButton(action_supression_totale);
         private JComboBox kindCombo = new JComboBox();
         private JPopupMenu popup = new JPopupMenu();
 
@@ -138,6 +140,7 @@ public class Interface extends JComponent {
             this.setBackground(Color.lightGray);
 
             this.add(dsatur);
+            this.add(suppression_totale);
         /* Pour me souvenir du menu popup
         popup.add(new JMenuItem(newNode));
         popup.add(new JMenuItem(color));
@@ -162,6 +165,20 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e) {
             graphe.dsatur();
+            repaint();
+        }
+    }
+
+    class suppressionTotaleAction extends AbstractAction{
+        public suppressionTotaleAction(String name){
+            super(name);
+        }
+
+        public void actionPerformed(ActionEvent e){
+            graphe.get_liste_de_sommet().clear();
+            graphe.get_liste_arc().clear();
+            graphe.setNbSommets(0);
+            graphe.setNbArcs(0);
             repaint();
         }
     }
