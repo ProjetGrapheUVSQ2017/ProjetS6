@@ -17,7 +17,7 @@ public class Interface extends JComponent {
     private boolean selectionEnCours;
     private MenuPanel control = new MenuPanel();
     private static Graphe graphe;
-    private int rayon_sommet = 15;
+    private static int rayon_sommet = 15;
     private Sommet sommet_selection;
 
     public static void main(String[] args) throws Exception{
@@ -96,37 +96,34 @@ public class Interface extends JComponent {
     }
 
     private class GestionSouris extends MouseAdapter {
+        Point depart;
+        Point arrive;
+        @Override
+        public void mousePressed(MouseEvent e) {
+            depart = e.getPoint();
+        }
 
         @Override
         public void mouseReleased(MouseEvent e) {
+            arrive = e.getPoint();
+            if(getSommetFromPoint(depart) == getSommetFromPoint(arrive)){
+                if(depart.equals(arrive)){
+                    graphe.addSommet(e.getPoint());
+                }
+            }
+            else{
+                graphe.addArc(getSommetFromPoint(depart), getSommetFromPoint(arrive));
+            }
 
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-            Point sourisPoint = e.getPoint();
-            graphe.addSommet(sourisPoint);
             repaint();
         }
+
     }
 
     private class SelectionViaClic extends MouseMotionAdapter {
-
-        Point delta = new Point();
-        Point sourisPoint;
-
-        /*
-
         @Override
         public void mouseDragged(MouseEvent e) {
-                delta.setLocation(
-                        e.getX() - mousePt.x,
-                        e.getY() - mousePt.y);
-                Node.updatePosition(nodes, delta);
-                sourisPoint = e.getPoint();
-                repaint();
         }
-        */
     }
 
     class MenuPanel extends JToolBar {
@@ -167,5 +164,21 @@ public class Interface extends JComponent {
             graphe.dsatur();
             repaint();
         }
+    }
+
+    private static boolean isPointInSommet(Point p, Sommet s){
+        if(Math.pow(p.x - s.getPoint().x, 2) + Math.pow(p.y - s.getPoint().y, 2) < Math.pow(rayon_sommet, 2)){
+                return true;
+            }
+        return false;
+    }
+
+    private static Sommet getSommetFromPoint(Point p){
+        for(Sommet s : graphe.get_liste_de_sommet()){
+            if(isPointInSommet(p, s)){
+                return s;
+            }
+        }
+        return null;
     }
 }
