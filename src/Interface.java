@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class Interface extends JComponent {
     private Rectangle rectangleSouris;
     private boolean selectionEnCours;
     private MenuPanel control = new MenuPanel();
-    private Graphe graphe;
+    private static Graphe graphe;
     private int rayon_sommet = 15;
 
     public static void main(String[] args) throws Exception{
@@ -47,7 +48,6 @@ public class Interface extends JComponent {
         graphe.addArc(graphe.getSommet(3),graphe.getSommet(2));
         graphe.addArc(graphe.getSommet(1),graphe.getSommet(2));
 
-        graphe.dsatur();
 
     }
 
@@ -87,5 +87,45 @@ public class Interface extends JComponent {
         // Draw horizontal arrow starting in (0, 0)
         g.drawLine(rayon_sommet, 0, len, 0);
         g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len}, new int[] {0, -ARR_SIZE/2, ARR_SIZE/2, 0}, 4);
+    }
+
+    public class MenuPanel extends JToolBar {
+        private Action action_dsatur = new dsaturAction("Dsatur");
+        private JButton dsatur = new JButton(action_dsatur);
+        private JComboBox kindCombo = new JComboBox();
+        private JPopupMenu popup = new JPopupMenu();
+
+
+        MenuPanel() {
+            this.setLayout(new FlowLayout(FlowLayout.LEFT));
+            this.setBackground(Color.lightGray);
+
+            this.add(dsatur);
+        /* Pour me souvenir du menu popup
+        popup.add(new JMenuItem(newNode));
+        popup.add(new JMenuItem(color));
+        popup.add(new JMenuItem(connect));
+        popup.add(new JMenuItem(delete));
+        JMenu subMenu = new JMenu("Kind");
+        for (Kind k : Kind.values()) {
+            kindCombo.addItem(k);
+            subMenu.add(new JMenuItem(new KindItemAction(k)));
+        }
+        popup.add(subMenu);
+        kindCombo.addActionListener(kind);
+        */
+        }
+
+    }
+
+    public class dsaturAction extends AbstractAction{
+        public dsaturAction(String name) {
+            super(name);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            graphe.dsatur();
+            repaint();
+        }
     }
 }
