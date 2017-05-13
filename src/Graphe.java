@@ -37,6 +37,7 @@ public abstract class Graphe implements Serializable {
 	
 	public abstract void addSommet(Sommet s);
 	public abstract ArrayList<Sommet> get_liste_de_sommet();
+	public abstract ArrayList<Arc> get_liste_arc();
 	public abstract void addSommet(Point p);
 	public abstract void addArc(Sommet d, Sommet a);
 	public abstract void deleteArc(Sommet d, Sommet a);

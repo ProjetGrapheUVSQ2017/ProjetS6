@@ -29,11 +29,13 @@ public class Sommet {
 	public Sommet(Point coords, ArrayList<Variable> var){
 		this.coords = coords;
 		this.variables = var;
+		this.couleur = Color.BLACK;
 	}
 	
 	public Sommet(Point coords){
 		this.coords = coords;
 		this.variables = new ArrayList<Variable>();
+		this.couleur = Color.BLACK;
 	}
 	
 	public int getId(){
