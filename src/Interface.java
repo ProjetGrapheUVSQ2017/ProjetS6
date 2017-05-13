@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class Interface extends JComponent {
     private MenuPanel control = new MenuPanel();
     private static Graphe graphe;
     private int rayon_sommet = 15;
+    private Sommet sommet_selection;
 
     public static void main(String[] args) throws Exception{
         JFrame f = new JFrame("Graphe");
@@ -35,6 +37,7 @@ public class Interface extends JComponent {
         this.setOpaque(true);
 
         this.addMouseListener(new GestionSouris());
+        this.addMouseMotionListener(new SelectionViaClic());
 
     }
 
@@ -45,7 +48,6 @@ public class Interface extends JComponent {
         graphe.addSommet(new Point(50,350));
         graphe.addSommet(new Point(250,350));
 
-        graphe.addArc(graphe.getSommet(0),graphe.getSommet(1));
         graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
         graphe.addArc(graphe.getSommet(3),graphe.getSommet(1));
         graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
@@ -106,6 +108,25 @@ public class Interface extends JComponent {
             graphe.addSommet(sourisPoint);
             repaint();
         }
+    }
+
+    private class SelectionViaClic extends MouseMotionAdapter {
+
+        Point delta = new Point();
+        Point sourisPoint;
+
+        /*
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+                delta.setLocation(
+                        e.getX() - mousePt.x,
+                        e.getY() - mousePt.y);
+                Node.updatePosition(nodes, delta);
+                sourisPoint = e.getPoint();
+                repaint();
+        }
+        */
     }
 
     class MenuPanel extends JToolBar {

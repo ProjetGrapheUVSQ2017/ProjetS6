@@ -335,8 +335,6 @@ public class GrapheListe extends Graphe {
 				float b = rand.nextFloat();
 				liste_id_color.add(new Color(r,g,b));
 			}
-			System.out.println(id_color);
-
 			this.get_liste_de_sommet().get(i).setCouleur(liste_id_color.get(id_color));
 			this.get_liste_de_sommet().get(i).removeVar(this.get_liste_de_sommet().get(i).getList().size() -1);
 			
