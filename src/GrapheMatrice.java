@@ -115,8 +115,7 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Envoi true si l'arc existe dans le graphe, et false sinon</br>
 	 * Renvoi false aussi si les sommets spÃ©cifiÃ©s ne font pas partie du graphe.
-	 * @param d : Sommet de dÃ©part de l'arc
-	 * @param a : Sommet d'arrivÃ©e de l'arc
+	 * @param id : Identifiant du sommet à supprimer
 	 * @author Aziz
 	 */
 	@Override
@@ -146,7 +145,7 @@ public class GrapheMatrice extends Graphe {
 		for(int i = 0; i<graphe.length; i++){
 			for(int  j = 0;j<graphe[0].length-1; j++){
 				if(graphe[i][j] != null){
-					graphe[i][j].setId(graphe[i][j].getId()-1);
+					graphe[i][j].setID(graphe[i][j].getId()-1);
 				}
 			}
 		}
@@ -155,7 +154,6 @@ public class GrapheMatrice extends Graphe {
 			sommets.get(i).setID(sommets.get(i).getId()-1);
 		}
 	}
-}
 	
 	
 	
@@ -215,8 +213,7 @@ public class GrapheMatrice extends Graphe {
 	 * Renvoie l'arc identifiÃ© par l'identifiant.</br>
 	 * Renvoie null si l'arc n'existe pas.
 	 * </br>Parcours le graphe pour obtenir l'arc concernÃ©, la recherche en donnant les sommets de dÃ©part et d'arrivÃ©e est moins couteuses.
-	 * @param d : Sommet de dÃ©part de l'arc recherchÃ©
-	 * @param a : Sommet d'arrivÃ©e de l'arc recherchÃ©
+	 * @param id : Identifiant de l'arc recherché
 	 * @return Arc
 	 * @author damien
 	 */
@@ -291,12 +288,6 @@ public class GrapheMatrice extends Graphe {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
-		return null;
-	}
-
 
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
