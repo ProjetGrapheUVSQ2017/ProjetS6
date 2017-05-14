@@ -378,10 +378,14 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> res = new ArrayList<Sommet>();
 		for(Arc act : arcs){
 			if(act.getSommetArrivee().equals(s)){
-				res.add(act.getSommetDepart());
+				if(!res.contains(act.getSommetDepart())){
+					res.add(act.getSommetDepart());
+				}
 			}
 			else if(act.getSommetDepart().equals(s)){
-				res.add(act.getSommetArrivee());
+				if(!res.contains(act.getSommetArrivee())){
+					res.add(act.getSommetArrivee());
+				}
 			}
 		}
 		return res;
