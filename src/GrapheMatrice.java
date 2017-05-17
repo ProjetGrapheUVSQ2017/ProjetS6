@@ -146,7 +146,7 @@ public class GrapheMatrice extends Graphe {
 		for(int i = 0; i<graphe.length; i++){
 			for(int  j = 0;j<graphe[0].length-1; j++){
 				if(graphe[i][j] != null){
-					graphe[i][j].setId(graphe[i][j].getId()-1);
+					graphe[i][j].setID(graphe[i][j].getId()-1);
 				}
 			}
 		}
@@ -155,7 +155,6 @@ public class GrapheMatrice extends Graphe {
 			sommets.get(i).setID(sommets.get(i).getId()-1);
 		}
 	}
-}
 	
 	
 	
@@ -303,11 +302,6 @@ public class GrapheMatrice extends Graphe {
 		return sommets;
 	}
 
-	@Override
-	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public ArrayList<Arc> get_liste_arc() {
