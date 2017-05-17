@@ -288,17 +288,18 @@ public class GrapheMatrice extends Graphe {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
 		return sommets;
 	}
 
-	@Override
-	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public ArrayList<Arc> get_liste_arc() {
