@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * @author Damien
  *
  */
-public class Sommet {
+public class Sommet implements Serializable{
 	/**
 	 * Coordonn�es du sommet dans l'espace d'affichage
 	 */
