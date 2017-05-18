@@ -51,9 +51,23 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void addSommet(Point p) {
+		int id = 0;
+		boolean change = true;
+		while(change){
+			change=false;
+			for(Sommet s : sommets){
+				if(id==s.getId()) {
+					id++;
+					change=true;
+				}
+			}
+		}
+
+
 		sommets.add(new Sommet(p));
 		this.setNbSommets(getNbSommets()+1);
-		sommets.get(getNbSommets()-1).setID(getNbSommets());
+		sommets.get(getNbSommets()-1).setID(id);
+
 	}
 
 	/**
@@ -327,6 +341,8 @@ public class GrapheListe extends Graphe {
 					}
 				}
 			}
+
+			System.out.println(max.getId());
 			
 			change=true;
 			
