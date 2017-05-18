@@ -283,7 +283,7 @@ public class GrapheListe extends Graphe {
 			
 			nbcolormax=0;
 			nbarcmax=0;
-			
+			max=null;
 			
 			for (int i=0; i<acolo.size();i++) {
 				actu=acolo.get(i);
@@ -304,7 +304,14 @@ public class GrapheListe extends Graphe {
 					nbarcmax=nbarc;
 					max=actu;
 				}
+				
+				if (nbarc==0){
+					max=actu;
+				}
+				
+				
 			}
+			
 
 
 			liste_voisins=liste_voisins_pere_et_fils(max);
