@@ -2,6 +2,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import java.awt.Color;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Random;
 
 /**
@@ -28,8 +30,6 @@ public class GrapheListe extends Graphe {
 	public GrapheListe(GrapheListe old){
 		sommets = new ArrayList<Sommet>();
 		arcs = new ArrayList<Arc>();
-		//TODO: Il fait quoi ce constructeur ?
-		// Rep : Il copie l'ancienne graphe liste dans une nouvelle
 	}
 
 	/**
@@ -83,11 +83,13 @@ public class GrapheListe extends Graphe {
 		for(Arc act : arcs){
 			if(act.getSommetDepart().equals(d) && act.getSommetArrivee().equals(a)){
 				aSupprimer = act;
+				break;
 			}
 		}
 		
 		if(aSupprimer != null){
 			arcs.remove(aSupprimer);
+			this.setNbArcs(this.getNbArcs()-1);
 		}
 	}
 
@@ -101,6 +103,8 @@ public class GrapheListe extends Graphe {
 		for(Arc act : arcs){
 			if(act.getId() == id){
 				arcs.remove(act);
+				this.setNbArcs(this.getNbArcs()-1);
+				break;
 			}
 		}
 	}
@@ -112,14 +116,20 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void deleteSommet(int id) {
-		
-		//TODO: Il faut supprimer les arcs en relation du sommet
 		for(Sommet s : sommets){
 			if(s.getId() == id){
+				ListIterator<Arc> i = arcs.listIterator();
+				while (i.hasNext()) {
+					Arc a = i.next();
+					if(a.getSommetDepart()==s || a.getSommetArrivee()==s){
+						i.remove();
+						this.setNbArcs(this.getNbArcs()-1);
+					}
+				}
 				sommets.remove(s);
 				this.setNbSommets(getNbSommets()-1);
+				break;
 			}
-			
 		}
 	}
 
@@ -149,8 +159,15 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public Sommet getSommet(int id) {
-		return this.sommets.get(id);
+		for(Sommet s : sommets){
+			if(s.getId()==id){
+				return s;
+			}
+		}
+		return null;
 	}
+
+
 
 	/**
 	 * Renvoi l'arc identifi� par d et a.</br>
@@ -244,13 +261,11 @@ public class GrapheListe extends Graphe {
 	@Override
 	public boolean dsatur() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
-		Sommet max1 = null;
-		Sommet max2 = null;
 		int nbcolor=0;
 		int nbcolormax=0;
 		int nbarc=0;
 		int nbarcmax=0;
-		Sommet actu, max;
+		Sommet actu, max = null;
 		int color=0;
 		boolean change=true;
 		ArrayList<Sommet> liste_voisins;
@@ -259,8 +274,9 @@ public class GrapheListe extends Graphe {
 		
 		//mettre la couleur � 0 pour tous les sommets (on stocke �a � la fin de la liste des variables)
 
-		for (int h=0; h<this.get_liste_de_sommet().size();h++){
-			this.getSommet(h).addVar(new VarInt(0));
+
+		for(Sommet s: sommets){
+			s.addVar(new VarInt(-1));
 		}
 		
 		while (!acolo.isEmpty()) {
@@ -274,27 +290,22 @@ public class GrapheListe extends Graphe {
 				nbarc=0;
 				nbcolor=0;
 				for (int j=0;j<(liste_voisins=liste_voisins_pere_et_fils(actu)).size();j++) {
-					if ( liste_voisins.get(j).getVar(liste_voisins.get(j).getList().size()-1).getInt()!=0 ){
+					if ( liste_voisins.get(j).getVar(liste_voisins.get(j).getList().size()-1).getInt()!=-1 ){
 					nbcolor=nbcolor+1;
 					}
 				}
 				
 				nbarc=liste_voisins.size();
-				if (nbcolor>=nbcolormax) {
-					max1=actu;
+				if (nbcolor>nbcolormax) {
+					max=actu;
 					nbcolormax=nbcolor;
 				}
-				if (nbarc>=nbarcmax){
+				if (nbarc>nbarcmax && nbcolor==nbcolormax){
 					nbarcmax=nbarc;
-					max2=actu;
+					max=actu;
 				}
 			}
-			if (nbcolormax==0){
-				max=max2;
-			}
-			else {
-				max=max1;
-			}
+
 
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
@@ -312,7 +323,7 @@ public class GrapheListe extends Graphe {
 			
 			change=true;
 			
-			this.getSommet(max.getId()-1).setVar(this.getSommet(max.getId()-1).getList().size()-1, new VarInt(color));
+			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
 			for (int z=0;z<acolo.size();z++) {
 				if (max.equals(acolo.get(z))) {
 					acolo.remove(z);
@@ -325,9 +336,9 @@ public class GrapheListe extends Graphe {
 		
 		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
 		ArrayList<Color> liste_id_color = new ArrayList<Color>();
-		for (int i=0;i<this.get_liste_de_sommet().size();i++) {
+		for (Sommet s: sommets) {
 			Random rand = new Random();
-			int id_color = this.getSommet(i).getVar(this.getSommet(i).getList().size()-1).getInt();
+			int id_color = s.getVar(s.getList().size()-1).getInt();
 			while(id_color > liste_id_color.size()-1){
 
 				float r = rand.nextFloat();
@@ -335,8 +346,8 @@ public class GrapheListe extends Graphe {
 				float b = rand.nextFloat();
 				liste_id_color.add(new Color(r,g,b));
 			}
-			this.get_liste_de_sommet().get(i).setCouleur(liste_id_color.get(id_color));
-			this.get_liste_de_sommet().get(i).removeVar(this.get_liste_de_sommet().get(i).getList().size() -1);
+			s.setCouleur(liste_id_color.get(id_color));
+			s.removeVar(s.getList().size() -1);
 			
 		}
 		
@@ -378,10 +389,14 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> res = new ArrayList<Sommet>();
 		for(Arc act : arcs){
 			if(act.getSommetArrivee().equals(s)){
-				res.add(act.getSommetDepart());
+				if(!res.contains(act.getSommetDepart())){
+					res.add(act.getSommetDepart());
+				}
 			}
 			else if(act.getSommetDepart().equals(s)){
-				res.add(act.getSommetArrivee());
+				if(!res.contains(act.getSommetArrivee())){
+					res.add(act.getSommetArrivee());
+				}
 			}
 		}
 		return res;

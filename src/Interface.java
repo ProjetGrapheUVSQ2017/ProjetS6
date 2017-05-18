@@ -23,16 +23,39 @@ public class Interface extends JComponent {
     private Sommet sommet_selection;
 
     public static void main(String[] args) throws Exception{
-        JFrame f = new JFrame("Graphe");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Interface inter = new Interface();
-        f.add(inter.control, BorderLayout.NORTH);
-        f.add(new JScrollPane(inter), BorderLayout.CENTER);
-        f.setPreferredSize(new Dimension(largeur,hauteur));
-        f.pack();
-        f.setVisible(true);
+        EventQueue.invokeLater(new Runnable() {
 
-        inter.run();
+            public void run(){
+                JFrame f = new JFrame("Graphe");
+                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                Interface inter = new Interface();
+                f.add(inter.control,BorderLayout.NORTH);
+                f.add(new
+
+                        JScrollPane(inter),BorderLayout.CENTER);
+                f.setPreferredSize(new
+
+                        Dimension(largeur, hauteur));
+                f.pack();
+                f.setVisible(true);
+
+
+                graphe = new GrapheListe();
+                graphe.addSommet(new Point(50,50));
+                graphe.addSommet(new Point(250,50));
+                graphe.addSommet(new Point(50,350));
+                graphe.addSommet(new Point(250,350));
+
+                graphe.addArc(graphe.getSommet(1),graphe.getSommet(2));
+                graphe.addArc(graphe.getSommet(1),graphe.getSommet(3));
+                graphe.addArc(graphe.getSommet(1),graphe.getSommet(4));
+                graphe.addArc(graphe.getSommet(2),graphe.getSommet(3));
+                graphe.addArc(graphe.getSommet(3),graphe.getSommet(4));
+
+
+            }
+
+        });
     }
 
     public Interface(){
@@ -40,22 +63,6 @@ public class Interface extends JComponent {
 
         this.addMouseListener(new GestionSouris());
         this.addMouseMotionListener(new SelectionViaClic());
-
-    }
-
-    public void run(){
-        graphe = new GrapheListe();
-        graphe.addSommet(new Point(50,50));
-        graphe.addSommet(new Point(250,50));
-        graphe.addSommet(new Point(50,350));
-        graphe.addSommet(new Point(250,350));
-
-        graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
-        graphe.addArc(graphe.getSommet(3),graphe.getSommet(1));
-        graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
-        graphe.addArc(graphe.getSommet(3),graphe.getSommet(2));
-        graphe.addArc(graphe.getSommet(1),graphe.getSommet(2));
-
 
     }
 
@@ -103,21 +110,27 @@ public class Interface extends JComponent {
         @Override
         public void mousePressed(MouseEvent e) {
             depart = e.getPoint();
+            ptSouris = e.getPoint();
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
             arrive = e.getPoint();
-            if(getSommetFromPoint(depart) == getSommetFromPoint(arrive)){
-                if(depart.equals(arrive)){
-                    graphe.addSommet(e.getPoint());
-                }
+            if (e.isPopupTrigger()) {
+                showPopup(e);
             }
-            else{
+            if(getSommetFromPoint(depart) != getSommetFromPoint(arrive)){
                 graphe.addArc(getSommetFromPoint(depart), getSommetFromPoint(arrive));
             }
 
             repaint();
+        }
+
+        private void showPopup(MouseEvent e) {
+            control.popup.show(e.getComponent(), e.getX(), e.getY());
         }
 
     }
@@ -133,6 +146,8 @@ public class Interface extends JComponent {
         private Action action_supression_totale = new suppressionTotaleAction("Tout Supprimer");
         private Action action_ouvrir = new ouvrirAction("Charger");
         private Action action_sauvegarder = new sauvegarderAction("Sauvegarder");
+        private Action action_creerSommet = new creerSommetAction("Creer Sommet");
+        private Action action_supprimerSommet = new supprimerSommetAction("Supprimer");
         private JButton dsatur = new JButton(action_dsatur);
         private JButton suppression_totale = new JButton(action_supression_totale);
         private JButton ouvrir = new JButton(action_ouvrir);
@@ -149,21 +164,33 @@ public class Interface extends JComponent {
             this.add(suppression_totale);
             this.add(ouvrir);
             this.add(sauvegarder);
-        /* Pour me souvenir du menu popup
-        popup.add(new JMenuItem(newNode));
-        popup.add(new JMenuItem(color));
-        popup.add(new JMenuItem(connect));
-        popup.add(new JMenuItem(delete));
-        JMenu subMenu = new JMenu("Kind");
-        for (Kind k : Kind.values()) {
-            kindCombo.addItem(k);
-            subMenu.add(new JMenuItem(new KindItemAction(k)));
-        }
-        popup.add(subMenu);
-        kindCombo.addActionListener(kind);
-        */
+
+            this.popup.add(new JMenuItem(action_creerSommet));
+            this.popup.add(new JMenuItem(action_supprimerSommet));
         }
 
+    }
+
+    class creerSommetAction extends AbstractAction{
+        public creerSommetAction(String name) {
+            super(name);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            graphe.addSommet(ptSouris.getLocation());
+            repaint();
+        }
+    }
+
+    class supprimerSommetAction extends AbstractAction{
+        public supprimerSommetAction(String name){super(name);}
+
+        public void actionPerformed(ActionEvent e){
+            if(getSommetFromPoint(ptSouris)!=null){
+                graphe.deleteSommet(getSommetFromPoint(ptSouris).getId());
+                repaint();
+            }
+        }
     }
 
     class dsaturAction extends AbstractAction{
