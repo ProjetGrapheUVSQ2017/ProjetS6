@@ -4,6 +4,7 @@ public class VarFloat extends Variable {
 	public VarFloat(float val){
 		this.val=val;
 	}
+	@Override
 	public float getFloat(){
 		return this.val;
 	}
@@ -18,6 +19,16 @@ public class VarFloat extends Variable {
 
 	@Override
 	public String toString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public int getInt() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public String getString() {
 		// TODO Auto-generated method stub
 		return null;
 	}
