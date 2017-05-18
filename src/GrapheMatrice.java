@@ -151,7 +151,7 @@ public class GrapheMatrice extends Graphe {
 		for(int i = 0; i<graphe.length; i++){
 			for(int  j = 0;j<graphe[0].length-1; j++){
 				if(graphe[i][j] != null){
-					graphe[i][j].setId(graphe[i][j].getId()-1);	
+					graphe[i][j].setID(graphe[i][j].getId()-1);	
 				}
 			}
 		}
