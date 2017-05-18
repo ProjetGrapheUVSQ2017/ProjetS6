@@ -46,11 +46,11 @@ public class Interface extends JComponent {
                 graphe.addSommet(new Point(50,350));
                 graphe.addSommet(new Point(250,350));
 
-                graphe.addArc(graphe.getSommet(1),graphe.getSommet(2));
+                graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
+                graphe.addArc(graphe.getSommet(0),graphe.getSommet(1));
+                graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(1),graphe.getSommet(3));
-                graphe.addArc(graphe.getSommet(1),graphe.getSommet(4));
                 graphe.addArc(graphe.getSommet(2),graphe.getSommet(3));
-                graphe.addArc(graphe.getSommet(3),graphe.getSommet(4));
 
 
             }
