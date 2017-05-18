@@ -341,8 +341,6 @@ public class GrapheListe extends Graphe {
 					}
 				}
 			}
-
-			System.out.println(max.getId());
 			
 			change=true;
 			
