@@ -135,6 +135,10 @@ public class Interface extends JComponent {
                         SommetSelec.add(getSommetFromPoint(ptSouris));
                     }
                 }
+            }else{
+                if(modeMouse.getSelectedItem()=="Selection"){
+                    SommetSelec.clear();
+                }
             }
         }
 
