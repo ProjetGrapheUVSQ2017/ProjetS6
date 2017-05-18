@@ -438,6 +438,7 @@ public class Interface extends JComponent {
                     Sommet s = i.next();
                     if(!SommetSelec.contains(s)){
                         i.remove();
+                        graphe.setNbSommets(graphe.getNbSommets()-1);
                     }
                 }
                 ListIterator<Arc> j = graphe.get_liste_arc().listIterator();
@@ -445,6 +446,7 @@ public class Interface extends JComponent {
                     Arc a = j.next();
                     if(!SommetSelec.contains(a.getSommetDepart()) || !SommetSelec.contains(a.getSommetArrivee())){
                         j.remove();
+                        graphe.setNbArcs(graphe.getNbArcs()-1);
                     }
                 }
                 SommetSelec.clear();
