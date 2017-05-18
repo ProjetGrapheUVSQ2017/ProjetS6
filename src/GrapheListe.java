@@ -2,7 +2,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import java.awt.Color;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Random;
 
@@ -107,6 +106,9 @@ public class GrapheListe extends Graphe {
 				break;
 			}
 		}
+		
+		//ATTENTION : les ids ne marche peut-être pas sur les arcs
+		//TODO: Regarder, bon après on utilise surtout Sommet d, s pour les identifier mais quand même
 	}
 
 	/**
