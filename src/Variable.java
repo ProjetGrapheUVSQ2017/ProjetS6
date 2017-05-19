@@ -11,7 +11,7 @@ public int getId(){
 public void setId(int id){
 	this.id=id;
 }
-public abstract int getTypeVar();
+public abstract String getTypeVar();
 public abstract String toString();
 public abstract int getInt();
 public abstract String getString();
