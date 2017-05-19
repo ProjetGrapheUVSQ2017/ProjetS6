@@ -407,7 +407,7 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e) {
 
-            JFrame VariableWindow = new JFrame();
+            final JFrame VariableWindow = new JFrame();
             VariableWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             VariableWindow.setLocation(ptSouris);
 
@@ -415,8 +415,8 @@ public class Interface extends JComponent {
 
             Boolean sommet=false;
             Boolean ne_rien_faire = false;
-            Sommet s = getSommetFromPoint(ptSouris);
-            Arc a = getArcFromPoint(ptSouris);
+            final Sommet s = getSommetFromPoint(ptSouris);
+            final Arc a = getArcFromPoint(ptSouris);
 
             if(s!=null){
                 sommet=true;
@@ -431,7 +431,7 @@ public class Interface extends JComponent {
 
             if(!ne_rien_faire) {
 
-                ArrayList<TextField> liste_input = new ArrayList<TextField>();
+                final ArrayList<TextField> liste_input = new ArrayList<TextField>();
 
                 if(sommet){
                     VariableWindow.setSize(300, s.getList().size() * 65 + 200);
@@ -450,9 +450,9 @@ public class Interface extends JComponent {
                 JPanel container = new JPanel();
                 container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-                JPanel p1 = new JPanel(new GridBagLayout());
+                final JPanel p1 = new JPanel(new GridBagLayout());
 
-                GridBagConstraints gbc = new GridBagConstraints();
+                final GridBagConstraints gbc = new GridBagConstraints();
                 gbc.weightx = 1;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -481,9 +481,6 @@ public class Interface extends JComponent {
                 addVariableInt.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        Sommet s = getSommetFromPoint(ptSouris);
-                        Arc a = getArcFromPoint(ptSouris);
-
                         if(s!=null){
                             s.addVar(new VarInt(0));
                             liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
@@ -504,9 +501,6 @@ public class Interface extends JComponent {
                 addVariableFloat.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        Sommet s = getSommetFromPoint(ptSouris);
-                        Arc a = getArcFromPoint(ptSouris);
-
                         if(s!=null){
                             s.addVar(new VarFloat(0));
                             liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
@@ -527,9 +521,6 @@ public class Interface extends JComponent {
                 addVariableString.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        Sommet s = getSommetFromPoint(ptSouris);
-                        Arc a = getArcFromPoint(ptSouris);
-
                         if(s!=null){
                             s.addVar(new VarString(" "));
                             liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
@@ -551,9 +542,6 @@ public class Interface extends JComponent {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
                         for (int i = 0; i < liste_input.size(); i++) {
-                            Sommet s = getSommetFromPoint(ptSouris);
-                            Arc a = getArcFromPoint(ptSouris);
-
                             if (s != null) {
                                 if (s.getVar(i).getTypeVar() == "Int") {
                                     s.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
@@ -591,9 +579,6 @@ public class Interface extends JComponent {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                         for (int i = 0; i < liste_input.size(); i++) {
-                            Sommet s = getSommetFromPoint(ptSouris);
-                            Arc a = getArcFromPoint(ptSouris);
-
                             if (s != null) {
                                 if (s.getVar(i).getTypeVar() == "Int") {
                                     s.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
