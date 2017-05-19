@@ -12,15 +12,13 @@ public class VarFloat extends Variable {
 		 this.val=val;
 	}
 	@Override
-	public int getTypeVar() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String getTypeVar() {
+		return "Float";
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		return Float.toString(val);
 	}
 	@Override
 	public int getInt() {

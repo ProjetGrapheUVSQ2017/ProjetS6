@@ -3,6 +3,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -33,6 +34,7 @@ public class Interface extends JComponent {
                 graphe.addSommet(new Point(250,50));
                 graphe.addSommet(new Point(50,350));
                 graphe.addSommet(new Point(250,350));
+
 
                 graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
                 graphe.addArc(graphe.getSommet(0),graphe.getSommet(1));
@@ -69,16 +71,22 @@ public class Interface extends JComponent {
         for(Sommet s : graphe.get_liste_de_sommet()){
             g.setColor(s.getCouleur());
             g.fillOval(s.getPoint().x-rayon_sommet, s.getPoint().y-rayon_sommet, rayon_sommet*2,rayon_sommet*2);
+            int i =0;
+            for(Variable v : s.getList()){
+                g.setColor(Color.DARK_GRAY);
+                g.drawString(v.toString(),s.getPoint().x, s.getPoint().y+rayon_sommet+12+(i*12));
+                i++;
+            }
         }
         for(Arc a : graphe.get_liste_arc()){
             g.setColor(a.getCouleur());
 
-        int x1 = a.getSommetDepart().getPoint().x;
-        int y1 = a.getSommetDepart().getPoint().y;
-        int x2 = a.getSommetArrivee().getPoint().x;
-        int y2 = a.getSommetArrivee().getPoint().y;
+            int x1 = a.getSommetDepart().getPoint().x;
+            int y1 = a.getSommetDepart().getPoint().y;
+            int x2 = a.getSommetArrivee().getPoint().x;
+            int y2 = a.getSommetArrivee().getPoint().y;
 
-            drawArrow(g, x1, y1, x2, y2);;
+            drawArrow(g, x1, y1, x2, y2, a);
         }
 
         Graphics2D g2 = (Graphics2D) g;
@@ -91,9 +99,10 @@ public class Interface extends JComponent {
         g.setColor(Color.darkGray);
         g.drawRect(rectangleSouris.x, rectangleSouris.y, rectangleSouris.width, rectangleSouris.height);
 
+
     }
 
-    void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+    void drawArrow(Graphics g1, int x1, int y1, int x2, int y2, Arc a) {
         int ARR_SIZE = 12;
         Graphics2D g = (Graphics2D) g1.create();
 
@@ -107,6 +116,18 @@ public class Interface extends JComponent {
         // Draw horizontal arrow starting in (0, 0)
         g.drawLine(rayon_sommet, 0, len, 0);
         g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len}, new int[] {0, -ARR_SIZE/2, ARR_SIZE/2, 0}, 4);
+        int i =0;
+        for(Variable v : a.getList()){
+            g.setColor(Color.DARK_GRAY);
+            if(i==0){
+                g.setFont(new Font(g.getFont().getName(),Font.BOLD,15));
+            }
+            else{
+                g.setFont(new Font(g.getFont().getName(),Font.PLAIN,15));
+            }
+            g.drawString(v.toString(),len/2, 20+(i*15));
+            i++;
+        }
     }
 
     private class GestionSouris extends MouseAdapter {
@@ -254,6 +275,7 @@ public class Interface extends JComponent {
             this.popup.add(new JMenuItem(action_supprimerSommet));
             this.popup.add(new JMenuItem(action_ModifierVariable));
 
+
             this.add(new JLabel("Mode d'édition"));
             String[] modeMouseString = { "Selection", "Arcs", "Sommet"};
             modeMouse = new JComboBox(modeMouseString);
@@ -279,13 +301,20 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e){
             Sommet s = getSommetFromPoint(ptSouris);
+            Arc a = getArcFromPoint(ptSouris);
+
             if(s!=null){
-                if(SommetSelec.contains(s)){
-                    SommetSelec.remove(s);
-                }
-                graphe.deleteSommet(s.getId());
+                    if(SommetSelec.contains(s)){
+                        SommetSelec.remove(s);
+                    }
+                    graphe.deleteSommet(s.getId());
+                    repaint();
+            }
+            else if(a!=null){
+                graphe.deleteArc(a.getId());
                 repaint();
             }
+
         }
     }
 
@@ -377,8 +406,228 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
-            /* TODO */
-            repaint();
+
+            JFrame VariableWindow = new JFrame();
+            VariableWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            VariableWindow.setLocation(ptSouris);
+
+            VariableWindow.setTitle("Modification des Variables");
+
+            Boolean sommet=false;
+            Boolean ne_rien_faire = false;
+            Sommet s = getSommetFromPoint(ptSouris);
+            Arc a = getArcFromPoint(ptSouris);
+
+            if(s!=null){
+                sommet=true;
+            }
+            else if(a!=null){
+                sommet=false;
+            }else{
+                VariableWindow.setVisible(false); //you can't see me!
+                VariableWindow.dispose();
+                ne_rien_faire=true;
+            }
+
+            if(!ne_rien_faire) {
+
+                ArrayList<TextField> liste_input = new ArrayList<TextField>();
+
+                if(sommet){
+                    VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                    for (Variable v : s.getList()) {
+                        liste_input.add(new TextField(v.toString()));
+                    }
+                }else{
+                    VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                    for (Variable v : a.getList()) {
+                        liste_input.add(new TextField(v.toString()));
+                    }
+                }
+
+
+
+                JPanel container = new JPanel();
+                container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
+                JPanel p1 = new JPanel(new GridBagLayout());
+
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.weightx = 1;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc.gridwidth = GridBagConstraints.REMAINDER;
+                gbc.insets = new Insets(10, 10, 0, 10);
+
+
+                for (int i = 0; i < liste_input.size(); i++) {
+                    if(sommet){
+                        p1.add(new JLabel("Variable " + (i + 1) + " (" + s.getList().get(i).getTypeVar() + ") : "), gbc);
+                    }else{
+                        if(i==0){
+                            p1.add(new JLabel("Poids " + " (" + a.getList().get(i).getTypeVar() + ") : "), gbc);
+                        }else{
+                            p1.add(new JLabel("Variable " + (i + 1) + " (" + a.getList().get(i).getTypeVar() + ") : "), gbc);
+                        }
+                    }
+
+                    p1.add(liste_input.get(i), gbc);
+                }
+
+                JButton addVariableInt = new JButton("Ajouter une Variable(int)");
+                JButton addVariableFloat = new JButton("Ajouter une Variable(float)");
+                JButton addVariableString = new JButton("Ajouter une Variable(string)");
+                JButton terminer = new JButton("Terminer");
+
+                addVariableInt.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        if(s!=null){
+                            s.addVar(new VarInt(0));
+                            liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
+                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            p1.add(liste_input.get(liste_input.size() - 1), gbc);
+                            VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                        }
+                        else{
+                            a.addVar(new VarInt(0));
+                            liste_input.add(new TextField(a.getVar(a.getList().size() - 1).toString()));
+                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            p1.add(liste_input.get(liste_input.size() - 1), gbc);
+                            VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                        }
+                    }
+                });
+
+                addVariableFloat.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        if(s!=null){
+                            s.addVar(new VarFloat(0));
+                            liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
+                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            p1.add(liste_input.get(liste_input.size() - 1), gbc);
+                            VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                        }
+                        else{
+                            a.addVar(new VarFloat(0));
+                            liste_input.add(new TextField(a.getVar(a.getList().size() - 1).toString()));
+                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            p1.add(liste_input.get(liste_input.size() - 1), gbc);
+                            VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                        }
+                    }
+                });
+
+                addVariableString.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        if(s!=null){
+                            s.addVar(new VarString(" "));
+                            liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
+                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            p1.add(liste_input.get(liste_input.size() - 1), gbc);
+                            VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                        }
+                        else{
+                            a.addVar(new VarString(" "));
+                            liste_input.add(new TextField(a.getVar(a.getList().size() - 1).toString()));
+                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            p1.add(liste_input.get(liste_input.size() - 1), gbc);
+                            VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                        }
+                    }
+                });
+
+                terminer.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        for (int i = 0; i < liste_input.size(); i++) {
+                            if (s != null) {
+                                if (s.getVar(i).getTypeVar() == "Int") {
+                                    s.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                }
+                                if (s.getVar(i).getTypeVar() == "Float") {
+                                    s.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                }
+                                if (s.getVar(i).getTypeVar() == "String") {
+                                    s.setVar(i, new VarString(liste_input.get(i).getText()));
+                                }
+                            }
+                            else{
+                                if (a.getVar(i).getTypeVar() == "Int") {
+                                    a.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                }
+                                if (a.getVar(i).getTypeVar() == "Float") {
+                                    a.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                    if(i==0){
+                                        a.getVar(i).setPoids(true);
+                                    }
+                                }
+                                if (a.getVar(i).getTypeVar() == "String") {
+                                    a.setVar(i, new VarString(liste_input.get(i).getText()));
+                                }
+                            }
+
+                        }
+                        repaint();
+                        VariableWindow.setVisible(false);
+                        VariableWindow.dispose();
+                    }
+                });
+
+                VariableWindow.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                        for (int i = 0; i < liste_input.size(); i++) {
+                            if (s != null) {
+                                if (s.getVar(i).getTypeVar() == "Int") {
+                                    s.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                }
+                                if (s.getVar(i).getTypeVar() == "Float") {
+                                    s.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                }
+                                if (s.getVar(i).getTypeVar() == "String") {
+                                    s.setVar(i, new VarString(liste_input.get(i).getText()));
+                                }
+                            }
+                            else{
+                                if (a.getVar(i).getTypeVar() == "Int") {
+                                    a.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                }
+                                if (a.getVar(i).getTypeVar() == "Float") {
+                                    a.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                    if(i==0){
+                                        a.getVar(i).setPoids(true);
+                                    }
+                                }
+                                if (a.getVar(i).getTypeVar() == "String") {
+                                    a.setVar(i, new VarString(liste_input.get(i).getText()));
+                                }
+                            }
+                        }
+                        repaint();
+                        VariableWindow.setVisible(false);
+                        VariableWindow.dispose();
+                    }
+                });
+
+                JPanel p2 = new JPanel(new GridBagLayout());
+
+                p2.add(addVariableInt, gbc);
+                p2.add(addVariableFloat, gbc);
+                p2.add(addVariableString, gbc);
+                p2.add(terminer, gbc);
+
+
+                container.add(p1);
+                container.add(p2);
+
+                VariableWindow.add(container);
+
+
+                VariableWindow.setVisible(true);
+                repaint();
+            }
         }
     }
 
@@ -472,6 +721,16 @@ public class Interface extends JComponent {
         for(Sommet s : graphe.get_liste_de_sommet()){
             if(isPointInSommet(p, s)){
                 return s;
+            }
+        }
+        return null;
+    }
+
+    private static Arc getArcFromPoint(Point p){
+        for(Arc a : graphe.get_liste_arc()){
+            Line2D l = new Line2D.Double(a.getSommetDepart().getPoint(), a.getSommetArrivee().getPoint());
+            if(l.ptLineDist(p)<20){
+                return a;
             }
         }
         return null;

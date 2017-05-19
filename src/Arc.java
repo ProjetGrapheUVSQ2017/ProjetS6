@@ -16,6 +16,8 @@ public class Arc implements Serializable {
 		this.arrivee = a;
 		this.variables = new ArrayList<Variable>();
 		this.couleur = Color.BLACK;
+		this.addVar(new VarFloat(1.0f));
+		this.getVar(0).setPoids(true);
 	}
 	
 	public Arc(Sommet d, Sommet a, ArrayList<Variable> var){
@@ -23,6 +25,11 @@ public class Arc implements Serializable {
 		this.arrivee = a;
 		this.variables = var;
 		this.couleur = Color.BLACK;
+		this.addVar(new VarFloat(1.0f));
+		this.getVar(0).setPoids(true);
+		for(Variable v : var){
+			this.addVar(v);
+		}
 	}
 
 	public Sommet getSommetDepart() {
@@ -74,7 +81,11 @@ public class Arc implements Serializable {
 	}
 	
 	public float getVarPoids(){
-		//TODO: Renvoyer la premi�re variable poids
+		for(Variable v : variables){
+			if(v.isPoids()){
+				return v.getFloat();
+			}
+		}
 		return 0;
 	}
 	

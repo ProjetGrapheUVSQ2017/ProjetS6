@@ -15,15 +15,13 @@ public class VarString extends Variable{
 		}
 		
 	@Override
-	public int getTypeVar() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String getTypeVar() {
+		return "String";
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		return val;
 	}
 
 	@Override

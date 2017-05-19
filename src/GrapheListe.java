@@ -91,7 +91,20 @@ public class GrapheListe extends Graphe {
 	@Override
 	public void addArc(Sommet d, Sommet a) {
 		if(sommets.contains(d) && sommets.contains(a)){
+			int id = 0;
+			boolean change = true;
+			while(change){
+				change=false;
+				for(Arc arc : arcs){
+					if(id==arc.getId()) {
+						id++;
+						change=true;
+					}
+				}
+			}
 			arcs.add(new Arc(d, a));
+			this.setNbArcs(getNbArcs()+1);
+			arcs.get(getNbArcs()-1).setID(id);
 		}
 
 	}
