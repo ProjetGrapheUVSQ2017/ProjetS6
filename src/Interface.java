@@ -116,16 +116,24 @@ public class Interface extends JComponent {
         // Draw horizontal arrow starting in (0, 0)
         g.drawLine(rayon_sommet, 0, len, 0);
         g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len}, new int[] {0, -ARR_SIZE/2, ARR_SIZE/2, 0}, 4);
+        int dx_draw_value;
+        if(dx>0){
+            dx_draw_value=15;
+        }
+        else{
+            dx_draw_value=-15;
+        }
+
         int i =0;
         for(Variable v : a.getList()){
             g.setColor(Color.DARK_GRAY);
             if(i==0){
-                g.setFont(new Font(g.getFont().getName(),Font.BOLD,15));
+                g.setFont(new Font(g.getFont().getName(),Font.BOLD,dx_draw_value));
             }
             else{
-                g.setFont(new Font(g.getFont().getName(),Font.PLAIN,15));
+                g.setFont(new Font(g.getFont().getName(),Font.PLAIN,dx_draw_value));
             }
-            g.drawString(v.toString(),len/2, 20+(i*15));
+            g.drawString(v.toString(),len/2, 20+(i*dx_draw_value));
             i++;
         }
     }
