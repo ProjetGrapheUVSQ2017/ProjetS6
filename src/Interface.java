@@ -248,6 +248,7 @@ public class Interface extends JComponent {
             this.add(ouvrir);
             this.add(sauvegarder);
             this.add(sousGraphe);
+            this.add(welsh_powell);
 
             this.popup.add(new JMenuItem(action_creerSommet));
             this.popup.add(new JMenuItem(action_supprimerSommet));
@@ -345,6 +346,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+        	graphe.welsh_powell();
             repaint();
         }
     }
