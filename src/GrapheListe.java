@@ -38,7 +38,18 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void addSommet(Sommet s) {
+		int id = 0;
+		boolean change = true;
 		if(s != null){
+			while(change){
+				change=false;
+				for(Sommet se : sommets){
+					if(id==se.getId()) {
+						id++;
+						change=true;
+					}
+				}
+			}
 			sommets.add(s);
 			this.setNbSommets(getNbSommets()+1);
 			sommets.get(getNbSommets()-1).setID(getNbSommets());
