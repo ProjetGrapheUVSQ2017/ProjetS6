@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -26,8 +27,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Ajoute un sommet au graphe</br>
 	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
-	 * Et ajoute le sommet Ã  notre liste de sommets composant le graphe.
-	 * @param s : Sommet ajoutÃ© au graphe
+	 * Et ajoute le sommet ÃƒÂ  notre liste de sommets composant le graphe.
+	 * @param s : Sommet ajoutÃƒÂ© au graphe
 	 * @author damien
 	 */
 	@Override
@@ -269,8 +270,51 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean kruskall() {
-		// TODO Auto-generated method stub
-		return false;
+	ArrayList<Arc> ArcsNonTries=get_liste_arc();
+	ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
+	ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>();
+	int poids=0;
+	/*
+	 * trier les poids des arcs par ordre croissant
+	 * */
+	int j=0;
+	while(j<this.getNbArcs()){
+		Arc ArcMin= ArcsNonTries.get(j);
+	for(int i=j+1;i<this.getNbArcs();i++){
+		if(ArcsNonTries.get(i).getVar(0).getInt()<ArcMin.getVar(0).getInt()){
+			ArcMin=ArcsNonTries.get(i);
+		}
+	}
+	ArcsTries.add(ArcMin);
+	}
+	/*colorer les arcs et les sommets qui consr
+	 * 
+	 * */
+	for(int i=0;i<this.getNbArcs();i++){
+		//on fait ce test pour vérifier si l'arc courant forme un cycle avec l'arbre en construction
+		if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())&& SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart()))){
+		//si le sommet d'arrivée de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
+			if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())))
+		 {
+		SommetSelectionnes.add(ArcsTries.get(i).getSommetArrivee());
+		ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+		ArcsTries.get(i).setCouleur(Color.BLUE);
+		poids+=ArcsTries.get(i).getVar(i).getInt();
+		}
+		//si le sommet de départ de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
+		else  if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart())))
+			{
+		SommetSelectionnes.add(ArcsTries.get(i).getSommetDepart());
+		ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
+		ArcsTries.get(i).setCouleur(Color.BLUE);
+		poids+=ArcsTries.get(i).getVar(i).getInt();//TODO : ajouter label pour montrer le poids minimal de l'arbre
+		}	
+		//On sortit de la boucle si tous les sommets sont colorés
+		 if(SommetSelectionnes.size()==getNbSommets()) break;
+		}	
+	}
+	
+		return true;
 	}
 
 	@Override
@@ -310,6 +354,14 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public ArrayList<Arc> get_liste_arc() {
-		return null;
+		ArrayList<Arc> arcs=new ArrayList<Arc>();
+		for(int i = 0; i<graphe.length; i++){
+			for(int j = 0; j<graphe.length; j++){
+				if(graphe[i][j] != null){
+					arcs.add(graphe[i][j]);
+				}
+			}
+		}
+		return arcs;
 	}
 }
