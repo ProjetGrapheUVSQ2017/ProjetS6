@@ -38,7 +38,7 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void addSommet(Sommet s) {
-		int id = 0;
+		/*int id = 0;
 		boolean change = true;
 		if(s != null){
 			while(change){
@@ -53,6 +53,13 @@ public class GrapheListe extends Graphe {
 			sommets.add(s);
 			this.setNbSommets(getNbSommets()+1);
 			sommets.get(getNbSommets()-1).setID(getNbSommets());
+		}*/
+		
+		if(s != null){
+			sommets.add(s);
+			for(int i = 0; i <sommets.size(); i++){
+				sommets.get(i).setID(i);
+			}
 		}
 	}
 
@@ -62,23 +69,29 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void addSommet(Point p) {
-		int id = 0;
-		boolean change = true;
-		while(change){
-			change=false;
-			for(Sommet s : sommets){
-				if(id==s.getId()) {
-					id++;
-					change=true;
-				}
+//		int id = 0;
+//		boolean change = true;
+//		while(change){
+//			change=false;
+//			for(Sommet s : sommets){
+//				if(id==s.getId()) {
+//					id++;
+//					change=true;
+//				}
+//			}
+//		}
+//
+//
+//		sommets.add(new Sommet(p));
+//		this.setNbSommets(getNbSommets()+1);
+//		sommets.get(getNbSommets()-1).setID(id);
+		
+		if(p != null){
+			sommets.add(new Sommet(p));
+			for(int i = 0; i <sommets.size(); i++){
+				sommets.get(i).setID(i);
 			}
 		}
-
-
-		sommets.add(new Sommet(p));
-		this.setNbSommets(getNbSommets()+1);
-		sommets.get(getNbSommets()-1).setID(id);
-
 	}
 
 	/**
@@ -169,6 +182,10 @@ public class GrapheListe extends Graphe {
 				break;
 			}
 		}
+		
+		for(int i = 0; i <sommets.size(); i++){
+			sommets.get(i).setID(i);
+		}
 	}
 
 	/**
@@ -197,12 +214,14 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public Sommet getSommet(int id) {
-		for(Sommet s : sommets){
-			if(s.getId()==id){
-				return s;
-			}
-		}
-		return null;
+//		for(Sommet s : sommets){
+//			if(s.getId()==id){
+//				return s;
+//			}
+//		}
+//		return null;
+		
+		return sommets.get(id);
 	}
 
 
@@ -268,8 +287,85 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
+		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
+		boolean continuer = true;
+		
+		
+		//Liste représentant les distances pour les sommets, les père et un booléen indiquant si un sommet à été traité
+		ArrayList<Double> distance = new ArrayList<Double>();
+		ArrayList<Sommet> pere = new ArrayList<Sommet>();
+		ArrayList<Boolean> traiter = new ArrayList<Boolean>();
+		
+		for(Sommet s : sommets){
+			distance.add(Double.MAX_VALUE);
+			pere.add(null);
+			traiter.add(false);
+		}
+		
+		if(sommets.contains(d) && sommets.contains(a)){
+			
+			if(d.equals(a)){ //Les sommets de départ et d'arrivée doivent être différents ou alors l'algo s'arrête en renvoyant un false
+				return false;//Peut être changer si l'on souhaite le contraire
+			}
+			
+			//Initialisation du départ et de aTraiter avec le sommet de départ
+			distance.set(d.getId(), 0.0);
+			aTraiter.add(d);
+			pere.set(d.getId(), null);
+			
+			while(continuer){//Tant que tous les sommets n'ont pas été traité
+				Sommet enTraitement = null;
+				
+				double min = Double.MAX_VALUE; Sommet mini = null;
+				for(Sommet s : aTraiter){
+					if(distance.get(s.getId()) < min){
+						min = distance.get(s.getId());
+						mini = s;
+					}
+				}
+				enTraitement = mini; //On trouve le sommet de aTraiter ayant la distance la plus courte
+
+				if(enTraitement != null){
+					for(Arc c : this.getSortants(enTraitement)){
+						for(Sommet s : sommets){
+							if(c.getSommetArrivee().equals(s) && traiter.get(s.getId()) == false){
+								aTraiter.add(s);
+							}
+							
+							if(c.getSommetArrivee().equals(s)){
+								if(distance.get(s.getId()) > (distance.get(enTraitement.getId())+c.getVarPoids())){
+									distance.set(s.getId(), distance.get(enTraitement.getId())+c.getVarPoids());
+									pere.set(s.getId(), enTraitement);
+								}
+							}
+						}
+					}
+					traiter.set(enTraitement.getId(), true);
+					aTraiter.remove(enTraitement);
+				}
+				continuer = false;
+				for(Sommet s : aTraiter){
+					if(!traiter.get(s.getId())){
+						continuer = true;
+					}
+				}
+			}
+			return true;
+		}
 		return false;
+	}
+
+	private ArrayList<Arc> getSortants(Sommet s) {
+		//Fonction rajouté pour obtenir les arcs sortant d'un sommet
+		ArrayList<Arc> arcSortant = new ArrayList<Arc>();
+		
+		for(Arc a : arcs){
+			if(a.getSommetDepart().equals(s)){
+				arcSortant.add(a);
+			}
+		}
+		
+		return arcSortant;
 	}
 
 	@Override

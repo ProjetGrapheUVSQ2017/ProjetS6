@@ -1,4 +1,3 @@
-import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 import java.awt.Point;
@@ -76,13 +75,23 @@ public class GrapheListeTest {
 	@Test
 	public void testDSATUR(){
 		Sommet s1 = new Sommet(new Point(11, 12));
-		Sommet s2 = new Sommet(new Point(11, 12));
+		Sommet s2 = new Sommet(new Point(12, 13));
 		graphe.addSommet(s1);
 		graphe.addSommet(s2);
 		graphe.addArc(s1, s2);
 		graphe.dsatur();
 		assertNotNull("Mauvaise couleur", graphe.getSommet(1).getCouleur());
 		assertFalse("Couleur non diff�rente", graphe.getSommet(0).getCouleur().equals(graphe.getSommet(1).getCouleur()));
+	}
+	
+	@Test
+	public void testDijkstra(){
+		Sommet s1 = new Sommet(new Point(11, 12));
+		Sommet s2 = new Sommet(new Point(12, 13));
+		graphe.addSommet(s1);
+		graphe.addSommet(s2);
+		graphe.addArc(s1, s2);
+		assertTrue("Plus court chemin non trouvé", graphe.dijkstra(s1, s2));
 	}
 
 }
