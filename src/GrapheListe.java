@@ -91,7 +91,20 @@ public class GrapheListe extends Graphe {
 	@Override
 	public void addArc(Sommet d, Sommet a) {
 		if(sommets.contains(d) && sommets.contains(a)){
+			int id = 0;
+			boolean change = true;
+			while(change){
+				change=false;
+				for(Arc arc : arcs){
+					if(id==arc.getId()) {
+						id++;
+						change=true;
+					}
+				}
+			}
 			arcs.add(new Arc(d, a));
+			this.setNbArcs(getNbArcs()+1);
+			arcs.get(getNbArcs()-1).setID(id);
 		}
 
 	}
@@ -279,8 +292,78 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean welsh_powell() {
-		// TODO Auto-generated method stub
-		return false;
+		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
+		int nbarc=0;
+		Sommet actu, max = null;
+		int nbarcmax=0;
+		ArrayList<Sommet> liste_voisins;
+		int color=0;
+		boolean change=true;
+		
+		
+		for(Sommet s: sommets){
+			s.addVar(new VarInt(-1));
+		}
+		
+		while (!acolo.isEmpty()) {
+			nbarcmax=0;
+			max=null;
+			
+			for (int i=0; i<acolo.size();i++) {
+			actu=acolo.get(i);
+			nbarc=0;
+			nbarc=liste_voisins_pere_et_fils(actu).size();
+			
+			if (nbarc>nbarcmax){
+				nbarcmax=nbarc;
+				max=actu;
+				}
+			
+			if (nbarc==0){
+				max=actu;
+				}
+			
+			}
+			liste_voisins=liste_voisins_pere_et_fils(max);
+			int compare;
+			color=0;
+			while (change) {
+				change =false;
+				for (int k=0; k<liste_voisins.size();k++){
+					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
+					if (compare==color){
+						color=color+1;
+						change=true;
+					}
+				}
+			}
+			change=true;
+			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
+			for (int z=0;z<acolo.size();z++) {
+				if (max.equals(acolo.get(z))) {
+					acolo.remove(z);
+				}
+			}
+		}
+
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
+		ArrayList<Color> liste_id_color = new ArrayList<Color>();
+		for (Sommet s: sommets) {
+			Random rand = new Random();
+			int id_color = s.getVar(s.getList().size()-1).getInt();
+			while(id_color > liste_id_color.size()-1){
+
+				float r = rand.nextFloat();
+				float g = rand.nextFloat();
+				float b = rand.nextFloat();
+				liste_id_color.add(new Color(r,g,b));
+			}
+			s.setCouleur(liste_id_color.get(id_color));
+			s.removeVar(s.getList().size() -1);
+			
+		}
+	
+		return true;
 	}
 
 	@Override

@@ -13,19 +13,16 @@ public class VarInt extends Variable{
 		this.val=val;
 	}
 	@Override
-	public int getTypeVar() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String getTypeVar() {
+		return "Int";
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		return Integer.toString(val);
 	}
 	@Override
 	public String getString() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
