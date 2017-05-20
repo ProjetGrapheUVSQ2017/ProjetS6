@@ -44,7 +44,7 @@ public class Interface extends JComponent {
                 //graphe.kruskall();
           
 
-
+                graphe.dijkstra(graphe.getSommet(0), graphe.getSommet(3));
             }
 
         });

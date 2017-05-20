@@ -290,6 +290,8 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
 		boolean continuer = true;
 		
+		ArrayList<Arc> aColorier = new ArrayList<Arc>(); //Liste d'arc étant utiliser dans le plus court chemin et qui doivent être coloré à la fin de dijkstra
+		
 		
 		//Liste représentant les distances pour les sommets, les père et un booléen indiquant si un sommet à été traité
 		ArrayList<Double> distance = new ArrayList<Double>();
@@ -300,6 +302,7 @@ public class GrapheListe extends Graphe {
 			distance.add(Double.MAX_VALUE);
 			pere.add(null);
 			traiter.add(false);
+			aColorier.add(null);
 		}
 		
 		if(sommets.contains(d) && sommets.contains(a)){
@@ -336,6 +339,8 @@ public class GrapheListe extends Graphe {
 								if(distance.get(s.getId()) > (distance.get(enTraitement.getId())+c.getVarPoids())){
 									distance.set(s.getId(), distance.get(enTraitement.getId())+c.getVarPoids());
 									pere.set(s.getId(), enTraitement);
+									aColorier.set(s.getId(), c);
+									
 								}
 							}
 						}
@@ -350,6 +355,17 @@ public class GrapheListe extends Graphe {
 					}
 				}
 			}
+			
+			d.setCouleur(Color.red);
+			a.setCouleur(Color.red);
+			Sommet pereA = pere.get(a.getId()); 
+			aColorier.get(a.getId()).setCouleur(Color.red);
+			while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
+				pereA.setCouleur(Color.red);
+				aColorier.get(pereA.getId()).setCouleur(Color.RED);
+				pereA = pere.get(pereA.getId());
+			}
+			
 			return true;
 		}
 		return false;
