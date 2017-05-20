@@ -286,8 +286,54 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean kruskall() {
-		// TODO Auto-generated method stub
-		return false;
+
+		ArrayList<Arc> ArcsNonTries=this.get_liste_arc();
+		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
+		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>();
+		int poids=0;
+		/*
+		 * trier les poids des arcs par ordre croissant
+		 * */
+		int j=0;
+		while(j<this.getNbArcs()){
+			Arc ArcMin= ArcsNonTries.get(j);
+		for(int i=j+1;i<this.getNbArcs();i++){
+			if(ArcsNonTries.get(i).getVar(0).getInt()<ArcMin.getVar(0).getInt()){
+				ArcMin=ArcsNonTries.get(i);
+			}
+		}
+	
+		ArcsTries.add(ArcMin);
+		j++;
+		}
+		
+		for(int i=0;i<this.getNbArcs();i++){
+			//on fait ce test pour vérifier si l'arc courant forme un cycle avec l'arbre en construction
+			if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())&& SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart()))){
+			//si le sommet d'arrivée de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
+				if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())))
+			 {
+			SommetSelectionnes.add(ArcsTries.get(i).getSommetArrivee());
+			ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+			ArcsTries.get(i).setCouleur(Color.BLUE);
+			poids+=ArcsTries.get(i).getVar(i).getInt();
+			}
+			//si le sommet de départ de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
+			else  if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart())))
+				{
+			SommetSelectionnes.add(ArcsTries.get(i).getSommetDepart());
+			ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
+			ArcsTries.get(i).setCouleur(Color.BLUE);
+			poids+=ArcsTries.get(i).getVar(i).getInt();//TODO : ajouter label pour montrer le poids minimal de l'arbre
+			}	
+			//On sortit de la boucle si tous les sommets sont colorés
+			 if(SommetSelectionnes.size()==getNbSommets()) break;
+			}	
+			
+		}
+		
+		
+			return true;
 	}
 
 	@Override
@@ -437,7 +483,6 @@ public class GrapheListe extends Graphe {
 			}
 			
 			change=true;
-			
 			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
 			for (int z=0;z<acolo.size();z++) {
 				if (max.equals(acolo.get(z))) {

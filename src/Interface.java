@@ -41,6 +41,8 @@ public class Interface extends JComponent {
                 graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(1),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(2),graphe.getSommet(3));
+                graphe.kruskall();
+          
 
 
             }
