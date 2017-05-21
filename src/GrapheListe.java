@@ -57,6 +57,7 @@ public class GrapheListe extends Graphe {
 		
 		if(s != null){
 			sommets.add(s);
+			this.setNbSommets(getNbSommets()+1);
 			for(int i = 0; i <sommets.size(); i++){
 				sommets.get(i).setID(i);
 			}
@@ -87,6 +88,7 @@ public class GrapheListe extends Graphe {
 //		sommets.get(getNbSommets()-1).setID(id);
 		
 		if(p != null){
+			this.setNbSommets(getNbSommets()+1);
 			sommets.add(new Sommet(p));
 			for(int i = 0; i <sommets.size(); i++){
 				sommets.get(i).setID(i);
@@ -398,10 +400,65 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean kruskall() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+//		ArrayList<Arc> ListeSommets =new ArrayList<Arc>(get_liste_de_sommet());
+		ArrayList<Arc> ArcsNonTries=new ArrayList<Arc>(get_liste_arc());
+		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
+		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>(get_liste_de_sommet());
+		/*
+		 * trier les poids des arcs par ordre croissant
+		 * */
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
+		
+		int idArc=0;
+		
+		while (ArcsTries.size()!=this.getNbArcs()){
+			Arc ArcMin= ArcsNonTries.get(0);
+			idArc=0;
+			for(int i=1;i<ArcsNonTries.size();i++){
+				if(ArcsNonTries.get(i).getVarPoids()<ArcMin.getVarPoids() && !(ArcsTries.contains(ArcsNonTries.get(i))) ){
+					ArcMin=ArcsNonTries.get(i);
+					idArc=i;
+				}
+			}
+			ArcsNonTries.remove(idArc);
+			ArcsTries.add(ArcMin);
 
+		}
+		int i, n, num1, num2,poids=0;
+		n = SommetSelectionnes.size();
+		for (i = 0; i < n; i++)
+			sommets.get(i).addVar(new VarInt(i));
+		i = 0;
+		ArrayList<Arc> arcajouté=new ArrayList<Arc>();
+		while (arcajouté.size() < n - 1) {
+			Arc a = ArcsTries.get(i);
+			num1 = a.getSommetDepart().getVar(a.getSommetDepart().getList().size()-1).getInt();
+			num2 = a.getSommetArrivee().getVar(a.getSommetDepart().getList().size()-1).getInt();
+			if (num1 != num2) {
+				ArcsTries.get(i).setCouleur(Color.BLUE);
+				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
+				poids+=ArcsTries.get(i).getVarPoids();
+				arcajouté.add(a);
+				for (Sommet s : sommets)
+					if (s.getVar(s.getList().size()-1).getInt() == num2) 
+						{
+						s.setVar(s.getList().size()-1,new VarInt(num1));
+						}
+			}
+			i++;
+		}
+		for (Sommet t : sommets){
+			t.removeVar(t.getList().size()-1);
+		}
+
+			return true;
+	}
 	@Override
 	public boolean welsh_powell() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
@@ -411,6 +468,13 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> liste_voisins;
 		int color=0;
 		boolean change=true;
+		
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
 		
 		
 		for(Sommet s: sommets){
@@ -491,9 +555,12 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> liste_voisins;
 	
 
-		
-		//mettre la couleur � 0 pour tous les sommets (on stocke �a � la fin de la liste des variables)
-
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
 
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
@@ -549,7 +616,6 @@ public class GrapheListe extends Graphe {
 			}
 			
 			change=true;
-			
 			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
 			for (int z=0;z<acolo.size();z++) {
 				if (max.equals(acolo.get(z))) {
@@ -630,3 +696,5 @@ public class GrapheListe extends Graphe {
 	}
 
 }
+
+

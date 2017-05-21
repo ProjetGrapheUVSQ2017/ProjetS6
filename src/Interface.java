@@ -41,8 +41,9 @@ public class Interface extends JComponent {
                 graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(1),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(2),graphe.getSommet(3));
+          
 
-                graphe.dijkstra(graphe.getSommet(0), graphe.getSommet(3));
+                //graphe.dijkstra(graphe.getSommet(0), graphe.getSommet(3));
             }
 
         });
@@ -278,6 +279,7 @@ public class Interface extends JComponent {
             this.add(sauvegarder);
             this.add(sousGraphe);
             this.add(welsh_powell);
+            this.add(kruskall);
 
             this.popup.add(new JMenuItem(action_creerSommet));
             this.popup.add(new JMenuItem(action_supprimerSommet));
@@ -373,6 +375,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+        	graphe.kruskall();
             repaint();
         }
     }
