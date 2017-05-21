@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -52,13 +53,13 @@ public class GrapheMatrice extends Graphe {
 	@Override
 	public void addSommet(Point p) {
 		Arc temp[][] = new Arc[graphe.length+1][graphe.length+1];
-		System.arraycopy(graphe, 0, temp, 0, graphe.length);
+		    System.arraycopy(graphe, 0, temp, 0, graphe.length);
 		graphe = temp;
 		graphe[graphe.length-1][graphe.length-1] = null;
 		Sommet s = new Sommet(p);
 		s.setID(graphe.length);
 		sommets.add(s);
-
+		this.setNbSommets(this.getNbSommets ()+1);
 	}
 
 	
@@ -75,7 +76,7 @@ public class GrapheMatrice extends Graphe {
 		if(sommets.contains(d) && sommets.contains(a)){
 			if(graphe[d.getId()][a.getId()] != null){
 				graphe[d.getId()][a.getId()] = new Arc(d, a);
-				this.setNbSommets(this.getNbSommets()+1);
+				this.setNbArcs(this.getNbArcs()+1);
 			}
 		}
 		
@@ -132,7 +133,7 @@ public class GrapheMatrice extends Graphe {
 			}
 		}
 		/**
-		 * supprimer les arcs qui sont attachés au sommet
+		 * supprimer les arcs qui sont attachï¿½s au sommet
 		 */
 		for(int i = id; i<graphe.length; i++){
 			for(int  j = 0;j<graphe[0].length-1; j++){
@@ -147,7 +148,7 @@ public class GrapheMatrice extends Graphe {
 		}
 			}
 		/**
-		 *  refaire les id des arcs qui viennent après le id du sommet supprimé
+		 *  refaire les id des arcs qui viennent aprï¿½s le id du sommet supprimï¿½
 		*/
 		for(int i = 0; i<graphe.length; i++){
 			for(int  j = 0;j<graphe[0].length-1; j++){
@@ -157,7 +158,7 @@ public class GrapheMatrice extends Graphe {
 			}
 		}
 		 /**
-		  *   il faut aussi refaire les id des sommets qui viennent après le id du sommet supprimé
+		  *   il faut aussi refaire les id des sommets qui viennent aprï¿½s le id du sommet supprimï¿½
 		  */
 
 		for(int i = graphe[0].length; id<i; i--){
@@ -270,10 +271,10 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean kruskall() {
+	//	ArrayList<Arc> ListeSommets =new ArrayList<Arc>(get_liste_de_sommet());
 	ArrayList<Arc> ArcsNonTries=get_liste_arc();
 	ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
-	ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>();
-	int poids=0;
+	ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>(get_liste_de_sommet());
 	/*
 	 * trier les poids des arcs par ordre croissant
 	 * */
@@ -287,13 +288,40 @@ public class GrapheMatrice extends Graphe {
 	}
 	ArcsTries.add(ArcMin);
 	}
-	/*colorer les arcs et les sommets qui consr
+	/*colorer les arcs et les sommets qui consruisent l'arbre couvrant minimal
 	 * 
 	 * */
+	int i, n, num1, num2,poids=0;
+	n = SommetSelectionnes.size();
+	for (i = 0; i < n; i++)
+		sommets.get(i).setID(i);
+	i = 0;
+	while (ArcsTries.size() < n - 1) {
+		Arc a = ArcsTries.get(i);
+		num1 = a.getSommetDepart().getVar(0).getInt();
+		num2 = a.getSommetArrivee().getVar(0).getInt();
+		if (num1 != num2) {
+			ArcsTries.get(i).setCouleur(Color.BLUE);
+			ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+			ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
+			poids+=ArcsTries.get(i).getVar(i).getInt();
+			for (Sommet s : sommets)
+				if (s.getVar(0).getInt() == num2) 
+					{
+					s.setVar(0,new VarInt(num1));
+					}
+		}
+		i++;
+	}
+
+		return true;
+	}
+
+	 /*
 	for(int i=0;i<this.getNbArcs();i++){
-		//on fait ce test pour vérifier si l'arc courant forme un cycle avec l'arbre en construction
+		//on fait ce test pour vï¿½rifier si l'arc courant forme un cycle avec l'arbre en construction
 		if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())&& SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart()))){
-		//si le sommet d'arrivée de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
+		//si le sommet d'arrivï¿½e de l'arc courant n'appartient pas ï¿½ l'arbre en construction, on l'ajoute 
 			if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())))
 		 {
 		SommetSelectionnes.add(ArcsTries.get(i).getSommetArrivee());
@@ -301,7 +329,7 @@ public class GrapheMatrice extends Graphe {
 		ArcsTries.get(i).setCouleur(Color.BLUE);
 		poids+=ArcsTries.get(i).getVar(i).getInt();
 		}
-		//si le sommet de départ de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
+		//si le sommet de dï¿½part de l'arc courant n'appartient pas ï¿½ l'arbre en construction, on l'ajoute 
 		else  if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart())))
 			{
 		SommetSelectionnes.add(ArcsTries.get(i).getSommetDepart());
@@ -309,18 +337,83 @@ public class GrapheMatrice extends Graphe {
 		ArcsTries.get(i).setCouleur(Color.BLUE);
 		poids+=ArcsTries.get(i).getVar(i).getInt();//TODO : ajouter label pour montrer le poids minimal de l'arbre
 		}	
-		//On sortit de la boucle si tous les sommets sont colorés
-		 if(SommetSelectionnes.size()==getNbSommets()) break;
-		}	
-	}
+		//On sortit de la boucle si tous les sommets sont colorï¿½s
+		*/
 	
-		return true;
-	}
-
 	@Override
 	public boolean welsh_powell() {
-		// TODO Auto-generated method stub
-		return false;
+		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
+		int nbarc=0;
+		Sommet actu, max = null;
+		int nbarcmax=0;
+		ArrayList<Sommet> liste_voisins;
+		int color=0;
+		boolean change=true;
+		
+		
+		for(Sommet s: sommets){
+			s.addVar(new VarInt(-1));
+		}
+		
+		while (!acolo.isEmpty()) {
+			nbarcmax=0;
+			max=null;
+			
+			for (int i=0; i<acolo.size();i++) {
+			actu=acolo.get(i);
+			nbarc=0;
+			nbarc=liste_voisins_pere_et_fils(actu).size();
+			
+			if (nbarc>nbarcmax){
+				nbarcmax=nbarc;
+				max=actu;
+				}
+			
+			if (nbarc==0){
+				max=actu;
+				}
+			
+			}
+			liste_voisins=liste_voisins_pere_et_fils(max);
+			int compare;
+			color=0;
+			while (change) {
+				change =false;
+				for (int k=0; k<liste_voisins.size();k++){
+					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
+					if (compare==color){
+						color=color+1;
+						change=true;
+					}
+				}
+			}
+			change=true;
+			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
+			for (int z=0;z<acolo.size();z++) {
+				if (max.equals(acolo.get(z))) {
+					acolo.remove(z);
+				}
+			}
+		}
+
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (lï¿½ oï¿½ je stockais la couleur)
+		ArrayList<Color> liste_id_color = new ArrayList<Color>();
+		for (Sommet s: sommets) {
+			Random rand = new Random();
+			int id_color = s.getVar(s.getList().size()-1).getInt();
+			while(id_color > liste_id_color.size()-1){
+
+				float r = rand.nextFloat();
+				float g = rand.nextFloat();
+				float b = rand.nextFloat();
+				liste_id_color.add(new Color(r,g,b));
+			}
+			s.setCouleur(liste_id_color.get(id_color));
+			s.removeVar(s.getList().size() -1);
+			
+		}
+	
+		return true;
 	}
 
 	@Override
@@ -343,8 +436,24 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Sommet> res = new ArrayList<Sommet>();
+		for(int i = 0; i<graphe.length; i++){
+			for(int j = 0; j<graphe[0].length; j++){
+				if(graphe[i][j]!=null){
+				if(graphe[i][j].getSommetArrivee().equals(s)){
+				if(!res.contains(graphe[i][j].getSommetDepart())){
+					res.add(graphe[i][j].getSommetDepart());
+				}
+			}
+			else if(graphe[i][j].getSommetDepart().equals(s)){
+				if(!res.contains(graphe[i][j].getSommetArrivee())){
+					res.add(graphe[i][j].getSommetArrivee());
+					}
+				}
+			}
+		}
+	}
+		return res;
 	}
 	
 	@Override
@@ -356,7 +465,7 @@ public class GrapheMatrice extends Graphe {
 	public ArrayList<Arc> get_liste_arc() {
 		ArrayList<Arc> arcs=new ArrayList<Arc>();
 		for(int i = 0; i<graphe.length; i++){
-			for(int j = 0; j<graphe.length; j++){
+			for(int j = 0; j<graphe[0].length; j++){
 				if(graphe[i][j] != null){
 					arcs.add(graphe[i][j]);
 				}
