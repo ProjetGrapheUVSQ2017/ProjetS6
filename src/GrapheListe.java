@@ -57,6 +57,7 @@ public class GrapheListe extends Graphe {
 		
 		if(s != null){
 			sommets.add(s);
+			this.setNbSommets(getNbSommets()+1);
 			for(int i = 0; i <sommets.size(); i++){
 				sommets.get(i).setID(i);
 			}
@@ -87,6 +88,7 @@ public class GrapheListe extends Graphe {
 //		sommets.get(getNbSommets()-1).setID(id);
 		
 		if(p != null){
+			this.setNbSommets(getNbSommets()+1);
 			sommets.add(new Sommet(p));
 			for(int i = 0; i <sommets.size(); i++){
 				sommets.get(i).setID(i);
@@ -396,54 +398,140 @@ public class GrapheListe extends Graphe {
 		return false;
 	}
 
+
+	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s, ArrayList<Arc> arc) {
+		ArrayList<Sommet> res = new ArrayList<Sommet>();
+		for(Arc act : arc){
+			if(act.getSommetArrivee().equals(s)){
+				if(!res.contains(act.getSommetDepart())){
+					res.add(act.getSommetDepart());
+				}
+			}
+			else if(act.getSommetDepart().equals(s)){
+				if(!res.contains(act.getSommetArrivee())){
+					res.add(act.getSommetArrivee());
+				}
+			}
+		}
+		return res;
+	
+
+}
+	
+	public boolean recherche_cycle(ArrayList<Sommet> s, ArrayList<Arc> a, Arc ajout){
+		int T[]=new int[s.size()];
+		ArrayList<Sommet> liste_voisins;
+		ArrayList<Sommet> Ã traiter = new ArrayList<Sommet>();
+		int nbsommet=0;
+		a.add(ajout);
+		for (int i=0;i<s.size();i++){
+			T[i]=0;
+		}
+		for (int i=0;i<s.size();i++){
+			liste_voisins=liste_voisins_pere_et_fils(s.get(i),a);
+			System.out.println("Taille liste voisin :"+liste_voisins.size());
+			
+			for(int j=0;j<liste_voisins.size();j++){
+				System.out.println(liste_voisins.get(j).getId());
+				for (int k=0;k<s.size();k++){
+					if (liste_voisins.get(j).equals(s.get(k))) {
+						T[k]++;
+					}
+				}
+			}
+		}
+		
+		for (int i=0;i<s.size();i++){
+			if (T[i]==0) {
+				Ã traiter.add(s.get(i));
+				nbsommet++;
+			}
+		}
+		Sommet x;
+		while (!Ã traiter.isEmpty()) {
+			x=Ã traiter.get(0);
+			Ã traiter.remove(0);
+			liste_voisins=liste_voisins_pere_et_fils(x,a);
+			for(int j=0;j<liste_voisins.size();j++){
+				T[liste_voisins.get(j).getId()]--;
+				if (T[liste_voisins.get(j).getId()]==0){
+					Ã traiter.add(liste_voisins.get(j));
+					nbsommet++;
+				}
+			}
+			
+		}
+		if (nbsommet==s.size()) {
+		return true;
+		}
+		else {
+			return false;
+		}
+		
+	}
+	
 	@Override
 	public boolean kruskall() {
 
-		ArrayList<Arc> ArcsNonTries=this.get_liste_arc();
+		
+		ArrayList<Arc> ArcsNonTries= new ArrayList<Arc>(this.get_liste_arc());
 		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
 		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>();
-		int poids=0;
+		ArrayList<Arc> ArcSelectionnes=new ArrayList<Arc>();
+		
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
+		
+		int idArc=0;
 		/*
 		 * trier les poids des arcs par ordre croissant
 		 * */
-		int j=0;
-		while(j<this.getNbArcs()){
-			Arc ArcMin= ArcsNonTries.get(j);
-		for(int i=j+1;i<this.getNbArcs();i++){
-			if(ArcsNonTries.get(i).getVar(0).getInt()<ArcMin.getVar(0).getInt()){
-				ArcMin=ArcsNonTries.get(i);
+		while (ArcsTries.size()!=this.getNbArcs()){
+			Arc ArcMin= ArcsNonTries.get(0);
+			idArc=0;
+			for(int i=1;i<ArcsNonTries.size();i++){
+				if(ArcsNonTries.get(i).getVarPoids()<ArcMin.getVarPoids() && !(ArcsTries.contains(ArcsNonTries.get(i))) ){
+					ArcMin=ArcsNonTries.get(i);
+					idArc=i;
+				}
 			}
+			ArcsNonTries.remove(idArc);
+			ArcsTries.add(ArcMin);
+
 		}
-	
-		ArcsTries.add(ArcMin);
-		j++;
-		}
-		
-		for(int i=0;i<this.getNbArcs();i++){
-			//on fait ce test pour vérifier si l'arc courant forme un cycle avec l'arbre en construction
-			if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())&& SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart()))){
-			//si le sommet d'arrivée de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
-				if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())))
-			 {
-			SommetSelectionnes.add(ArcsTries.get(i).getSommetArrivee());
-			ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
-			ArcsTries.get(i).setCouleur(Color.BLUE);
-			poids+=ArcsTries.get(i).getVar(i).getInt();
+		Arc averef;
+		while (!ArcsTries.isEmpty()){
+			averef=ArcsTries.get(0);
+			ArcsTries.remove(0);
+			System.out.println("prout");
+			if (!(SommetSelectionnes.contains(averef.getSommetDepart()))){
+				SommetSelectionnes.add(averef.getSommetDepart());
 			}
-			//si le sommet de départ de l'arc courant n'appartient pas à l'arbre en construction, on l'ajoute 
-			else  if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart())))
-				{
-			SommetSelectionnes.add(ArcsTries.get(i).getSommetDepart());
-			ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
-			ArcsTries.get(i).setCouleur(Color.BLUE);
-			poids+=ArcsTries.get(i).getVar(i).getInt();//TODO : ajouter label pour montrer le poids minimal de l'arbre
-			}	
-			//On sortit de la boucle si tous les sommets sont colorés
-			 if(SommetSelectionnes.size()==getNbSommets()) break;
-			}	
+			if (!(SommetSelectionnes.contains(averef.getSommetArrivee()))){
+				SommetSelectionnes.add(averef.getSommetArrivee());
+			}
+			System.out.println("taille sommet selection :"+SommetSelectionnes.size());
+			System.out.println("taille arc selection :"+ArcSelectionnes.size());
+			boolean test=recherche_cycle(SommetSelectionnes, ArcSelectionnes, averef);
+			if (test==false){
+				System.out.println("wtf");
+			}
+			if (test==true){
+				ArcSelectionnes.add(averef);
+				System.out.println("Id arc ajoutÃ©"+averef.getId());
+			}
 			
 		}
-		
+		//mon colloriage collorie tout (genre il a tout add ? et test renvoit rj faux
+		for (int i=0;i<ArcSelectionnes.size();i++) {
+			ArcSelectionnes.get(i).setCouleur(Color.BLUE);
+			ArcSelectionnes.get(i).getSommetDepart().setCouleur(Color.BLUE);
+			ArcSelectionnes.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+		}
 		
 			return true;
 	}
