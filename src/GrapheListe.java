@@ -398,87 +398,15 @@ public class GrapheListe extends Graphe {
 		return false;
 	}
 
-
-	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s, ArrayList<Arc> arc) {
-		ArrayList<Sommet> res = new ArrayList<Sommet>();
-		for(Arc act : arc){
-			if(act.getSommetArrivee().equals(s)){
-				if(!res.contains(act.getSommetDepart())){
-					res.add(act.getSommetDepart());
-				}
-			}
-			else if(act.getSommetDepart().equals(s)){
-				if(!res.contains(act.getSommetArrivee())){
-					res.add(act.getSommetArrivee());
-				}
-			}
-		}
-		return res;
-	
-
-}
-	
-	public boolean recherche_cycle(ArrayList<Sommet> s, ArrayList<Arc> a, Arc ajout){
-		int T[]=new int[s.size()];
-		ArrayList<Sommet> liste_voisins;
-		ArrayList<Sommet> àtraiter = new ArrayList<Sommet>();
-		int nbsommet=0;
-		a.add(ajout);
-		for (int i=0;i<s.size();i++){
-			T[i]=0;
-		}
-		for (int i=0;i<s.size();i++){
-			liste_voisins=liste_voisins_pere_et_fils(s.get(i),a);
-			System.out.println("Taille liste voisin :"+liste_voisins.size());
-			
-			for(int j=0;j<liste_voisins.size();j++){
-				System.out.println(liste_voisins.get(j).getId());
-				for (int k=0;k<s.size();k++){
-					if (liste_voisins.get(j).equals(s.get(k))) {
-						T[k]++;
-					}
-				}
-			}
-		}
-		
-		for (int i=0;i<s.size();i++){
-			if (T[i]==0) {
-				àtraiter.add(s.get(i));
-				nbsommet++;
-			}
-		}
-		Sommet x;
-		while (!àtraiter.isEmpty()) {
-			x=àtraiter.get(0);
-			àtraiter.remove(0);
-			liste_voisins=liste_voisins_pere_et_fils(x,a);
-			for(int j=0;j<liste_voisins.size();j++){
-				T[liste_voisins.get(j).getId()]--;
-				if (T[liste_voisins.get(j).getId()]==0){
-					àtraiter.add(liste_voisins.get(j));
-					nbsommet++;
-				}
-			}
-			
-		}
-		if (nbsommet==s.size()) {
-		return true;
-		}
-		else {
-			return false;
-		}
-		
-	}
-	
 	@Override
 	public boolean kruskall() {
-
-		
-		ArrayList<Arc> ArcsNonTries= new ArrayList<Arc>(this.get_liste_arc());
+//		ArrayList<Arc> ListeSommets =new ArrayList<Arc>(get_liste_de_sommet());
+		ArrayList<Arc> ArcsNonTries=new ArrayList<Arc>(get_liste_arc());
 		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
-		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>();
-		ArrayList<Arc> ArcSelectionnes=new ArrayList<Arc>();
-		
+		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>(get_liste_de_sommet());
+		/*
+		 * trier les poids des arcs par ordre croissant
+		 * */
 		for(Arc a : this.get_liste_arc()){
 			a.setCouleur(Color.BLACK);
 		}
@@ -487,9 +415,7 @@ public class GrapheListe extends Graphe {
 		}
 		
 		int idArc=0;
-		/*
-		 * trier les poids des arcs par ordre croissant
-		 * */
+		
 		while (ArcsTries.size()!=this.getNbArcs()){
 			Arc ArcMin= ArcsNonTries.get(0);
 			idArc=0;
@@ -503,39 +429,36 @@ public class GrapheListe extends Graphe {
 			ArcsTries.add(ArcMin);
 
 		}
-		Arc averef;
-		while (!ArcsTries.isEmpty()){
-			averef=ArcsTries.get(0);
-			ArcsTries.remove(0);
-			System.out.println("prout");
-			if (!(SommetSelectionnes.contains(averef.getSommetDepart()))){
-				SommetSelectionnes.add(averef.getSommetDepart());
+		int i, n, num1, num2,poids=0;
+		n = SommetSelectionnes.size();
+		for (i = 0; i < n; i++)
+			sommets.get(i).addVar(new VarInt(i));
+		i = 0;
+		ArrayList<Arc> arcajouté=new ArrayList<Arc>();
+		while (arcajouté.size() < n - 1) {
+			Arc a = ArcsTries.get(i);
+			num1 = a.getSommetDepart().getVar(a.getSommetDepart().getList().size()-1).getInt();
+			num2 = a.getSommetArrivee().getVar(a.getSommetDepart().getList().size()-1).getInt();
+			if (num1 != num2) {
+				ArcsTries.get(i).setCouleur(Color.BLUE);
+				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
+				poids+=ArcsTries.get(i).getVarPoids();
+				arcajouté.add(a);
+				for (Sommet s : sommets)
+					if (s.getVar(s.getList().size()-1).getInt() == num2) 
+						{
+						s.setVar(s.getList().size()-1,new VarInt(num1));
+						}
 			}
-			if (!(SommetSelectionnes.contains(averef.getSommetArrivee()))){
-				SommetSelectionnes.add(averef.getSommetArrivee());
-			}
-			System.out.println("taille sommet selection :"+SommetSelectionnes.size());
-			System.out.println("taille arc selection :"+ArcSelectionnes.size());
-			boolean test=recherche_cycle(SommetSelectionnes, ArcSelectionnes, averef);
-			if (test==false){
-				System.out.println("wtf");
-			}
-			if (test==true){
-				ArcSelectionnes.add(averef);
-				System.out.println("Id arc ajouté"+averef.getId());
-			}
-			
+			i++;
 		}
-		//mon colloriage collorie tout (genre il a tout add ? et test renvoit rj faux
-		for (int i=0;i<ArcSelectionnes.size();i++) {
-			ArcSelectionnes.get(i).setCouleur(Color.BLUE);
-			ArcSelectionnes.get(i).getSommetDepart().setCouleur(Color.BLUE);
-			ArcSelectionnes.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+		for (Sommet t : sommets){
+			t.removeVar(t.getList().size()-1);
 		}
-		
+
 			return true;
 	}
-
 	@Override
 	public boolean welsh_powell() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
@@ -545,6 +468,13 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> liste_voisins;
 		int color=0;
 		boolean change=true;
+		
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
 		
 		
 		for(Sommet s: sommets){
@@ -625,9 +555,12 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> liste_voisins;
 	
 
-		
-		//mettre la couleur � 0 pour tous les sommets (on stocke �a � la fin de la liste des variables)
-
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
 
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
@@ -763,3 +696,5 @@ public class GrapheListe extends Graphe {
 	}
 
 }
+
+
