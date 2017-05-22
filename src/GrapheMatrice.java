@@ -32,10 +32,9 @@ public class GrapheMatrice extends Graphe {
 			this.addArc(a.getSommetDepart(),a.getSommetArrivee());
 			Arc arcTemp = this.getArc(a.getSommetDepart(), a.getSommetArrivee());
 			//On récupère le nouvel arc du graphe
-			ArrayList<Variable> varTemp = a.getList();
-			//On recopie la liste des variables de l'ancienne arc
-			for(Variable act : varTemp){
-				arcTemp.addVar(act);
+			a.setVar(0, arcTemp.getVar(0));
+			for(int i=1; i < a.getList().size();i++){
+				arcTemp.addVar(a.getVar(i));
 			}
 			
 			//et on recopie sa couleur
