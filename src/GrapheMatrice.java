@@ -29,7 +29,7 @@ public class GrapheMatrice extends Graphe {
 	 * Ajoute un sommet au graphe</br>
 	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
 	 * Et ajoute le sommet Ã  notre liste de sommets composant le graphe.
-	 * @param s : Sommet ajoutÃ© au graphe
+	 * @param s : Sommet ajouté au graphe
 	 * @author damien
 	 */
 	@Override
@@ -38,7 +38,7 @@ public class GrapheMatrice extends Graphe {
 		System.arraycopy(graphe, 0, temp, 0, graphe.length);
 		graphe = temp;
 		graphe[graphe.length-1][graphe.length-1] = null;
-		s.setID(graphe.length);
+		s.setID(graphe.length-1);
 		sommets.add(s);
 	}
 
@@ -53,7 +53,7 @@ public class GrapheMatrice extends Graphe {
 	@Override
 	public void addSommet(Point p) {
 		Arc temp[][] = new Arc[graphe.length+1][graphe.length+1];
-		    System.arraycopy(graphe, 0, temp, 0, graphe.length);
+		System.arraycopy(graphe, 0, temp, 0, graphe.length);
 		graphe = temp;
 		graphe[graphe.length-1][graphe.length-1] = null;
 		Sommet s = new Sommet(p);
@@ -73,8 +73,13 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public void addArc(Sommet d, Sommet a) {
+//		System.err.println("Ajout d'un arc " + d.toString() + " "+ a.toString());
+//		System.err.println("d.getId() : "+ d.getId());
+//		System.err.println("a.getId() : "+ a.getId());
+//		System.err.println("Graphe de taille " +graphe.length);
+//		System.err.println(graphe.toString());
 		if(sommets.contains(d) && sommets.contains(a)){
-			if(graphe[d.getId()][a.getId()] != null){
+			if(graphe[d.getId()][a.getId()] == null){
 				graphe[d.getId()][a.getId()] = new Arc(d, a);
 				this.setNbArcs(this.getNbArcs()+1);
 			}
@@ -472,5 +477,19 @@ public class GrapheMatrice extends Graphe {
 			}
 		}
 		return arcs;
+	}
+	
+	@Override
+	public String toString(){
+		String tmp = new String();
+		
+		for(int i = 0; i<graphe.length; i++){
+			for(int j = 0; j<graphe.length; j++){
+				tmp += "[" + graphe[i][j].toString() + "]";
+			}
+			tmp += "\n";
+		}
+		
+		return tmp;
 	}
 }
