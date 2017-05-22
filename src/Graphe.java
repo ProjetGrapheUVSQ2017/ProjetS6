@@ -1,4 +1,4 @@
-import java.awt.Point;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -28,7 +28,16 @@ public abstract class Graphe implements Serializable {
 	public void setNbArcs(int a){
 		this.nbArcs = a;
 	}
-	
+
+	public void reset_couleur_graph() {
+		for(Arc arc : this.get_liste_arc()){
+			arc.setCouleur(Color.BLACK);
+		}
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
+	}
+
 	public abstract void addSommet(Sommet s);
 	public abstract ArrayList<Sommet> get_liste_de_sommet();
 	public abstract ArrayList<Arc> get_liste_arc();

@@ -277,18 +277,21 @@ public class GrapheMatrice extends Graphe {
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
@@ -299,12 +302,7 @@ public class GrapheMatrice extends Graphe {
 
 		/*initialiser la couleur de tous les arcs et des sommets en noir
 		 * */
-		for(Arc a : this.get_liste_arc()){
-			a.setCouleur(Color.BLACK);
-		}
-		for(Sommet s : this.get_liste_de_sommet()){
-			s.setCouleur(Color.BLACK);
-		}
+		this.reset_couleur_graph();
 		/*
 		 * trier les poids des arcs par ordre croissant
 		 * */
@@ -357,6 +355,8 @@ public class GrapheMatrice extends Graphe {
 		ArrayList<Sommet> liste_voisins;
 		int color=0;
 		boolean change=true;
+
+		this.reset_couleur_graph();
 		
 		
 		for(Sommet s: sommets){
@@ -427,18 +427,21 @@ public class GrapheMatrice extends Graphe {
 	@Override
 	public boolean dsatur() {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
 	@Override
 	public boolean kosaraju() {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
 	@Override
 	public boolean tarjan() {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 

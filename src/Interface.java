@@ -193,13 +193,13 @@ public class Interface extends JComponent {
             if(modeMouse.getSelectedItem()=="Arcs"){
                 if(getSommetFromPoint(depart) != getSommetFromPoint(arrive)){
                     graphe.addArc(getSommetFromPoint(depart), getSommetFromPoint(arrive));
-                    repaint();
                 }
             }
             if(modeMouse.getSelectedItem()=="Selection"){
                 rectangleSouris = new Rectangle();
-                repaint();
+
             }
+            repaint();
         }
 
         private void showPopup(MouseEvent e) {
@@ -219,7 +219,6 @@ public class Interface extends JComponent {
                     s.getPoint().y += p.y;
                 }
                 ptSouris = e.getPoint();
-                repaint();
             }
             if(modeMouse.getSelectedItem()=="Selection"){
                 SommetSelec.clear();
@@ -231,8 +230,9 @@ public class Interface extends JComponent {
                         }
                     }
                 }
-                repaint();
+
             }
+            repaint();
         }
     }
 
@@ -342,12 +342,11 @@ public class Interface extends JComponent {
                         SommetSelec.remove(s);
                     }
                     graphe.deleteSommet(s.getId());
-                    repaint();
             }
             else if(a!=null){
                 graphe.deleteArc(a.getId());
-                repaint();
             }
+            repaint();
 
         }
     }
@@ -372,6 +371,7 @@ public class Interface extends JComponent {
             JOptionPane jop = new JOptionPane();
             jop.showMessageDialog(f, "Veuillez selectionner le Sommet de Départ puis le Sommet d'arrivée via un simple clic.", "Information", JOptionPane.INFORMATION_MESSAGE);
             SommetSelec.clear();
+            graphe.reset_couleur_graph();
             selectDeuxSommet=true;
             repaint();
         }
@@ -383,6 +383,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
             repaint();
         }
     }
@@ -393,6 +394,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
             repaint();
         }
     }
@@ -425,6 +427,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.kosaraju();
             repaint();
         }
     }
@@ -435,6 +438,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.tarjan();
             repaint();
         }
     }
