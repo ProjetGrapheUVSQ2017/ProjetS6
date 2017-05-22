@@ -184,6 +184,9 @@ public class GrapheMatrice extends Graphe {
 		for(Arc act : arcTemp){
 			tableauTemp[act.getSommetDepart().getId()][act.getSommetArrivee().getId()] = act;
 		}
+
+		this.setNbSommets(sommets.size());
+		System.out.println(this.getNbSommets());
 	}
 	
 	/**
