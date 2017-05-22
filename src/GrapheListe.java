@@ -27,9 +27,11 @@ public class GrapheListe extends Graphe {
 		arcs = new ArrayList<Arc>();
 	}
 	
-	public GrapheListe(GrapheListe old){
-		sommets = new ArrayList<Sommet>();
-		arcs = new ArrayList<Arc>();
+	public GrapheListe(Graphe old){
+		sommets = new ArrayList<Sommet>(old.get_liste_de_sommet());
+		arcs = new ArrayList<Arc>(old.get_liste_arc());
+		this.setNbSommets(old.getNbSommets());
+		this.setNbArcs(old.getNbArcs());
 	}
 
 	/**
