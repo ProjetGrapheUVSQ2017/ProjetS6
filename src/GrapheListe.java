@@ -436,11 +436,25 @@ public class GrapheListe extends Graphe {
 		}
 		int i, n, num1, num2,poids=0;
 		n = SommetSelectionnes.size();
-		for (i = 0; i < n; i++)
-			sommets.get(i).addVar(new VarInt(i));
+		ListIterator<Sommet> z = SommetSelectionnes.listIterator();
+		while (z.hasNext()) {
+			Sommet a = z.next();
+			if (liste_voisins_pere_et_fils(a).isEmpty()) {
+				z.remove();
+			}
+		}
+
+		n = SommetSelectionnes.size();
+		for (i = 0; i < n; i++){
+			SommetSelectionnes.get(i).addVar(new VarInt(i));
+		}
+		
+		
 		i = 0;
 		ArrayList<Arc> arcajouté=new ArrayList<Arc>();
-		while (arcajouté.size() < n - 1) {
+		boolean change=true;
+		while (change) {
+			change=false;
 			Arc a = ArcsTries.get(i);
 			num1 = a.getSommetDepart().getVar(a.getSommetDepart().getList().size()-1).getInt();
 			num2 = a.getSommetArrivee().getVar(a.getSommetDepart().getList().size()-1).getInt();
@@ -450,15 +464,20 @@ public class GrapheListe extends Graphe {
 				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
 				poids+=ArcsTries.get(i).getVarPoids();
 				arcajouté.add(a);
-				for (Sommet s : sommets)
+				for (Sommet s : SommetSelectionnes)
 					if (s.getVar(s.getList().size()-1).getInt() == num2) 
 						{
 						s.setVar(s.getList().size()-1,new VarInt(num1));
 						}
 			}
+			for (Sommet x : SommetSelectionnes){
+				if (x.getCouleur()!=Color.BLUE){
+					change=true;
+				}
+			}
 			i++;
 		}
-		for (Sommet t : sommets){
+		for (Sommet t : SommetSelectionnes){
 			t.removeVar(t.getList().size()-1);
 		}
 
