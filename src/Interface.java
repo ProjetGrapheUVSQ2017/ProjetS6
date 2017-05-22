@@ -648,8 +648,8 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e){
-            for(int i = 0; i<graphe.getNbSommets(); i++){
-            	graphe.deleteSommet(i);
+            while(graphe.getNbSommets()!=0){
+            	graphe.deleteSommet(0);
             }
             SommetSelec.clear();
             repaint();
