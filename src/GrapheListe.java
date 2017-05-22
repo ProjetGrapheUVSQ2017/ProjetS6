@@ -301,6 +301,11 @@ public class GrapheListe extends Graphe {
 		ArrayList<Double> distance = new ArrayList<Double>();
 		ArrayList<Sommet> pere = new ArrayList<Sommet>();
 		ArrayList<Boolean> traiter = new ArrayList<Boolean>();
+
+		//Reinitialise toute les couleurs des arcs et sommets en noir
+		this.reset_couleur_graph();
+
+
 		
 		for(Sommet s : sommets){
 			distance.add(Double.MAX_VALUE);
@@ -391,12 +396,14 @@ public class GrapheListe extends Graphe {
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
@@ -409,12 +416,8 @@ public class GrapheListe extends Graphe {
 		/*
 		 * trier les poids des arcs par ordre croissant
 		 * */
-		for(Arc a : this.get_liste_arc()){
-			a.setCouleur(Color.BLACK);
-		}
-		for(Sommet s : this.get_liste_de_sommet()){
-			s.setCouleur(Color.BLACK);
-		}
+
+		this.reset_couleur_graph();
 		
 		int idArc=0;
 		
@@ -471,12 +474,7 @@ public class GrapheListe extends Graphe {
 		int color=0;
 		boolean change=true;
 		
-		for(Arc a : this.get_liste_arc()){
-			a.setCouleur(Color.BLACK);
-		}
-		for(Sommet s : this.get_liste_de_sommet()){
-			s.setCouleur(Color.BLACK);
-		}
+		this.reset_couleur_graph();
 		
 		
 		for(Sommet s: sommets){
@@ -557,12 +555,7 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> liste_voisins;
 	
 
-		for(Arc a : this.get_liste_arc()){
-			a.setCouleur(Color.BLACK);
-		}
-		for(Sommet s : this.get_liste_de_sommet()){
-			s.setCouleur(Color.BLACK);
-		}
+		this.reset_couleur_graph();
 
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
@@ -652,12 +645,14 @@ public class GrapheListe extends Graphe {
 	@Override
 	public boolean kosaraju() {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
 	@Override
 	public boolean tarjan() {
 		// TODO Auto-generated method stub
+		this.reset_couleur_graph();
 		return false;
 	}
 
