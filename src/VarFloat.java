@@ -1,5 +1,9 @@
 
 public class VarFloat extends Variable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8699786705793512893L;
 	private float val;
 	public VarFloat(float val){
 		this.val=val;
