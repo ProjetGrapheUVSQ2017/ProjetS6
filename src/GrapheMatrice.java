@@ -259,74 +259,59 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean kruskall() {
-	//	ArrayList<Arc> ListeSommets =new ArrayList<Arc>(get_liste_de_sommet());
-	ArrayList<Arc> ArcsNonTries=get_liste_arc();
-	ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
-	ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>(get_liste_de_sommet());
-	/*
-	 * trier les poids des arcs par ordre croissant
-	 * */
-	int j=0;
-	while(j<this.getNbArcs()){
-		Arc ArcMin= ArcsNonTries.get(j);
-	for(int i=j+1;i<this.getNbArcs();i++){
-		if(ArcsNonTries.get(i).getVar(0).getInt()<ArcMin.getVar(0).getInt()){
-			ArcMin=ArcsNonTries.get(i);
-		}
-	}
-	ArcsTries.add(ArcMin);
-	}
-	/*colorer les arcs et les sommets qui consruisent l'arbre couvrant minimal
-	 * 
-	 * */
-	int i, n, num1, num2,poids=0;
-	n = SommetSelectionnes.size();
-	for (i = 0; i < n; i++)
-		sommets.get(i).setID(i);
-	i = 0;
-	while (ArcsTries.size() < n - 1) {
-		Arc a = ArcsTries.get(i);
-		num1 = a.getSommetDepart().getVar(0).getInt();
-		num2 = a.getSommetArrivee().getVar(0).getInt();
-		if (num1 != num2) {
-			ArcsTries.get(i).setCouleur(Color.BLUE);
-			ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
-			ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
-			poids+=ArcsTries.get(i).getVar(i).getInt();
-			for (Sommet s : sommets)
-				if (s.getVar(0).getInt() == num2) 
-					{
-					s.setVar(0,new VarInt(num1));
-					}
-		}
-		i++;
-	}
+		ArrayList<Arc> ArcsNonTries=get_liste_arc();
+		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
 
-		return true;
-	}
-
-	 /*
-	for(int i=0;i<this.getNbArcs();i++){
-		//on fait ce test pour v�rifier si l'arc courant forme un cycle avec l'arbre en construction
-		if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())&& SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart()))){
-		//si le sommet d'arriv�e de l'arc courant n'appartient pas � l'arbre en construction, on l'ajoute 
-			if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetArrivee())))
-		 {
-		SommetSelectionnes.add(ArcsTries.get(i).getSommetArrivee());
-		ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
-		ArcsTries.get(i).setCouleur(Color.BLUE);
-		poids+=ArcsTries.get(i).getVar(i).getInt();
+		/*initialiser la couleur de tous les arcs et des sommets en noir
+		 * */
+		for(Arc a : this.get_liste_arc()){
+			a.setCouleur(Color.BLACK);
 		}
-		//si le sommet de d�part de l'arc courant n'appartient pas � l'arbre en construction, on l'ajoute 
-		else  if(!(SommetSelectionnes.contains(ArcsTries.get(i).getSommetDepart())))
-			{
-		SommetSelectionnes.add(ArcsTries.get(i).getSommetDepart());
-		ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
-		ArcsTries.get(i).setCouleur(Color.BLUE);
-		poids+=ArcsTries.get(i).getVar(i).getInt();//TODO : ajouter label pour montrer le poids minimal de l'arbre
-		}	
-		//On sortit de la boucle si tous les sommets sont color�s
-		*/
+		for(Sommet s : this.get_liste_de_sommet()){
+			s.setCouleur(Color.BLACK);
+		}
+		/*
+		 * trier les poids des arcs par ordre croissant
+		 * */
+		while(ArcsTries.size()!=this.getNbArcs()){
+			Arc ArcMin= ArcsNonTries.get(0);
+		for(int i=1;i<ArcsNonTries.size();i++){
+			if(ArcsNonTries.get(i).getVarPoids()<ArcMin.getVarPoids()&& !(ArcsTries.contains(ArcsNonTries.get(i)))){
+				ArcMin=ArcsNonTries.get(i);
+			}
+		}
+		ArcsTries.add(ArcMin);
+		ArcsNonTries.remove(ArcMin);
+		}
+		/*colorer les arcs et les sommets qui consruisent l'arbre couvrant minimal
+		 * 
+		 * */
+		int i, num1, num2,poids=0;
+		for (i = 0; i < this.getNbSommets(); i++)
+			sommets.get(i).addVar(new VarInt(i));
+		i = 0;
+		while (i<ArcsTries.size()) {
+			Arc a = ArcsTries.get(i);
+			num1 = a.getSommetDepart().getVar(a.getSommetDepart().getList().size()-1).getInt();
+			num2 = a.getSommetArrivee().getVar(a.getSommetArrivee().getList().size()-1).getInt();
+			if (num1 != num2) {
+				ArcsTries.get(i).setCouleur(Color.BLUE);
+				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
+				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
+				poids+=ArcsTries.get(i).getVarPoids();
+				for (Sommet s : sommets)
+					if (s.getVar(s.getList().size()-1).getInt() == num2) 
+						{
+						s.setVar(s.getList().size()-1,new VarInt(num1));
+						}
+			}
+			i++;
+		}
+		for (Sommet t : sommets){
+			t.removeVar(t.getList().size()-1);
+		}
+			return true;
+	}
 	
 	@Override
 	public boolean welsh_powell() {
