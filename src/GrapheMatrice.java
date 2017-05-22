@@ -86,6 +86,7 @@ public class GrapheMatrice extends Graphe {
 			if(graphe[d.getId()][a.getId()] == null){
 				graphe[d.getId()][a.getId()] = new Arc(d, a);
 				this.setNbArcs(this.getNbArcs()+1);
+				graphe[d.getId()][a.getId()].setID(getNbArcs());
 			}
 		}
 		
@@ -120,6 +121,7 @@ public class GrapheMatrice extends Graphe {
 				if(graphe[i][j] != null && graphe[i][j].getId() == id){
 					graphe[i][j] = null;
 					this.setNbArcs(this.getNbArcs()-1);
+					System.err.println("Suppression de l'arc i : "+i+" ,j : "+j);
 				}
 			}
 		}
