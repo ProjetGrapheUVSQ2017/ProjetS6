@@ -272,8 +272,7 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public Graphe changement_format() {
-		// TODO Auto-generated method stub
-		return null;
+		return new GrapheListe(this);
 	}
 
 	@Override
