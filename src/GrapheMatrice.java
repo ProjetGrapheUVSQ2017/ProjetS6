@@ -133,6 +133,7 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public void deleteSommet(int id){
+		//On repère le sommet à supprimer
 		Sommet aSupprimer = null;
 		for(Sommet s : sommets){
 			if(s.getId() == id){
@@ -140,6 +141,7 @@ public class GrapheMatrice extends Graphe {
 			}
 		}
 		
+		//On supprime tous les arcs liés au sommet à supprimer
 		for(int i = 0; i<graphe.length; i++){
 			for(int j = 0; j<graphe.length; j++){
 				if(graphe[i][j] != null){
@@ -151,7 +153,37 @@ public class GrapheMatrice extends Graphe {
 			}
 		}
 		
+		//Et on supprime le sommet de la liste des sommets du graphe
 		sommets.remove(aSupprimer);
+		
+		
+		//On stocke temporairement tous les arcs de la matrice
+		ArrayList<Arc> arcTemp = new ArrayList<Arc>();
+		for(int i = 0; i < graphe.length; i++){
+			for(int j = 0; j < graphe.length; j++){
+				if(graphe[i][j] != null){
+					arcTemp.add(graphe[i][j]);
+				}
+			}
+		}
+		
+		//On redéfinit les IDs de tous les sommets de 0 à nombre de sommets-1
+		for(int i = 0; i < sommets.size(); i++){
+			sommets.get(i).setID(i);
+		}
+		
+		//Initialisation de la nouvelle matrice d'adjacence
+		Arc[][] tableauTemp = new Arc[sommets.size()][sommets.size()];		
+		for(int i = 0; i<sommets.size(); i++){
+			for(int j = 0; j<sommets.size(); j++){
+				tableauTemp[i][j] = null; 
+			}
+		}
+		
+		//Et on remet les arcs à leur place dans la matrice d'adjacence
+		for(Arc act : arcTemp){
+			tableauTemp[act.getSommetDepart().getId()][act.getSommetArrivee().getId()] = act;
+		}
 	}
 	
 	/**
