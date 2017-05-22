@@ -1,6 +1,10 @@
 
 public class VarString extends Variable{
 
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = -166926269467455150L;
 		private String val;
 		public VarString(String val){
 			this.val=val;

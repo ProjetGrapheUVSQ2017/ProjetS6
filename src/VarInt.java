@@ -1,6 +1,10 @@
 
 public class VarInt extends Variable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5594894313407954692L;
 	private int val;
 	public  VarInt(int val){
 		this.val=val;
