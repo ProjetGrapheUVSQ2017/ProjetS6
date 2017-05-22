@@ -16,6 +16,7 @@ public class Interface extends JComponent {
     private Point ptSouris;
     private Rectangle rectangleSouris = new Rectangle();
     private boolean selectionEnCours;
+    private boolean selectDeuxSommet = false;
     private MenuPanel control = new MenuPanel();
     private static Graphe graphe;
     private static int rayon_sommet = 15;
@@ -151,18 +152,28 @@ public class Interface extends JComponent {
                 showPopup(e);
             }
             else if(getSommetFromPoint(ptSouris)!=null){
-                if(modeMouse.getSelectedItem()=="Selection"){
-                    SommetSelec.clear();
+                if(selectDeuxSommet==true){
                     SommetSelec.add(getSommetFromPoint(ptSouris));
-                }
-                else if(modeMouse.getSelectedItem()=="Sommet"){
-                    if(SommetSelec.isEmpty()){
+                    getSommetFromPoint(ptSouris).setCouleur(Color.RED);
+                    if(SommetSelec.size()==2){
+                        selectDeuxSommet=false;
+                        graphe.dijkstra(SommetSelec.get(0),SommetSelec.get(1));
+                        SommetSelec.clear();
+                    }
+                }else{
+                    if(modeMouse.getSelectedItem()=="Selection"){
                         SommetSelec.clear();
                         SommetSelec.add(getSommetFromPoint(ptSouris));
                     }
-                    if(SommetSelec.size()==1){
-                        SommetSelec.clear();
-                        SommetSelec.add(getSommetFromPoint(ptSouris));
+                    else if(modeMouse.getSelectedItem()=="Sommet"){
+                        if(SommetSelec.isEmpty()){
+                            SommetSelec.clear();
+                            SommetSelec.add(getSommetFromPoint(ptSouris));
+                        }
+                        if(SommetSelec.size()==1){
+                            SommetSelec.clear();
+                            SommetSelec.add(getSommetFromPoint(ptSouris));
+                        }
                     }
                 }
             }else{
@@ -170,6 +181,7 @@ public class Interface extends JComponent {
                     SommetSelec.clear();
                 }
             }
+            repaint();
         }
 
         @Override
@@ -251,35 +263,47 @@ public class Interface extends JComponent {
         private Action action_ModifierVariable = new modifierVariableAction("Modifier Variable");
         private Action action_CreerSousGraphe = new creerSousGrapheAction("Creer Sous Graphe");
 
-        private JButton dsatur = new JButton(action_dsatur);
-        private JButton dijkstra = new JButton(action_dijkstra);
-        private JButton bellman_ford = new JButton(action_bellman_ford);
-        private JButton ford_fulkerson = new JButton(action_ford_fulkerson);
-        private JButton kruskall = new JButton(action_kruskall);
-        private JButton welsh_powell = new JButton(action_welsh_powell);
-        private JButton kosaraju = new JButton(action_kosaraju);
-        private JButton tarjan = new JButton(action_tarjan);
+        private JMenuItem dsatur = new JMenuItem(action_dsatur);
+        private JMenuItem dijkstra = new JMenuItem(action_dijkstra);
+        private JMenuItem bellman_ford = new JMenuItem(action_bellman_ford);
+        private JMenuItem ford_fulkerson = new JMenuItem(action_ford_fulkerson);
+        private JMenuItem kruskall = new JMenuItem(action_kruskall);
+        private JMenuItem welsh_powell = new JMenuItem(action_welsh_powell);
+        private JMenuItem kosaraju = new JMenuItem(action_kosaraju);
+        private JMenuItem tarjan = new JMenuItem(action_tarjan);
 
 
 
-        private JButton suppression_totale = new JButton(action_supression_totale);
-        private JButton ouvrir = new JButton(action_ouvrir);
-        private JButton sauvegarder = new JButton(action_sauvegarder);
-        private JButton sousGraphe = new JButton(action_CreerSousGraphe);
+        private JMenuItem suppression_totale = new JMenuItem(action_supression_totale);
+        private JMenuItem ouvrir = new JMenuItem(action_ouvrir);
+        private JMenuItem sauvegarder = new JMenuItem(action_sauvegarder);
+        private JMenuItem sousGraphe = new JMenuItem(action_CreerSousGraphe);
         private JPopupMenu popup = new JPopupMenu();
+
+        private JMenu fichier = new JMenu("Fichier");
+        private JMenu analyse = new JMenu("Analyse de Graphe");
 
 
         MenuPanel() {
             this.setLayout(new FlowLayout(FlowLayout.LEFT));
             this.setBackground(Color.lightGray);
 
-            this.add(dsatur);
-            this.add(suppression_totale);
-            this.add(ouvrir);
-            this.add(sauvegarder);
-            this.add(sousGraphe);
-            this.add(welsh_powell);
-            this.add(kruskall);
+            fichier.add(ouvrir);
+            fichier.add(sauvegarder);
+            fichier.add(suppression_totale);
+            fichier.add(sousGraphe);
+            this.add(fichier);
+
+
+            analyse.add(dsatur);
+            analyse.add(welsh_powell);
+            analyse.add(kruskall);
+            analyse.add(dijkstra);
+            analyse.add(bellman_ford);
+            analyse.add(ford_fulkerson);
+            analyse.add(kosaraju);
+            analyse.add(tarjan);
+            this.add(analyse);
 
             this.popup.add(new JMenuItem(action_creerSommet));
             this.popup.add(new JMenuItem(action_supprimerSommet));
@@ -345,6 +369,10 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            JOptionPane jop = new JOptionPane();
+            jop.showMessageDialog(f, "Veuillez selectionner le Sommet de Départ puis le Sommet d'arrivée via un simple clic.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            SommetSelec.clear();
+            selectDeuxSommet=true;
             repaint();
         }
     }
