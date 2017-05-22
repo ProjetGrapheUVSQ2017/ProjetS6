@@ -76,7 +76,7 @@ public class Interface extends JComponent {
         }else{
             type_graphe="Matrice";
         }
-        g.drawString("Graphe de type: "+ type_graphe, f.getWidth()-160,f.getHeight()-50);
+        g.drawString("Graphe de type: "+ type_graphe, 10,20);
 
 
         for(Sommet s : graphe.get_liste_de_sommet()){
@@ -367,12 +367,7 @@ public class Interface extends JComponent {
         public transformationAction(String name){super(name);}
 
         public void actionPerformed(ActionEvent e){
-            if(graphe.getClass().getName()=="GrapheListe"){
-                graphe = new GrapheMatrice(graphe);
-            }
-            else{
-                graphe = new GrapheListe(graphe);
-            }
+            graphe = graphe.changement_format();
             repaint();
 
         }

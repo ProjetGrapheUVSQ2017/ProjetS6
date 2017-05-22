@@ -273,22 +273,8 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public Graphe changement_format() {
-		Graphe newGraphe = new GrapheMatrice();
-		//On crée le nouveau graphe sous forme de GrapheMatrice, et on ajoute tous les sommets
-		for(Sommet s : sommets){
-			newGraphe.addSommet(s);
-		}
-		
-		//Puis on ajoute tout les arcs et on recopie sa liste de variables.
-		for(Arc a : arcs){
-			newGraphe.addArc(a.getSommetDepart(), a.getSommetArrivee());
-			Arc arcTemp = newGraphe.getArc(a.getSommetDepart(), a.getSommetArrivee());
-			ArrayList<Variable> tmp = arcTemp.getList();
-			for(Variable varTemp : tmp){
-				arcTemp.addVar(varTemp);
-			}
-		}
-		return newGraphe;
+    
+		return new GrapheMatrice(this);
 	}
 
 	/**
