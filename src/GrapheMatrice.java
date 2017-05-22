@@ -30,6 +30,16 @@ public class GrapheMatrice extends Graphe {
 		this.sommets = new ArrayList<Sommet>(graphe.get_liste_de_sommet());
 		for(Arc a : graphe.get_liste_arc()){
 			this.addArc(a.getSommetDepart(),a.getSommetArrivee());
+			Arc arcTemp = this.getArc(a.getSommetDepart(), a.getSommetArrivee());
+			//On récupère le nouvel arc du graphe
+			
+			//On recopie la liste des variables de l'ancienne arc
+			for(Variable act : arcTemp.getList()){
+				arcTemp.addVar(act);
+			}
+			
+			//et on recopie sa couleur
+			arcTemp.setCouleur(a.getCouleur());
 		}
 	}
 
