@@ -648,10 +648,9 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e){
-            graphe.get_liste_de_sommet().clear();
-            graphe.get_liste_arc().clear();
-            graphe.setNbSommets(0);
-            graphe.setNbArcs(0);
+            for(int i = 0; i<graphe.getNbSommets(); i++){
+            	graphe.deleteSommet(i);
+            }
             SommetSelec.clear();
             repaint();
         }
