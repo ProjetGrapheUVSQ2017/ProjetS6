@@ -273,6 +273,7 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public Graphe changement_format() {
+    
 		return new GrapheMatrice(this);
 	}
 
