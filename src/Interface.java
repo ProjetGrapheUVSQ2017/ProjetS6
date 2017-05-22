@@ -69,6 +69,15 @@ public class Interface extends JComponent {
         g.setColor(Color.WHITE);
         g.fillRect(0,0,getWidth(),getHeight());
 
+        g.setColor(Color.BLACK);
+        String type_graphe = new String();
+        if(graphe.getClass().getName()=="GrapheListe"){
+            type_graphe="Liste";
+        }else{
+            type_graphe="Matrice";
+        }
+        g.drawString("Graphe de type: "+ type_graphe, f.getWidth()-160,f.getHeight()-50);
+
 
         for(Sommet s : graphe.get_liste_de_sommet()){
             g.setColor(s.getCouleur());
@@ -262,6 +271,7 @@ public class Interface extends JComponent {
         private Action action_supprimerSommet = new supprimerSommetAction("Supprimer");
         private Action action_ModifierVariable = new modifierVariableAction("Modifier Variable");
         private Action action_CreerSousGraphe = new creerSousGrapheAction("Creer Sous Graphe");
+        private Action action_transformation = new transformationAction("Changement de type de Graphe");
 
         private JMenuItem dsatur = new JMenuItem(action_dsatur);
         private JMenuItem dijkstra = new JMenuItem(action_dijkstra);
@@ -278,6 +288,7 @@ public class Interface extends JComponent {
         private JMenuItem ouvrir = new JMenuItem(action_ouvrir);
         private JMenuItem sauvegarder = new JMenuItem(action_sauvegarder);
         private JMenuItem sousGraphe = new JMenuItem(action_CreerSousGraphe);
+        private JMenuItem transformation = new JMenuItem(action_transformation);
         private JPopupMenu popup = new JPopupMenu();
 
         private JMenu fichier = new JMenu("Fichier");
@@ -290,8 +301,9 @@ public class Interface extends JComponent {
 
             fichier.add(ouvrir);
             fichier.add(sauvegarder);
-            fichier.add(suppression_totale);
+            fichier.add(transformation);
             fichier.add(sousGraphe);
+            fichier.add(suppression_totale);
             this.add(fichier);
 
 
@@ -345,6 +357,21 @@ public class Interface extends JComponent {
             }
             else if(a!=null){
                 graphe.deleteArc(a.getId());
+            }
+            repaint();
+
+        }
+    }
+
+    class transformationAction extends AbstractAction{
+        public transformationAction(String name){super(name);}
+
+        public void actionPerformed(ActionEvent e){
+            if(graphe.getClass().getName()=="GrapheListe"){
+                graphe = new GrapheMatrice(graphe);
+            }
+            else{
+                graphe = new GrapheListe(graphe);
             }
             repaint();
 

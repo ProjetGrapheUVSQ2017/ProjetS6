@@ -25,6 +25,14 @@ public class GrapheMatrice extends Graphe {
 		this.sommets = new ArrayList<Sommet>();
 	}
 
+	public GrapheMatrice(Graphe graphe) {
+		this.graphe = new Arc[graphe.getNbSommets()][graphe.getNbSommets()];
+		this.sommets = new ArrayList<Sommet>(graphe.get_liste_de_sommet());
+		for(Arc a : graphe.get_liste_arc()){
+			this.addArc(a.getSommetDepart(),a.getSommetArrivee());
+		}
+	}
+
 	/**
 	 * Ajoute un sommet au graphe</br>
 	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
