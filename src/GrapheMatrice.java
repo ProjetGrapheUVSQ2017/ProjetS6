@@ -132,47 +132,66 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public void deleteSommet(int id){
-		 /**
-		  * Supprimer le sommet du tableau
-		 */
-		for(Sommet act : sommets){
-			if(act.getId() == id){
-				sommets.remove(act);
-				this.setNbSommets(this.getNbSommets()-1);
+		Sommet aSupprimer = null;
+		for(Sommet s : sommets){
+			if(s.getId() == id){
+				aSupprimer = s;
 			}
 		}
-		/**
-		 * supprimer les arcs qui sont attach�s au sommet
-		 */
-		for(int i = id; i<graphe.length; i++){
-			for(int  j = 0;j<graphe[0].length-1; j++){
-				if(graphe[i][j] != null){
-			this.deleteArc(graphe[i][j].getId());
-			this.setNbArcs(this.getNbArcs()-1);
-			}
-				if(graphe[j][i] != null){
-			this.deleteArc(graphe[j][i].getId());
-			this.setNbArcs(this.getNbArcs()-1);
-				}
-		}
-			}
-		/**
-		 *  refaire les id des arcs qui viennent apr�s le id du sommet supprim�
-		*/
+		
 		for(int i = 0; i<graphe.length; i++){
-			for(int  j = 0;j<graphe[0].length-1; j++){
+			for(int j = 0; j<graphe.length; j++){
 				if(graphe[i][j] != null){
-					graphe[i][j].setID(graphe[i][j].getId()-1);	
+					if(graphe[i][j].getSommetArrivee().equals(aSupprimer) || graphe[i][j].getSommetDepart().equals(aSupprimer)){ //Si l'arc est lié au sommet à supprimer
+						graphe[i][j] = null;
+						this.setNbArcs(getNbArcs()-1);
+					}
 				}
 			}
 		}
-		 /**
-		  *   il faut aussi refaire les id des sommets qui viennent apr�s le id du sommet supprim�
-		  */
-
-		for(int i = graphe[0].length; id<i; i--){
-			sommets.get(i).setID(sommets.get(i).getId()-1);
-		}
+		
+		sommets.remove(aSupprimer);
+//		 /**
+//		  * Supprimer le sommet du tableau
+//		 */
+//		for(Sommet act : sommets){
+//			if(act.getId() == id){
+//				sommets.remove(act);
+//				this.setNbSommets(this.getNbSommets()-1);
+//			}
+//		}
+//		/**
+//		 * supprimer les arcs qui sont attach�s au sommet
+//		 */
+//		for(int i = id; i<graphe.length; i++){
+//			for(int  j = 0;j<graphe[0].length-1; j++){
+//				if(graphe[i][j] != null){
+//			this.deleteArc(graphe[i][j].getId());
+//			this.setNbArcs(this.getNbArcs()-1);
+//			}
+//				if(graphe[j][i] != null){
+//			this.deleteArc(graphe[j][i].getId());
+//			this.setNbArcs(this.getNbArcs()-1);
+//				}
+//		}
+//			}
+//		/**
+//		 *  refaire les id des arcs qui viennent apr�s le id du sommet supprim�
+//		*/
+//		for(int i = 0; i<graphe.length; i++){
+//			for(int  j = 0;j<graphe[0].length-1; j++){
+//				if(graphe[i][j] != null){
+//					graphe[i][j].setID(graphe[i][j].getId()-1);	
+//				}
+//			}
+//		}
+//		 /**
+//		  *   il faut aussi refaire les id des sommets qui viennent apr�s le id du sommet supprim�
+//		  */
+//
+//		for(int i = graphe[0].length; id<i; i--){
+//			sommets.get(i).setID(sommets.get(i).getId()-1);
+//		}
 	}
 	
 	/**
