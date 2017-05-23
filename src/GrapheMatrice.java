@@ -294,8 +294,117 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
+		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
+		boolean continuer = true;
+		
+		ArrayList<Arc> aColorier = new ArrayList<Arc>(); //Liste d'arc étant utiliser dans le plus court chemin et qui doivent être coloré à la fin de dijkstra
+		
+		
+		//Liste représentant les distances pour les sommets, les père et un booléen indiquant si un sommet à été traité
+		ArrayList<Double> distance = new ArrayList<Double>();
+		ArrayList<Sommet> pere = new ArrayList<Sommet>();
+		ArrayList<Boolean> traiter = new ArrayList<Boolean>();
+
+		//Reinitialise toute les couleurs des arcs et sommets en noir
 		this.reset_couleur_graph();
+
+
+		
+		for(Sommet s : sommets){
+			distance.add(Double.MAX_VALUE);
+			pere.add(null);
+			traiter.add(false);
+			aColorier.add(null);
+		}
+		
+		if(sommets.contains(d) && sommets.contains(a)){
+			
+			if(d.equals(a)){ //Les sommets de départ et d'arrivée doivent être différents ou alors l'algo s'arrête en renvoyant un false
+				return false;//Peut être changer si l'on souhaite le contraire
+			}
+			
+			//Initialisation du départ et de aTraiter avec le sommet de départ
+			distance.set(d.getId(), 0.0);
+			aTraiter.add(d);
+			pere.set(d.getId(), null);
+			
+			while(continuer){//Tant que tous les sommets n'ont pas été traité
+				Sommet enTraitement = null;
+				
+				double min = Double.MAX_VALUE; Sommet mini = null;
+				for(Sommet s : aTraiter){
+					if(distance.get(s.getId()) < min){
+						min = distance.get(s.getId());
+						mini = s;
+					}
+				}
+				enTraitement = mini; //On trouve le sommet de aTraiter ayant la distance la plus courte
+
+				if(enTraitement != null){
+					
+					//Création de la liste d'arc sortants de traitement
+					ArrayList<Arc> sortants = new ArrayList<Arc>();
+					for(int i = 0; i<this.graphe.length; i++){
+						if(graphe[enTraitement.getId()][i] != null){
+							sortants.add(graphe[enTraitement.getId()][i]);
+						}
+					}
+					
+					for(Arc c : sortants){
+						for(Sommet s : sommets){
+							if(c.getSommetArrivee().equals(s) && traiter.get(s.getId()) == false){
+								aTraiter.add(s);
+							}
+							
+							if(c.getSommetArrivee().equals(s)){
+								if(distance.get(s.getId()) > (distance.get(enTraitement.getId())+c.getVarPoids())){
+									distance.set(s.getId(), distance.get(enTraitement.getId())+c.getVarPoids());
+									pere.set(s.getId(), enTraitement);
+									aColorier.set(s.getId(), c);
+									
+								}
+							}
+						}
+					}
+					traiter.set(enTraitement.getId(), true);
+					aTraiter.remove(enTraitement);
+				}
+				
+				continuer = false;
+				for(Sommet s : aTraiter){//On regarder si tous les sommets ont été traités
+					if(!traiter.get(s.getId())){
+						continuer = true;
+					}
+				}
+			}
+			
+			
+			//Vérification des résultats
+			boolean cheminExiste = false;
+			Sommet act = a;
+			while(act != null){
+				if(act.equals(d)){
+					cheminExiste = true;
+				}
+				act = pere.get(act.getId());
+			}
+			
+
+			//Affichage des résultats
+			if(cheminExiste){
+				d.setCouleur(Color.red);
+				a.setCouleur(Color.red);
+				Sommet pereA = pere.get(a.getId()); 
+				aColorier.get(a.getId()).setCouleur(Color.red);
+				while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
+					pereA.setCouleur(Color.red);
+					aColorier.get(pereA.getId()).setCouleur(Color.RED);
+					pereA = pere.get(pereA.getId());
+				}
+
+				return true;
+			}
+		}
 		return false;
 	}
 
