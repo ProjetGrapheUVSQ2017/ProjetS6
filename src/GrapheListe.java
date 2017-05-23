@@ -368,21 +368,30 @@ public class GrapheListe extends Graphe {
 			
 			
 			//Vérification des résultats
+			boolean cheminExiste = false;
 			Sommet act = a;
-			
-			
-			//Affichage des résultats
-			d.setCouleur(Color.red);
-			a.setCouleur(Color.red);
-			Sommet pereA = pere.get(a.getId()); 
-			aColorier.get(a.getId()).setCouleur(Color.red);
-			while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
-				pereA.setCouleur(Color.red);
-				aColorier.get(pereA.getId()).setCouleur(Color.RED);
-				pereA = pere.get(pereA.getId());
+			while(act != null){
+				if(act.equals(d)){
+					cheminExiste = true;
+				}
+				act = pere.get(act.getId());
 			}
 			
-			return true;
+
+			//Affichage des résultats
+			if(cheminExiste){
+				d.setCouleur(Color.red);
+				a.setCouleur(Color.red);
+				Sommet pereA = pere.get(a.getId()); 
+				aColorier.get(a.getId()).setCouleur(Color.red);
+				while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
+					pereA.setCouleur(Color.red);
+					aColorier.get(pereA.getId()).setCouleur(Color.RED);
+					pereA = pere.get(pereA.getId());
+				}
+
+				return true;
+			}
 		}
 		return false;
 	}
