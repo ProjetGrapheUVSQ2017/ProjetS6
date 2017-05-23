@@ -357,14 +357,21 @@ public class GrapheListe extends Graphe {
 					traiter.set(enTraitement.getId(), true);
 					aTraiter.remove(enTraitement);
 				}
+				
 				continuer = false;
-				for(Sommet s : aTraiter){
+				for(Sommet s : aTraiter){//On regarder si tous les sommets ont été traités
 					if(!traiter.get(s.getId())){
 						continuer = true;
 					}
 				}
 			}
 			
+			
+			//Vérification des résultats
+			Sommet act = a;
+			
+			
+			//Affichage des résultats
 			d.setCouleur(Color.red);
 			a.setCouleur(Color.red);
 			Sommet pereA = pere.get(a.getId()); 
