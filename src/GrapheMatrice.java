@@ -292,10 +292,15 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public void creer_sous_graphe(ArrayList<Sommet> s) {
+		ArrayList<Sommet> aSupprimer = new ArrayList<Sommet>();
 		for(Sommet act : sommets){
 			if(!s.contains(act)){
-				this.deleteSommet(act.getId());
+				aSupprimer.add(act);
 			}
+		}
+		
+		for(Sommet act : aSupprimer){
+			this.deleteSommet(act.getId());
 		}
 	}
 

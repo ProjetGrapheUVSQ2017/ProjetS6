@@ -285,10 +285,15 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void creer_sous_graphe(ArrayList<Sommet> s) {
+		ArrayList<Sommet> aSupprimer = new ArrayList<Sommet>();
 		for(Sommet act : sommets){
 			if(!s.contains(act)){
-				this.deleteSommet(act.getId());
+				aSupprimer.add(act);
 			}
+		}
+		
+		for(Sommet act : aSupprimer){
+			this.deleteSommet(act.getId());
 		}
 	}
 
@@ -418,6 +423,7 @@ public class GrapheListe extends Graphe {
 	public boolean bellman_ford(Sommet d, Sommet a) {
 		this.reset_couleur_graph();
 		
+		ArrayList<Arc> aColorier = new ArrayList<Arc>();
 		ArrayList<Double> distance = new ArrayList<Double>();
 		ArrayList<Sommet> pere = new ArrayList<Sommet>();
 		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
@@ -427,6 +433,7 @@ public class GrapheListe extends Graphe {
 		for(int i = 0; i<sommets.size(); i++){
 			distance.add(Double.MAX_VALUE);
 			pere.add(null);
+			aColorier.add(null);
 		}
 		
 		//Initialisation pour le départ
@@ -447,19 +454,40 @@ public class GrapheListe extends Graphe {
 			
 			for(Arc act : sortants){
 				Sommet S1 = act.getSommetArrivee();
-				System.out.println("Arc poids :" +act.getVarPoids() + "sommet départ" + act.getSommetDepart().getId());
+				
 				if(distance.get(enTraitement.getId()) + act.getVarPoids() < (distance.get(S1.getId()))){
 					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids() ));
 					pere.set(S1.getId(), enTraitement);
 					aTraiter.add(S1);
+					aColorier.set(S1.getId(), act);
 				}
 			}
 		}
 		
-		for (int i=1;i<sommets.size();i++){
-			System.out.println("Sommet numéro : "+sommets.get(i).getId() + " Distance :" + distance.get(i) + "Pere : "+ pere.get(i).getId());
+		boolean cheminExiste = false;
+		Sommet act = a;
+		while(act != null){
+			if(act.equals(d)){
+				cheminExiste = true;
+			}
+			act = pere.get(act.getId());
+		}
+		
+		if(cheminExiste){
+		act = a;
+		while(act != null){
+			System.err.println(act.toString()+ " id : "+ act.getId() + " pere : " + pere.get(act.getId())+" , " + aColorier.get(act.getId()));
+			act.setCouleur(Color.GREEN);
+			Arc tmp = aColorier.get(act.getId());
+			if(tmp != null){//L'arc a colorié est l'arc qui arrive à act or le sommet départ n'a pas forcément celui là
+					tmp.setCouleur(Color.green);
+			}
+			act = pere.get(act.getId());
+			
 		}
 		return true;
+		}
+		return false;
 	}
 
 	@Override
