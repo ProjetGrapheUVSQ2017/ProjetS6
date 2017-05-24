@@ -476,7 +476,7 @@ public class GrapheListe extends Graphe {
 		if(cheminExiste){
 		act = a;
 		while(act != null){
-			System.err.println(act.toString()+ " id : "+ act.getId() + " pere : " + pere.get(act.getId())+" , " + aColorier.get(act.getId()));
+//			System.err.println(act.toString()+ " id : "+ act.getId() + " pere : " + pere.get(act.getId())+" , " + aColorier.get(act.getId()));
 			act.setCouleur(Color.GREEN);
 			Arc tmp = aColorier.get(act.getId());
 			if(tmp != null){//L'arc a colorié est l'arc qui arrive à act or le sommet départ n'a pas forcément celui là
