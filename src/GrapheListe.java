@@ -1,10 +1,14 @@
 import java.awt.Point;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-
+import java.util.Deque;
+import java.util.HashSet;
 import java.awt.Color;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Classe stockant le graphe sous forme de liste de sommets et de liste d'arcs.
@@ -357,7 +361,7 @@ public class GrapheListe extends Graphe {
 				enTraitement = mini; //On trouve le sommet de aTraiter ayant la distance la plus courte
 
 				if(enTraitement != null){
-					for(Arc c : this.getSortants(enTraitement)){
+					for(Arc c : this.getSortants(enTraitement, this)){
 						for(Sommet s : sommets){
 							if(c.getSommetArrivee().equals(s) && traiter.get(s.getId()) == false){
 								aTraiter.add(s);
@@ -415,11 +419,11 @@ public class GrapheListe extends Graphe {
 		return false;
 	}
 
-	private ArrayList<Arc> getSortants(Sommet s) {
+	private ArrayList<Arc> getSortants(Sommet s, Graphe graph) {
 		//Fonction rajouté pour obtenir les arcs sortant d'un sommet
 		ArrayList<Arc> arcSortant = new ArrayList<Arc>();
 		
-		for(Arc a : arcs){
+		for(Arc a : graph.get_liste_arc()){
 			if(a.getSommetDepart().equals(s)){
 				arcSortant.add(a);
 			}
@@ -766,10 +770,81 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean kosaraju() {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
-		return false;
-	}
+	        //pile d'arrivée des sommets
+	        Deque<Sommet> stack = new ArrayDeque<>();
+	        //sommets déjà visité
+	        Set<Sommet> visited = new HashSet<>();
+
+	        //visiter chaque sommets et regarder pour chaque fils
+	        for (Sommet vertex : this.get_liste_de_sommet()) {
+	            if (visited.contains(vertex)) {
+	                continue;
+	            }
+	            DFS(vertex, visited, stack);
+	        }
+
+
+	        //on met le graphe à l'envers
+	        	Graphe reverseGraph = new GrapheListe();
+		        for (Sommet s : this.get_liste_de_sommet()){
+		        	reverseGraph.addSommet(s);
+		        }
+		        for (Arc edge : this.get_liste_arc()) {
+		            reverseGraph.addArc(edge.getSommetArrivee(), edge.getSommetDepart());
+		        }
+
+	       
+	        //Faire recherche en profondeur sur le graphe renversé
+	        visited.clear();
+	        List<Set<Sommet>> result = new ArrayList<>();
+	        
+	        while (!stack.isEmpty()) {
+	        	Sommet vertex = reverseGraph.getSommet(stack.poll().getId());
+	            if(visited.contains(vertex)){
+	                continue;
+	            }
+	            Set<Sommet> set = new HashSet<>();
+	            DFSRenverse(vertex, visited, set, reverseGraph);
+	            result.add(set);
+	        }
+	        
+	        //mettre les couleurs les sommets contenu dans chaque liste
+	        result.forEach(set -> {
+	        	Random rand = new Random();
+	        	float r = rand.nextFloat();
+				float g = rand.nextFloat();
+				float b = rand.nextFloat();
+	            set.forEach(v -> v.setCouleur(new Color(r,g,b)));
+	        });
+	        
+	        return true;
+}
+
+		//parcours en profondeur normal
+	    private void DFS(Sommet vertex,Set<Sommet> visited, Deque<Sommet> stack) {
+	        visited.add(vertex);
+	        for (Arc a : getSortants(vertex, this)) {
+	        	Sommet v = a.getSommetArrivee();
+	            if (visited.contains(v)) {
+	                continue;
+	            }
+	            DFS(v, visited, stack);
+	        }
+	        stack.offerFirst(vertex);
+	    }
+	    //parcours en profondeur sur graphe renversé (on ajoute pas a la pile
+	    private void DFSRenverse(Sommet vertex, Set<Sommet> visited, Set<Sommet> set, Graphe graph) {
+	        visited.add(vertex);
+	        set.add(vertex);
+	        for (Arc a : getSortants(vertex, graph)) {
+	        	Sommet v = a.getSommetArrivee();
+	            if (visited.contains(v)) {
+	                continue;
+	            }
+	            DFSRenverse(v, visited, set, graph);
+	        }
+	    }
 
 	@Override
 	public boolean tarjan() {
