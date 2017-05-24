@@ -749,11 +749,50 @@ public class GrapheMatrice extends Graphe {
 		this.reset_couleur_graph();
 		return false;
 	}
-
+	public int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
+		int min=num[x]= ++j;
+		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
+			int y=s.getId();int m;
+			if(num[y]==-1){
+				m=attache(num,g,y,PointsArticulation,j);
+				if(m>=num[x]){
+					PointsArticulation.add(this.get_liste_de_sommet().get(x));
+				}
+			}else
+				m=num[y];
+			min=Math.min(min,m);
+		}
+		return min;
+	}
 	@Override
 	public boolean tarjan() {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
+		int numOrdre=0,n;
+		
+		n=this.getNbSommets();
+		int num[]=new int[n];
+		//id=-1;
+		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
+		for(int x=0;x<n;++x)
+			num[x]=-1;
+		for(int x=0;x<n;++x)
+		if(num[x]== -1){
+			num[x]=++numOrdre;
+			int nfils=0;
+			for(Sommet s: this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
+				int y=s.getId();
+				if(num[y]==-1){
+					++nfils;
+					
+				int m=attache(num,this,y,PointsArticulation,numOrdre);
+				}
+				}
+			if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
+		}
+		  for (Sommet t : PointsArticulation){
+        	t.setCouleur(Color.red);
+		}
+
 		return false;
 	}
 
