@@ -508,6 +508,10 @@ public class GrapheListe extends Graphe {
 		 * */
 
 		this.reset_couleur_graph();
+
+		if(ArcsNonTries.isEmpty()){
+			return false;
+		}
 		
 		int idArc=0;
 		
