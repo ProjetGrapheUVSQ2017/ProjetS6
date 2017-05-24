@@ -553,9 +553,102 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean dsatur() {
-		// TODO Auto-generated method stub
+		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
+		int nbcolor=0;
+		int nbcolormax=0;
+		int nbarc=0;
+		int nbarcmax=0;
+		Sommet actu, max = null;
+		int color=0;
+		boolean change=true;
+		ArrayList<Sommet> liste_voisins;
+	
+
 		this.reset_couleur_graph();
-		return false;
+
+		for(Sommet s: sommets){
+			s.addVar(new VarInt(-1));
+		}
+		
+		while (!acolo.isEmpty()) {
+			
+			nbcolormax=0;
+			nbarcmax=0;
+			max=null;
+			
+			for (int i=0; i<acolo.size();i++) {
+				actu=acolo.get(i);
+				nbarc=0;
+				nbcolor=0;
+				for (int j=0;j<(liste_voisins=liste_voisins_pere_et_fils(actu)).size();j++) {
+					if ( liste_voisins.get(j).getVar(liste_voisins.get(j).getList().size()-1).getInt()!=-1 ){
+					nbcolor=nbcolor+1;
+					}
+				}
+				
+				nbarc=liste_voisins.size();
+				if (nbcolor>nbcolormax) {
+					max=actu;
+					nbcolormax=nbcolor;
+				}
+				if (nbarc>nbarcmax && nbcolor==nbcolormax){
+					nbarcmax=nbarc;
+					max=actu;
+				}
+				
+				if (nbarc==0){
+					max=actu;
+				}
+				
+				
+			}
+			
+
+
+			liste_voisins=liste_voisins_pere_et_fils(max);
+			int compare;
+			color=0;
+			while (change) {
+				change =false;
+				for (int k=0; k<liste_voisins.size();k++){
+					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
+					if (compare==color){
+						color=color+1;
+						change=true;
+					}
+				}
+			}
+			
+			change=true;
+			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
+			for (int z=0;z<acolo.size();z++) {
+				if (max.equals(acolo.get(z))) {
+					acolo.remove(z);
+				}
+			}
+		}
+
+			
+
+		
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
+		ArrayList<Color> liste_id_color = new ArrayList<Color>();
+		for (Sommet s: sommets) {
+			Random rand = new Random();
+			int id_color = s.getVar(s.getList().size()-1).getInt();
+			while(id_color > liste_id_color.size()-1){
+
+				float r = rand.nextFloat();
+				float g = rand.nextFloat();
+				float b = rand.nextFloat();
+				liste_id_color.add(new Color(r,g,b));
+			}
+			s.setCouleur(liste_id_color.get(id_color));
+			s.removeVar(s.getList().size() -1);
+			
+		}
+		
+		return true;
 	}
 
 	@Override
