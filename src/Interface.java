@@ -176,9 +176,24 @@ public class Interface extends JComponent {
                         }else{
                             exec=graphe.bellman_ford(SommetSelec.get(0),SommetSelec.get(1));
                         }
-                        if(exec==false){
+                        if(exec==false) {
                             JOptionPane jop = new JOptionPane();
-                            jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe peut-être pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            if (algo_en_cours == "dijkstra") {
+                                Boolean neg = false;
+                                for (Arc act : graphe.get_liste_arc()) {
+                                    if (act.getVarPoids() < 0) {
+                                        neg = true;
+                                        break;
+                                    }
+                                }
+                                if (neg) {
+                                    jop.showMessageDialog(f, "Un ou plusieurs Arcs du Graphe sont négatifs (coloriés en rouge), l'algorithme de Dijkstra ne peut s'executer.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                                }else{
+                                    jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            } else {
+                                jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
                         algo_en_cours = null;
                         SommetSelec.clear();
