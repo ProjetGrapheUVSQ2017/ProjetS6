@@ -294,6 +294,8 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
+		
+		//TODO: Vérifier présences de poids négatifs
 		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
 		boolean continuer = true;
 		
@@ -414,8 +416,45 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
+		
+		ArrayList<Double> distance = new ArrayList<Double>();
+		ArrayList<Sommet> pere = new ArrayList<Sommet>();
+		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
+		
+		
+		//Initialisation des distances et des pères
+		for(int i = 0; i<sommets.size(); i++){
+			distance.add(Double.MAX_VALUE);
+			pere.add(null);
+		}
+		
+		//Initialisation pour le départ
+		distance.set(d.getId(), 0.0);
+		aTraiter.add(d);
+		
+		while(!aTraiter.isEmpty()){
+			Sommet enTraitement = aTraiter.get(0);
+			aTraiter.remove(enTraitement);
+			
+			//On isole les arcs entrants de enTraitement
+			ArrayList<Arc> entrants = new ArrayList<Arc>();
+			for(Arc act : arcs){
+				if(act.getSommetArrivee().equals(enTraitement)){
+					entrants.add(act);
+				}
+			}
+			
+			for(Arc act : entrants){
+				Sommet S1 = act.getSommetDepart();
+				if(distance.get(S1.getId()) > (distance.get(enTraitement.getId()) + act.getVarPoids())){
+					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids()));
+					pere.set(S1.getId(), enTraitement);
+					aTraiter.add(S1);
+				}
+			}
+		}
+			
 		return false;
 	}
 
