@@ -301,6 +301,14 @@ public class GrapheListe extends Graphe {
 	public boolean dijkstra(Sommet d, Sommet a) {
 		
 		//TODO: Vérifier présences de poids négatifs
+		
+		for(Arc act : arcs){
+			if(act.getVarPoids() < 0){
+				act.setCouleur(Color.red);
+				return false;
+			}
+		}
+		
 		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
 		boolean continuer = true;
 		
