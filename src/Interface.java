@@ -185,8 +185,12 @@ public class Interface extends JComponent {
                     }
                 }else{
                     if(modeMouse.getSelectedItem()=="Selection"){
-                        SommetSelec.clear();
-                        SommetSelec.add(getSommetFromPoint(ptSouris));
+                        if (e.isShiftDown()) {
+                            SommetSelec.add(getSommetFromPoint(ptSouris));
+                        }else{
+                            SommetSelec.clear();
+                            SommetSelec.add(getSommetFromPoint(ptSouris));
+                        }
                     }
                     else if(modeMouse.getSelectedItem()=="Sommet"){
                         if(SommetSelec.isEmpty()){
