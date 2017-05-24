@@ -278,15 +278,18 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Cr�e un sous-graphe compos� des sommets donn�s dans s et des arcs entre eux.
+	 * Crée un sous-graphe composé des sommets donnés dans s et des arcs entre eux.
 	 * @param s : Une ArrayList de sommet qui composeront le nouveau graphe
 	 * @author Damien
 	 * @see ArrayList
 	 */
 	@Override
 	public void creer_sous_graphe(ArrayList<Sommet> s) {
-		// TODO Auto-generated method stub
-
+		for(Sommet act : sommets){
+			if(!s.contains(act)){
+				this.deleteSommet(act.getId());
+			}
+		}
 	}
 
 	@Override
