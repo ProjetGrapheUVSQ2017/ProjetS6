@@ -165,22 +165,32 @@ public class Interface extends JComponent {
                 if(selectDeuxSommet==true){
                     SommetSelec.add(getSommetFromPoint(ptSouris));
                     getSommetFromPoint(ptSouris).setCouleur(Color.RED);
+                    repaint();
                     if(SommetSelec.size()==2){
+                        Boolean exec;
                         selectDeuxSommet=false;
                         if(algo_en_cours=="dijkstra"){
-                            graphe.dijkstra(SommetSelec.get(0),SommetSelec.get(1));
+                            exec=graphe.dijkstra(SommetSelec.get(0),SommetSelec.get(1));
                         }else if(algo_en_cours=="ford"){
-                            graphe.ford_fulkerson(SommetSelec.get(0),SommetSelec.get(1));
+                            exec=graphe.ford_fulkerson(SommetSelec.get(0),SommetSelec.get(1));
                         }else{
-                            graphe.bellman_ford(SommetSelec.get(0),SommetSelec.get(1));
+                            exec=graphe.bellman_ford(SommetSelec.get(0),SommetSelec.get(1));
+                        }
+                        if(exec==false){
+                            JOptionPane jop = new JOptionPane();
+                            jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe peut-être pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
                         }
                         algo_en_cours = null;
                         SommetSelec.clear();
                     }
                 }else{
                     if(modeMouse.getSelectedItem()=="Selection"){
-                        SommetSelec.clear();
-                        SommetSelec.add(getSommetFromPoint(ptSouris));
+                        if (e.isShiftDown()) {
+                            SommetSelec.add(getSommetFromPoint(ptSouris));
+                        }else{
+                            SommetSelec.clear();
+                            SommetSelec.add(getSommetFromPoint(ptSouris));
+                        }
                     }
                     else if(modeMouse.getSelectedItem()=="Sommet"){
                         if(SommetSelec.isEmpty()){
