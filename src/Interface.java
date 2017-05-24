@@ -35,6 +35,8 @@ public class Interface extends JComponent {
                 graphe.addSommet(new Point(250,50));
                 graphe.addSommet(new Point(50,350));
                 graphe.addSommet(new Point(250,350));
+                graphe.addSommet(new Point(300,400));
+                
 
 
                 graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
@@ -42,9 +44,7 @@ public class Interface extends JComponent {
                 graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(1),graphe.getSommet(3));
                 graphe.addArc(graphe.getSommet(2),graphe.getSommet(3));
-          
-
-                //graphe.dijkstra(graphe.getSommet(0), graphe.getSommet(3));
+                graphe.addArc(graphe.getSommet(1), graphe.getSommet(4));
             }
 
         });
