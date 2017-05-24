@@ -17,6 +17,7 @@ public class Interface extends JComponent {
     private Rectangle rectangleSouris = new Rectangle();
     private boolean selectionEnCours;
     private boolean selectDeuxSommet = false;
+    private String algo_en_cours = new String();
     private MenuPanel control = new MenuPanel();
     private static Graphe graphe;
     private static int rayon_sommet = 15;
@@ -166,7 +167,14 @@ public class Interface extends JComponent {
                     getSommetFromPoint(ptSouris).setCouleur(Color.RED);
                     if(SommetSelec.size()==2){
                         selectDeuxSommet=false;
-                        graphe.dijkstra(SommetSelec.get(0),SommetSelec.get(1));
+                        if(algo_en_cours=="dijkstra"){
+                            graphe.dijkstra(SommetSelec.get(0),SommetSelec.get(1));
+                        }else if(algo_en_cours=="ford"){
+                            graphe.ford_fulkerson(SommetSelec.get(0),SommetSelec.get(1));
+                        }else{
+                            graphe.bellman_ford(SommetSelec.get(0),SommetSelec.get(1));
+                        }
+                        algo_en_cours = null;
                         SommetSelec.clear();
                     }
                 }else{
@@ -379,6 +387,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
             graphe.dsatur();
             repaint();
         }
@@ -395,6 +404,7 @@ public class Interface extends JComponent {
             SommetSelec.clear();
             graphe.reset_couleur_graph();
             selectDeuxSommet=true;
+            algo_en_cours = "dijkstra";
             repaint();
         }
     }
@@ -406,6 +416,12 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e) {
             graphe.reset_couleur_graph();
+            JOptionPane jop = new JOptionPane();
+            jop.showMessageDialog(f, "Veuillez selectionner le Sommet de Départ puis le Sommet d'arrivée via un simple clic.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            SommetSelec.clear();
+            selectDeuxSommet=true;
+            algo_en_cours = "bellman";
+
             repaint();
         }
     }
@@ -417,6 +433,12 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e) {
             graphe.reset_couleur_graph();
+            JOptionPane jop = new JOptionPane();
+            jop.showMessageDialog(f, "Veuillez selectionner le Sommet de Départ puis le Sommet d'arrivée via un simple clic.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            SommetSelec.clear();
+            selectDeuxSommet=true;
+            algo_en_cours = "ford";
+
             repaint();
         }
     }
@@ -427,6 +449,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
         	graphe.kruskall();
             repaint();
         }
@@ -438,6 +461,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
         	graphe.welsh_powell();
             repaint();
         }
@@ -449,6 +473,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
             graphe.kosaraju();
             repaint();
         }
@@ -460,6 +485,7 @@ public class Interface extends JComponent {
         }
 
         public void actionPerformed(ActionEvent e) {
+            graphe.reset_couleur_graph();
             graphe.tarjan();
             repaint();
         }
@@ -752,22 +778,7 @@ public class Interface extends JComponent {
         }
         public void actionPerformed(ActionEvent e) {
             if(!SommetSelec.isEmpty()){
-                ListIterator<Sommet> i = graphe.get_liste_de_sommet().listIterator();
-                while (i.hasNext()) {
-                    Sommet s = i.next();
-                    if(!SommetSelec.contains(s)){
-                        i.remove();
-                        graphe.setNbSommets(graphe.getNbSommets()-1);
-                    }
-                }
-                ListIterator<Arc> j = graphe.get_liste_arc().listIterator();
-                while (j.hasNext()) {
-                    Arc a = j.next();
-                    if(!SommetSelec.contains(a.getSommetDepart()) || !SommetSelec.contains(a.getSommetArrivee())){
-                        j.remove();
-                        graphe.setNbArcs(graphe.getNbArcs()-1);
-                    }
-                }
+                graphe.creer_sous_graphe(SommetSelec);
                 SommetSelec.clear();
                 repaint();
             }
