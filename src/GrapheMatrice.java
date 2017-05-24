@@ -422,8 +422,70 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
+		
+		ArrayList<Arc> aColorier = new ArrayList<Arc>();
+		ArrayList<Double> distance = new ArrayList<Double>();
+		ArrayList<Sommet> pere = new ArrayList<Sommet>();
+		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
+		
+		
+		//Initialisation des distances et des pères
+		for(int i = 0; i<sommets.size(); i++){
+			distance.add(Double.MAX_VALUE);
+			pere.add(null);
+			aColorier.add(null);
+		}
+		
+		//Initialisation pour le départ
+		distance.set(d.getId(), 0.0);
+		aTraiter.add(d);
+		
+		while(!aTraiter.isEmpty()){
+			Sommet enTraitement = aTraiter.get(0);
+			aTraiter.remove(enTraitement);
+			
+			//On isole les arcs entrants de enTraitement
+			ArrayList<Arc> sortants = new ArrayList<Arc>();
+			for(int i = 0; i<this.graphe.length; i++){
+				if(graphe[enTraitement.getId()][i] != null) sortants.add(graphe[enTraitement.getId()][i]);
+			}
+			
+			for(Arc act : sortants){
+				Sommet S1 = act.getSommetArrivee();
+				
+				if(distance.get(enTraitement.getId()) + act.getVarPoids() < (distance.get(S1.getId()))){
+					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids() ));
+					pere.set(S1.getId(), enTraitement);
+					aTraiter.add(S1);
+					aColorier.set(S1.getId(), act);
+				}
+			}
+		}
+		
+		boolean cheminExiste = false;
+		Sommet act = a;
+		while(act != null){
+			if(act.equals(d)){
+				cheminExiste = true;
+			}
+			act = pere.get(act.getId());
+		}
+		
+		if(cheminExiste){
+		act = a;
+		while(act != null){
+//			System.err.println(act.toString()+ " id : "+ act.getId() + " pere : " + pere.get(act.getId())+" , " + aColorier.get(act.getId()));
+			act.setCouleur(Color.GREEN);
+			Arc tmp = aColorier.get(act.getId());
+			if(tmp != null){//L'arc a colorié est l'arc qui arrive à act or le sommet départ n'a pas forcément celui là
+					tmp.setCouleur(Color.green);
+			}
+			act = pere.get(act.getId());
+			
+		}
+		return true;
+		}
 		return false;
 	}
 
