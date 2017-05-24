@@ -286,16 +286,132 @@ public class GrapheMatrice extends Graphe {
 		return new GrapheListe(this);
 	}
 
+	/**
+	 * Supprimme tous les sommets n'appartenant pas à s ainsi que les arcs liés
+	 * @author Damien
+	 */
 	@Override
 	public void creer_sous_graphe(ArrayList<Sommet> s) {
-		// TODO Auto-generated method stub
-
+		for(Sommet act : sommets){
+			if(!s.contains(act)){
+				this.deleteSommet(act.getId());
+			}
+		}
 	}
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
+		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
+		boolean continuer = true;
+		
+		ArrayList<Arc> aColorier = new ArrayList<Arc>(); //Liste d'arc étant utiliser dans le plus court chemin et qui doivent être coloré à la fin de dijkstra
+		
+		
+		//Liste représentant les distances pour les sommets, les père et un booléen indiquant si un sommet à été traité
+		ArrayList<Double> distance = new ArrayList<Double>();
+		ArrayList<Sommet> pere = new ArrayList<Sommet>();
+		ArrayList<Boolean> traiter = new ArrayList<Boolean>();
+
+		//Reinitialise toute les couleurs des arcs et sommets en noir
 		this.reset_couleur_graph();
+
+
+		
+		for(Sommet s : sommets){
+			distance.add(Double.MAX_VALUE);
+			pere.add(null);
+			traiter.add(false);
+			aColorier.add(null);
+		}
+		
+		if(sommets.contains(d) && sommets.contains(a)){
+			
+			if(d.equals(a)){ //Les sommets de départ et d'arrivée doivent être différents ou alors l'algo s'arrête en renvoyant un false
+				return false;//Peut être changer si l'on souhaite le contraire
+			}
+			
+			//Initialisation du départ et de aTraiter avec le sommet de départ
+			distance.set(d.getId(), 0.0);
+			aTraiter.add(d);
+			pere.set(d.getId(), null);
+			
+			while(continuer){//Tant que tous les sommets n'ont pas été traité
+				Sommet enTraitement = null;
+				
+				double min = Double.MAX_VALUE; Sommet mini = null;
+				for(Sommet s : aTraiter){
+					if(distance.get(s.getId()) < min){
+						min = distance.get(s.getId());
+						mini = s;
+					}
+				}
+				enTraitement = mini; //On trouve le sommet de aTraiter ayant la distance la plus courte
+
+				if(enTraitement != null){
+					
+					//Création de la liste d'arc sortants de traitement
+					ArrayList<Arc> sortants = new ArrayList<Arc>();
+					for(int i = 0; i<this.graphe.length; i++){
+						if(graphe[enTraitement.getId()][i] != null){
+							sortants.add(graphe[enTraitement.getId()][i]);
+						}
+					}
+					
+					for(Arc c : sortants){
+						for(Sommet s : sommets){
+							if(c.getSommetArrivee().equals(s) && traiter.get(s.getId()) == false){
+								aTraiter.add(s);
+							}
+							
+							if(c.getSommetArrivee().equals(s)){
+								if(distance.get(s.getId()) > (distance.get(enTraitement.getId())+c.getVarPoids())){
+									distance.set(s.getId(), distance.get(enTraitement.getId())+c.getVarPoids());
+									pere.set(s.getId(), enTraitement);
+									aColorier.set(s.getId(), c);
+									
+								}
+							}
+						}
+					}
+					traiter.set(enTraitement.getId(), true);
+					aTraiter.remove(enTraitement);
+				}
+				
+				continuer = false;
+				for(Sommet s : aTraiter){//On regarder si tous les sommets ont été traités
+					if(!traiter.get(s.getId())){
+						continuer = true;
+					}
+				}
+			}
+			
+			
+			//Vérification des résultats
+			boolean cheminExiste = false;
+			Sommet act = a;
+			while(act != null){
+				if(act.equals(d)){
+					cheminExiste = true;
+				}
+				act = pere.get(act.getId());
+			}
+			
+
+			//Affichage des résultats
+			if(cheminExiste){
+				d.setCouleur(Color.red);
+				a.setCouleur(Color.red);
+				Sommet pereA = pere.get(a.getId()); 
+				aColorier.get(a.getId()).setCouleur(Color.red);
+				while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
+					pereA.setCouleur(Color.red);
+					aColorier.get(pereA.getId()).setCouleur(Color.RED);
+					pereA = pere.get(pereA.getId());
+				}
+
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -444,9 +560,102 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean dsatur() {
-		// TODO Auto-generated method stub
+		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
+		int nbcolor=0;
+		int nbcolormax=0;
+		int nbarc=0;
+		int nbarcmax=0;
+		Sommet actu, max = null;
+		int color=0;
+		boolean change=true;
+		ArrayList<Sommet> liste_voisins;
+	
+
 		this.reset_couleur_graph();
-		return false;
+
+		for(Sommet s: sommets){
+			s.addVar(new VarInt(-1));
+		}
+		
+		while (!acolo.isEmpty()) {
+			
+			nbcolormax=0;
+			nbarcmax=0;
+			max=null;
+			
+			for (int i=0; i<acolo.size();i++) {
+				actu=acolo.get(i);
+				nbarc=0;
+				nbcolor=0;
+				for (int j=0;j<(liste_voisins=liste_voisins_pere_et_fils(actu)).size();j++) {
+					if ( liste_voisins.get(j).getVar(liste_voisins.get(j).getList().size()-1).getInt()!=-1 ){
+					nbcolor=nbcolor+1;
+					}
+				}
+				
+				nbarc=liste_voisins.size();
+				if (nbcolor>nbcolormax) {
+					max=actu;
+					nbcolormax=nbcolor;
+				}
+				if (nbarc>nbarcmax && nbcolor==nbcolormax){
+					nbarcmax=nbarc;
+					max=actu;
+				}
+				
+				if (nbarc==0){
+					max=actu;
+				}
+				
+				
+			}
+			
+
+
+			liste_voisins=liste_voisins_pere_et_fils(max);
+			int compare;
+			color=0;
+			while (change) {
+				change =false;
+				for (int k=0; k<liste_voisins.size();k++){
+					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
+					if (compare==color){
+						color=color+1;
+						change=true;
+					}
+				}
+			}
+			
+			change=true;
+			this.getSommet(max.getId()).setVar(this.getSommet(max.getId()).getList().size()-1, new VarInt(color));
+			for (int z=0;z<acolo.size();z++) {
+				if (max.equals(acolo.get(z))) {
+					acolo.remove(z);
+				}
+			}
+		}
+
+			
+
+		
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
+		ArrayList<Color> liste_id_color = new ArrayList<Color>();
+		for (Sommet s: sommets) {
+			Random rand = new Random();
+			int id_color = s.getVar(s.getList().size()-1).getInt();
+			while(id_color > liste_id_color.size()-1){
+
+				float r = rand.nextFloat();
+				float g = rand.nextFloat();
+				float b = rand.nextFloat();
+				liste_id_color.add(new Color(r,g,b));
+			}
+			s.setCouleur(liste_id_color.get(id_color));
+			s.removeVar(s.getList().size() -1);
+			
+		}
+		
+		return true;
 	}
 
 	@Override

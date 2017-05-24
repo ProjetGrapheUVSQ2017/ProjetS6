@@ -278,19 +278,24 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Cr�e un sous-graphe compos� des sommets donn�s dans s et des arcs entre eux.
+	 * Crée un sous-graphe composé des sommets donnés dans s et des arcs entre eux.
 	 * @param s : Une ArrayList de sommet qui composeront le nouveau graphe
 	 * @author Damien
 	 * @see ArrayList
 	 */
 	@Override
 	public void creer_sous_graphe(ArrayList<Sommet> s) {
-		// TODO Auto-generated method stub
-
+		for(Sommet act : sommets){
+			if(!s.contains(act)){
+				this.deleteSommet(act.getId());
+			}
+		}
 	}
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
+		
+		//TODO: Vérifier présences de poids négatifs
 		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
 		boolean continuer = true;
 		
@@ -357,25 +362,41 @@ public class GrapheListe extends Graphe {
 					traiter.set(enTraitement.getId(), true);
 					aTraiter.remove(enTraitement);
 				}
+				
 				continuer = false;
-				for(Sommet s : aTraiter){
+				for(Sommet s : aTraiter){//On regarder si tous les sommets ont été traités
 					if(!traiter.get(s.getId())){
 						continuer = true;
 					}
 				}
 			}
 			
-			d.setCouleur(Color.red);
-			a.setCouleur(Color.red);
-			Sommet pereA = pere.get(a.getId()); 
-			aColorier.get(a.getId()).setCouleur(Color.red);
-			while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
-				pereA.setCouleur(Color.red);
-				aColorier.get(pereA.getId()).setCouleur(Color.RED);
-				pereA = pere.get(pereA.getId());
+			
+			//Vérification des résultats
+			boolean cheminExiste = false;
+			Sommet act = a;
+			while(act != null){
+				if(act.equals(d)){
+					cheminExiste = true;
+				}
+				act = pere.get(act.getId());
 			}
 			
-			return true;
+
+			//Affichage des résultats
+			if(cheminExiste){
+				d.setCouleur(Color.red);
+				a.setCouleur(Color.red);
+				Sommet pereA = pere.get(a.getId()); 
+				aColorier.get(a.getId()).setCouleur(Color.red);
+				while(!pereA.equals(d)){ //On colore les sommets en remontant la chaine du plus court chemin depuis l'arrivée.
+					pereA.setCouleur(Color.red);
+					aColorier.get(pereA.getId()).setCouleur(Color.RED);
+					pereA = pere.get(pereA.getId());
+				}
+
+				return true;
+			}
 		}
 		return false;
 	}
@@ -395,8 +416,45 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
+		
+		ArrayList<Double> distance = new ArrayList<Double>();
+		ArrayList<Sommet> pere = new ArrayList<Sommet>();
+		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
+		
+		
+		//Initialisation des distances et des pères
+		for(int i = 0; i<sommets.size(); i++){
+			distance.add(Double.MAX_VALUE);
+			pere.add(null);
+		}
+		
+		//Initialisation pour le départ
+		distance.set(d.getId(), 0.0);
+		aTraiter.add(d);
+		
+		while(!aTraiter.isEmpty()){
+			Sommet enTraitement = aTraiter.get(0);
+			aTraiter.remove(enTraitement);
+			
+			//On isole les arcs entrants de enTraitement
+			ArrayList<Arc> entrants = new ArrayList<Arc>();
+			for(Arc act : arcs){
+				if(act.getSommetArrivee().equals(enTraitement)){
+					entrants.add(act);
+				}
+			}
+			
+			for(Arc act : entrants){
+				Sommet S1 = act.getSommetDepart();
+				if(distance.get(S1.getId()) > (distance.get(enTraitement.getId()) + act.getVarPoids())){
+					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids()));
+					pere.set(S1.getId(), enTraitement);
+					aTraiter.add(S1);
+				}
+			}
+		}
+			
 		return false;
 	}
 
