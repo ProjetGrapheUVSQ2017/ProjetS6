@@ -306,6 +306,19 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
+		boolean presenceArcNeg = false;
+		
+		for(int i = 0; i<graphe.length; i++){
+			for(int j = 0; j<graphe.length; j++){
+				if(graphe[i][j] != null && graphe[i][j].getVarPoids() < 0){
+					graphe[i][j].setCouleur(Color.RED);
+					presenceArcNeg = true;
+				}
+			}
+		}
+		
+		if(presenceArcNeg) return false;
+		
 		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
 		boolean continuer = true;
 		
