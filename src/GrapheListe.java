@@ -438,24 +438,28 @@ public class GrapheListe extends Graphe {
 			aTraiter.remove(enTraitement);
 			
 			//On isole les arcs entrants de enTraitement
-			ArrayList<Arc> entrants = new ArrayList<Arc>();
+			ArrayList<Arc> sortants = new ArrayList<Arc>();
 			for(Arc act : arcs){
-				if(act.getSommetArrivee().equals(enTraitement)){
-					entrants.add(act);
+				if(act.getSommetDepart().equals(enTraitement)){
+					sortants.add(act);
 				}
 			}
 			
-			for(Arc act : entrants){
-				Sommet S1 = act.getSommetDepart();
-				if(distance.get(S1.getId()) > (distance.get(enTraitement.getId()) + act.getVarPoids())){
-					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids()));
+			for(Arc act : sortants){
+				Sommet S1 = act.getSommetArrivee();
+				System.out.println("Arc poids :" +act.getVarPoids() + "sommet départ" + act.getSommetDepart().getId());
+				if(distance.get(enTraitement.getId()) + act.getVarPoids() < (distance.get(S1.getId()))){
+					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids() ));
 					pere.set(S1.getId(), enTraitement);
 					aTraiter.add(S1);
 				}
 			}
 		}
-			
-		return false;
+		
+		for (int i=1;i<sommets.size();i++){
+			System.out.println("Sommet numéro : "+sommets.get(i).getId() + " Distance :" + distance.get(i) + "Pere : "+ pere.get(i).getId());
+		}
+		return true;
 	}
 
 	@Override
