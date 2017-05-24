@@ -437,6 +437,11 @@ public class GrapheMatrice extends Graphe {
 		/*initialiser la couleur de tous les arcs et des sommets en noir
 		 * */
 		this.reset_couleur_graph();
+
+		if(ArcsNonTries.isEmpty()){
+			return false;
+		}
+
 		/*
 		 * trier les poids des arcs par ordre croissant
 		 * */
@@ -477,7 +482,7 @@ public class GrapheMatrice extends Graphe {
 		for (Sommet t : sommets){
 			t.removeVar(t.getList().size()-1);
 		}
-			return true;
+		return true;
 	}
 	
 	@Override

@@ -460,7 +460,13 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e) {
             graphe.reset_couleur_graph();
-        	graphe.kruskall();
+
+            Boolean exec;
+        	exec=graphe.kruskall();
+        	if(exec==false){
+                JOptionPane jop = new JOptionPane();
+                jop.showMessageDialog(f, "Ce Graphe ne contient aucun arc, la recherche d'un arbre couvrant est donc impossible.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            }
             repaint();
         }
     }
