@@ -286,10 +286,17 @@ public class GrapheMatrice extends Graphe {
 		return new GrapheListe(this);
 	}
 
+	/**
+	 * Supprimme tous les sommets n'appartenant pas à s ainsi que les arcs liés
+	 * @author Damien
+	 */
 	@Override
 	public void creer_sous_graphe(ArrayList<Sommet> s) {
-		// TODO Auto-generated method stub
-
+		for(Sommet act : sommets){
+			if(!s.contains(act)){
+				this.deleteSommet(act.getId());
+			}
+		}
 	}
 
 	@Override
