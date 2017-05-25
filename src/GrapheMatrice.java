@@ -750,7 +750,7 @@ this.reset_couleur_graph();
 		this.reset_couleur_graph();
 		return false;
 	}
-	public int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
+	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
 		int min=num[x]= ++j;
 		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
 			int y=s.getId();int m;

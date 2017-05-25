@@ -31,7 +31,6 @@ public class VarInt extends Variable{
 	}
 	@Override
 	public float getFloat() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }
