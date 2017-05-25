@@ -554,16 +554,22 @@ public class Interface extends JComponent {
             }
 
             if(!ne_rien_faire) {
+                final JPanel p1 = new JPanel(new GridBagLayout());
 
                 final ArrayList<TextField> liste_input = new ArrayList<TextField>();
 
+                final ArrayList<JLabel> liste_Label = new ArrayList<JLabel>();
+
+                final ArrayList<JButton> liste_delete_button = new ArrayList<JButton>();
+
+
                 if(sommet){
-                    VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                    VariableWindow.setSize(300, s.getList().size() * 100 + 200);
                     for (Variable v : s.getList()) {
                         liste_input.add(new TextField(v.toString()));
                     }
                 }else{
-                    VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                    VariableWindow.setSize(300, a.getList().size() * 100 + 200);
                     for (Variable v : a.getList()) {
                         liste_input.add(new TextField(v.toString()));
                     }
@@ -574,8 +580,6 @@ public class Interface extends JComponent {
                 JPanel container = new JPanel();
                 container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-                final JPanel p1 = new JPanel(new GridBagLayout());
-
                 final GridBagConstraints gbc = new GridBagConstraints();
                 gbc.weightx = 1;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -583,18 +587,57 @@ public class Interface extends JComponent {
                 gbc.insets = new Insets(10, 10, 0, 10);
 
 
+
                 for (int i = 0; i < liste_input.size(); i++) {
                     if(sommet){
-                        p1.add(new JLabel("Variable " + (i + 1) + " (" + s.getList().get(i).getTypeVar() + ") : "), gbc);
+                        liste_Label.add(new JLabel("Variable " + (i + 1) + " (" + s.getList().get(i).getTypeVar() + ") : "));
+                        p1.add(liste_Label.get(i), gbc);
+                        p1.add(liste_input.get(i), gbc);
+                        liste_delete_button.add(new JButton("Supprimer"));
+                        liste_delete_button.get(i).addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent actionEvent) {
+                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                p1.remove(liste_delete_button.get(j));
+                                p1.remove(liste_input.get(j));
+                                p1.remove(liste_Label.get(j));
+                                liste_delete_button.remove(j);
+                                liste_input.remove(j);
+                                liste_Label.remove(j);
+                                s.removeVar(j);
+                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                VariableWindow.repaint();
+                            }
+                        });
+                        p1.add(liste_delete_button.get(i), gbc);
                     }else{
                         if(i==0){
-                            p1.add(new JLabel("Poids " + " (" + a.getList().get(i).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Poids " + " (" + a.getList().get(i).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(i), gbc);
+                            p1.add(liste_input.get(i), gbc);
                         }else{
-                            p1.add(new JLabel("Variable " + (i + 1) + " (" + a.getList().get(i).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + (i + 1) + " (" + s.getList().get(i).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(i), gbc);
+                            p1.add(liste_input.get(i), gbc);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(i).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    s.removeVar(j);
+                                    VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
+                            p1.add(liste_delete_button.get(i), gbc);
                         }
                     }
-
-                    p1.add(liste_input.get(i), gbc);
                 }
 
                 JButton addVariableInt = new JButton("Ajouter une Variable(int)");
@@ -602,23 +645,43 @@ public class Interface extends JComponent {
                 JButton addVariableString = new JButton("Ajouter une Variable(string)");
                 JButton terminer = new JButton("Terminer");
 
+
                 addVariableInt.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
                         if(s!=null){
                             s.addVar(new VarInt(0));
                             liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
-                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
-                            VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                            VariableWindow.setSize(300, s.getList().size() * 100 + 200);
                         }
                         else{
                             a.addVar(new VarInt(0));
                             liste_input.add(new TextField(a.getVar(a.getList().size() - 1).toString()));
-                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
-                            VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                            VariableWindow.setSize(300, a.getList().size() * 100 + 200);
                         }
+                        liste_delete_button.add(new JButton("Supprimer"));
+                        liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent actionEvent) {
+                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                p1.remove(liste_delete_button.get(j));
+                                p1.remove(liste_input.get(j));
+                                p1.remove(liste_Label.get(j));
+                                liste_delete_button.remove(j);
+                                liste_input.remove(j);
+                                liste_Label.remove(j);
+                                s.removeVar(j);
+                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                VariableWindow.repaint();
+                            }
+                        });
+                        p1.add(liste_delete_button.get(liste_delete_button.size()-1), gbc);
                     }
                 });
 
@@ -628,17 +691,36 @@ public class Interface extends JComponent {
                         if(s!=null){
                             s.addVar(new VarFloat(0));
                             liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
-                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
-                            VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                            VariableWindow.setSize(300, s.getList().size() * 100 + 200);
                         }
                         else{
                             a.addVar(new VarFloat(0));
                             liste_input.add(new TextField(a.getVar(a.getList().size() - 1).toString()));
-                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
-                            VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                            VariableWindow.setSize(300, a.getList().size() * 100 + 200);
                         }
+                        liste_delete_button.add(new JButton("Supprimer"));
+                        liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent actionEvent) {
+                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                p1.remove(liste_delete_button.get(j));
+                                p1.remove(liste_input.get(j));
+                                p1.remove(liste_Label.get(j));
+                                liste_delete_button.remove(j);
+                                liste_input.remove(j);
+                                liste_Label.remove(j);
+                                s.removeVar(j);
+                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                VariableWindow.repaint();
+                            }
+                        });
+                        p1.add(liste_delete_button.get(liste_delete_button.size()-1), gbc);
                     }
                 });
 
@@ -648,17 +730,36 @@ public class Interface extends JComponent {
                         if(s!=null){
                             s.addVar(new VarString(" "));
                             liste_input.add(new TextField(s.getVar(s.getList().size() - 1).toString()));
-                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + liste_input.size() + " (" + s.getList().get(liste_input.size() - 1).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
-                            VariableWindow.setSize(300, s.getList().size() * 65 + 200);
+                            VariableWindow.setSize(300, s.getList().size() * 100 + 200);
                         }
                         else{
                             a.addVar(new VarString(" "));
                             liste_input.add(new TextField(a.getVar(a.getList().size() - 1).toString()));
-                            p1.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "), gbc);
+                            liste_Label.add(new JLabel("Variable " + liste_input.size() + " (" + a.getList().get(liste_input.size() - 1).getTypeVar() + ") : "));
+                            p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
-                            VariableWindow.setSize(300, a.getList().size() * 65 + 200);
+                            VariableWindow.setSize(300, a.getList().size() * 100 + 200);
                         }
+                        liste_delete_button.add(new JButton("Supprimer"));
+                        liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent actionEvent) {
+                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                p1.remove(liste_delete_button.get(j));
+                                p1.remove(liste_input.get(j));
+                                p1.remove(liste_Label.get(j));
+                                liste_delete_button.remove(j);
+                                liste_input.remove(j);
+                                liste_Label.remove(j);
+                                s.removeVar(j);
+                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                VariableWindow.repaint();
+                            }
+                        });
+                        p1.add(liste_delete_button.get(liste_delete_button.size()-1), gbc);
                     }
                 });
 
