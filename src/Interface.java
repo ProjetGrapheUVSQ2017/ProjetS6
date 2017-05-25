@@ -191,7 +191,9 @@ public class Interface extends JComponent {
                                 }else{
                                     jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
                                 }
-                            } else {
+                            } else if(algo_en_cours == "bellman") {
+                                jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés ou il existe un cycle de poids négatif.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            }else{
                                 jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
@@ -835,7 +837,7 @@ public class Interface extends JComponent {
     private static Arc getArcFromPoint(Point p){
         for(Arc a : graphe.get_liste_arc()){
             Line2D l = new Line2D.Double(a.getSommetDepart().getPoint(), a.getSommetArrivee().getPoint());
-            if(l.ptLineDist(p)<20){
+            if(l.ptLineDist(p)<10){
                 return a;
             }
         }
