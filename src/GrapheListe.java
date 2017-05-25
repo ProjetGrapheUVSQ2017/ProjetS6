@@ -150,6 +150,9 @@ public class GrapheListe extends Graphe {
 			arcs.remove(aSupprimer);
 			this.setNbArcs(this.getNbArcs()-1);
 		}
+		for(int i = 0; i <this.arcs.size(); i++){
+			this.arcs.get(i).setID(i);
+		}
 	}
 
 	/**
@@ -159,12 +162,23 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void deleteArc(int id) {
-		for(Arc act : arcs){
+		for(Arc act : this.arcs){
 			if(act.getId() == id){
-				arcs.remove(act);
+				this.arcs.remove(act);
 				this.setNbArcs(this.getNbArcs()-1);
 				break;
 			}
+		}
+		for(int i = 0; i <this.arcs.size(); i++){
+			this.arcs.get(i).setID(i);
+		}
+		System.out.println("--------------------*deleteArc(id)------------------\nNombre de sommet : "+this.getNbSommets());
+		System.out.println("Nombre d'arcs : "+this.getNbArcs());
+		if(this.getNbSommets()>0){
+		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
+		}
+		if(this.getNbArcs()>0){
+		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
 		}
 	}
 
@@ -175,9 +189,9 @@ public class GrapheListe extends Graphe {
 	 */
 	@Override
 	public void deleteSommet(int id) {
-		for(Sommet s : sommets){
+		for(Sommet s : this.sommets){
 			if(s.getId() == id){
-				ListIterator<Arc> i = arcs.listIterator();
+				ListIterator<Arc> i = this.arcs.listIterator();
 				while (i.hasNext()) {
 					Arc a = i.next();
 					if(a.getSommetDepart()==s || a.getSommetArrivee()==s){
@@ -185,14 +199,25 @@ public class GrapheListe extends Graphe {
 						this.setNbArcs(this.getNbArcs()-1);
 					}
 				}
-				sommets.remove(s);
+				this.sommets.remove(s);
 				this.setNbSommets(getNbSommets()-1);
 				break;
 			}
 		}
 		
-		for(int i = 0; i <sommets.size(); i++){
-			sommets.get(i).setID(i);
+		for(int i = 0; i <this.sommets.size(); i++){
+			this.sommets.get(i).setID(i);
+		}
+		for(int i = 0; i <this.arcs.size(); i++){
+			this.arcs.get(i).setID(i);
+		}
+		System.out.println("--------------------*deleteSommet(id)------------------\nNombre de sommet : "+this.getNbSommets());
+		System.out.println("Nombre d'arcs : "+this.getNbArcs());
+		if(this.getNbSommets()>0){
+		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
+		}
+		if(this.getNbArcs()>0){
+		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
 		}
 	}
 
