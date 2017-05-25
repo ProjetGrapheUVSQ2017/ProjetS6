@@ -442,12 +442,11 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
-		this.reset_couleur_graph();
+this.reset_couleur_graph();
 		
 		ArrayList<Arc> aColorier = new ArrayList<Arc>();
 		ArrayList<Double> distance = new ArrayList<Double>();
 		ArrayList<Sommet> pere = new ArrayList<Sommet>();
-		ArrayList<Sommet> aTraiter = new ArrayList<Sommet>();
 		
 		
 		//Initialisation des distances et des pères
@@ -459,27 +458,22 @@ public class GrapheMatrice extends Graphe {
 		
 		//Initialisation pour le départ
 		distance.set(d.getId(), 0.0);
-		aTraiter.add(d);
-		
-		while(!aTraiter.isEmpty()){
-			Sommet enTraitement = aTraiter.get(0);
-			aTraiter.remove(enTraitement);
-			
-			//On isole les arcs entrants de enTraitement
-			ArrayList<Arc> sortants = new ArrayList<Arc>();
-			for(int i = 0; i<this.graphe.length; i++){
-				if(graphe[enTraitement.getId()][i] != null) sortants.add(graphe[enTraitement.getId()][i]);
-			}
-			
-			for(Arc act : sortants){
-				Sommet S1 = act.getSommetArrivee();
-				
-				if(distance.get(enTraitement.getId()) + act.getVarPoids() < (distance.get(S1.getId()))){
-					distance.set(S1.getId(), (distance.get(enTraitement.getId()) + act.getVarPoids() ));
-					pere.set(S1.getId(), enTraitement);
-					aTraiter.add(S1);
-					aColorier.set(S1.getId(), act);
+
+		//Implémentation de Bellman-Ford, on teste le graphe le nombre de sommet-1 fois pour obtenir le résultat
+		for(int i = 0; i<getNbSommets()-1; i++){
+			for(Arc act : get_liste_arc()){
+				if(distance.get(act.getSommetArrivee().getId()) > (distance.get(act.getSommetDepart().getId())+act.getVarPoids())){
+					distance.set(act.getSommetArrivee().getId(), (distance.get(act.getSommetDepart().getId())+act.getVarPoids()));
+					pere.set(act.getSommetArrivee().getId(), act.getSommetDepart());
+					aColorier.set(act.getSommetArrivee().getId(), act);
 				}
+			}
+		}
+		
+		//Détection cycle de poids négatif, si il y a un cycle de poids négatif, la méthode renvoi false;
+		for(Arc act : get_liste_arc()){
+			if(distance.get(act.getSommetArrivee().getId()) > (distance.get(act.getSommetDepart().getId()) + act.getVarPoids())){
+				return false;
 			}
 		}
 		
