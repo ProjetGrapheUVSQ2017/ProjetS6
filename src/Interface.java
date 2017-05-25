@@ -303,7 +303,7 @@ public class Interface extends JComponent {
         private Action action_ouvrir = new ouvrirAction("Charger");
         private Action action_sauvegarder = new sauvegarderAction("Sauvegarder");
         private Action action_creerSommet = new creerSommetAction("Creer Sommet");
-        private Action action_supprimerSommet = new supprimerSommetAction("Supprimer");
+        private Action action_supprimerSommet = new supprimerAction("Supprimer");
         private Action action_ModifierVariable = new modifierVariableAction("Modifier Variable");
         private Action action_CreerSousGraphe = new creerSousGrapheAction("Creer Sous Graphe");
         private Action action_transformation = new transformationAction("Changement de type de Graphe");
@@ -377,8 +377,8 @@ public class Interface extends JComponent {
         }
     }
 
-    class supprimerSommetAction extends AbstractAction{
-        public supprimerSommetAction(String name){super(name);}
+    class supprimerAction extends AbstractAction{
+        public supprimerAction(String name){super(name);}
 
         public void actionPerformed(ActionEvent e){
             Sommet s = getSommetFromPoint(ptSouris);

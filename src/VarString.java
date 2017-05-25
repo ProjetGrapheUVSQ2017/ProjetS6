@@ -30,13 +30,11 @@ public class VarString extends Variable{
 
 	@Override
 	public int getInt() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public float getFloat() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
