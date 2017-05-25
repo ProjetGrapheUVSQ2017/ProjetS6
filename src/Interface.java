@@ -844,7 +844,6 @@ public class Interface extends JComponent {
                 arc_min = a;
             }
         }
-        System.out.println(min);
         if(min<20){
             return arc_min;
         }
