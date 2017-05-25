@@ -26,8 +26,21 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	public GrapheMatrice(Graphe graphe) {
-		this.graphe = new Arc[graphe.getNbSommets()][graphe.getNbSommets()];
-		this.sommets = new ArrayList<Sommet>(graphe.get_liste_de_sommet());
+		this.sommets = new ArrayList<Sommet>();
+		this.graphe = new Arc[0][0];
+		
+		//J'ai dû refaire cette méthode pour respecter l'encapsulation et éviter des erreurs
+		//On parcourt les sommets de l'ancien graphe et on les ajoute dans ce GrapheMatrice
+		for(Sommet s : graphe.get_liste_de_sommet()){
+			try{
+				this.addSommet(s);
+			}
+			catch(NullPointerException e){
+				System.err.println("Un des sommets est nul " + e.toString());
+			}
+		}
+		
+		//Puis on récupère les arcs et on copie leurs données 
 		for(Arc a : graphe.get_liste_arc()){
 			this.addArc(a.getSommetDepart(),a.getSommetArrivee());
 			Arc arcTemp = this.getArc(a.getSommetDepart(), a.getSommetArrivee());
@@ -41,7 +54,6 @@ public class GrapheMatrice extends Graphe {
 			arcTemp.setCouleur(a.getCouleur());
 		}
 		
-		this.setNbSommets(graphe.getNbSommets());//On met le bon nombre de sommets
 	}
 
 	/**
@@ -95,12 +107,7 @@ public class GrapheMatrice extends Graphe {
 	 * @author damien
 	 */
 	@Override
-	public void addArc(Sommet d, Sommet a) {
-//		System.err.println("Ajout d'un arc " + d.toString() + " "+ a.toString());
-//		System.err.println("d.getId() : "+ d.getId());
-//		System.err.println("a.getId() : "+ a.getId());
-//		System.err.println("Graphe de taille " +graphe.length);
-//		System.err.println(graphe.toString());
+	public void addArc(Sommet d, Sommet a){
 		if(sommets.contains(d) && sommets.contains(a)){
 			if(graphe[d.getId()][a.getId()] == null){
 				graphe[d.getId()][a.getId()] = new Arc(d, a);
