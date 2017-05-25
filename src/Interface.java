@@ -835,11 +835,18 @@ public class Interface extends JComponent {
     }
 
     private static Arc getArcFromPoint(Point p){
+        double min=Double.MAX_VALUE;
+        Arc arc_min = null;
         for(Arc a : graphe.get_liste_arc()){
             Line2D l = new Line2D.Double(a.getSommetDepart().getPoint(), a.getSommetArrivee().getPoint());
-            if(l.ptLineDist(p)<10){
-                return a;
+            if(l.ptSegDist(p)<min){
+                min = l.ptSegDist(p);
+                arc_min = a;
             }
+        }
+        System.out.println(min);
+        if(min<20){
+            return arc_min;
         }
         return null;
     }
