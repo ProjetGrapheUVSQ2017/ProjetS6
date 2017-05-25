@@ -615,6 +615,8 @@ public class Interface extends JComponent {
                             liste_Label.add(new JLabel("Poids " + " (" + a.getList().get(i).getTypeVar() + ") : "));
                             p1.add(liste_Label.get(i), gbc);
                             p1.add(liste_input.get(i), gbc);
+                            liste_delete_button.add(new JButton());
+                            liste_delete_button.get(0).setVisible(false);
                         }else{
                             liste_Label.add(new JLabel("Variable " + (i + 1) + " (" + s.getList().get(i).getTypeVar() + ") : "));
                             p1.add(liste_Label.get(i), gbc);
@@ -656,6 +658,22 @@ public class Interface extends JComponent {
                             p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
                             VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    s.removeVar(j);
+                                    VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
                         }
                         else{
                             a.addVar(new VarInt(0));
@@ -664,23 +682,23 @@ public class Interface extends JComponent {
                             p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
                             VariableWindow.setSize(300, a.getList().size() * 100 + 200);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    a.removeVar(j);
+                                    VariableWindow.setSize(300, a.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
                         }
-                        liste_delete_button.add(new JButton("Supprimer"));
-                        liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent actionEvent) {
-                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
-                                p1.remove(liste_delete_button.get(j));
-                                p1.remove(liste_input.get(j));
-                                p1.remove(liste_Label.get(j));
-                                liste_delete_button.remove(j);
-                                liste_input.remove(j);
-                                liste_Label.remove(j);
-                                s.removeVar(j);
-                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
-                                VariableWindow.repaint();
-                            }
-                        });
                         p1.add(liste_delete_button.get(liste_delete_button.size()-1), gbc);
                     }
                 });
@@ -695,6 +713,22 @@ public class Interface extends JComponent {
                             p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
                             VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    s.removeVar(j);
+                                    VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
                         }
                         else{
                             a.addVar(new VarFloat(0));
@@ -703,23 +737,23 @@ public class Interface extends JComponent {
                             p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
                             VariableWindow.setSize(300, a.getList().size() * 100 + 200);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    a.removeVar(j);
+                                    VariableWindow.setSize(300, a.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
                         }
-                        liste_delete_button.add(new JButton("Supprimer"));
-                        liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent actionEvent) {
-                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
-                                p1.remove(liste_delete_button.get(j));
-                                p1.remove(liste_input.get(j));
-                                p1.remove(liste_Label.get(j));
-                                liste_delete_button.remove(j);
-                                liste_input.remove(j);
-                                liste_Label.remove(j);
-                                s.removeVar(j);
-                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
-                                VariableWindow.repaint();
-                            }
-                        });
                         p1.add(liste_delete_button.get(liste_delete_button.size()-1), gbc);
                     }
                 });
@@ -734,6 +768,22 @@ public class Interface extends JComponent {
                             p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
                             VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    s.removeVar(j);
+                                    VariableWindow.setSize(300, s.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
                         }
                         else{
                             a.addVar(new VarString(" "));
@@ -742,23 +792,23 @@ public class Interface extends JComponent {
                             p1.add(liste_Label.get(liste_Label.size()-1), gbc);
                             p1.add(liste_input.get(liste_input.size() - 1), gbc);
                             VariableWindow.setSize(300, a.getList().size() * 100 + 200);
+                            liste_delete_button.add(new JButton("Supprimer"));
+                            liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
+                                    p1.remove(liste_delete_button.get(j));
+                                    p1.remove(liste_input.get(j));
+                                    p1.remove(liste_Label.get(j));
+                                    liste_delete_button.remove(j);
+                                    liste_input.remove(j);
+                                    liste_Label.remove(j);
+                                    a.removeVar(j);
+                                    VariableWindow.setSize(300, a.getList().size() * 100 + 200);
+                                    VariableWindow.repaint();
+                                }
+                            });
                         }
-                        liste_delete_button.add(new JButton("Supprimer"));
-                        liste_delete_button.get(liste_delete_button.size()-1).addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent actionEvent) {
-                                int j = liste_delete_button.indexOf((JButton)actionEvent.getSource());
-                                p1.remove(liste_delete_button.get(j));
-                                p1.remove(liste_input.get(j));
-                                p1.remove(liste_Label.get(j));
-                                liste_delete_button.remove(j);
-                                liste_input.remove(j);
-                                liste_Label.remove(j);
-                                s.removeVar(j);
-                                VariableWindow.setSize(300, s.getList().size() * 100 + 200);
-                                VariableWindow.repaint();
-                            }
-                        });
                         p1.add(liste_delete_button.get(liste_delete_button.size()-1), gbc);
                     }
                 });
