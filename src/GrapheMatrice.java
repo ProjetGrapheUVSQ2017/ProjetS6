@@ -1,9 +1,9 @@
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-
-
+import java.util.Stack;
 /**
  * Classe implémentant un graphe sous forme de matrice d'adjacence.
  * @see Graphe
@@ -97,7 +97,6 @@ public class GrapheMatrice extends Graphe {
 		this.addSommet(new Sommet(p));
 	}
 
-	
 	/**
 	 * Crée un arc entre les sommets d et a.</br>
 	 * Ne fais rien si l'arc existe déjà.</br>
@@ -131,6 +130,14 @@ public class GrapheMatrice extends Graphe {
 			graphe[d.getId()][a.getId()] = null;
 			this.setNbArcs(this.getNbArcs()-1);
 		}
+		for(int n=0, i = 0; i < this.graphe.length && n!=this.getNbArcs(); i++){
+			for(int j = 0; j<this.graphe[0].length; j++){
+				if(this.graphe[i][j] != null ){
+					this.graphe[i][j].setID(n);
+					n++;
+				}
+			}
+		}
 	}
 
 	/**
@@ -142,13 +149,29 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public void deleteArc(int id) {
-		for(int i = 0; i<graphe.length; i++){
-			for(int j = 0; j<graphe.length; j++){
-				if(graphe[i][j] != null && graphe[i][j].getId() == id){
-					graphe[i][j] = null;
+		for(int i = 0; i<this.graphe.length; i++){
+			for(int j = 0; j<this.graphe.length; j++){
+				if(this.graphe[i][j] != null && this.graphe[i][j].getId() == id){
+					this.graphe[i][j] = null;
 					this.setNbArcs(this.getNbArcs()-1);
 				}
 			}
+		}
+		for(int n=0, i = 0; i < this.graphe.length && n!=this.getNbArcs(); i++){
+			for(int j = 0; j<this.graphe[0].length; j++){
+				if(this.graphe[i][j] != null ){
+					this.graphe[i][j].setID(n);
+					n++;
+				}
+			}
+		}
+		System.out.println("--------------------*delete Arc(id)------------------\nNombre de sommet : "+this.getNbSommets());
+		System.out.println("Nombre d'arcs : "+this.getNbArcs());
+		if(this.getNbSommets()>0){
+		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
+		}
+		if(this.getNbArcs()>0){
+		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
 		}
 	}
 
@@ -161,18 +184,18 @@ public class GrapheMatrice extends Graphe {
 	public void deleteSommet(int id){
 		//On repère le sommet à supprimer
 		Sommet aSupprimer = null;
-		for(Sommet s : sommets){
+		for(Sommet s : this.sommets){
 			if(s.getId() == id){
 				aSupprimer = s;
 			}
 		}
 		
 		//On supprime tous les arcs liés au sommet à supprimer
-		for(int i = 0; i<graphe.length; i++){
-			for(int j = 0; j<graphe.length; j++){
-				if(graphe[i][j] != null){
-					if(graphe[i][j].getSommetArrivee().equals(aSupprimer) || graphe[i][j].getSommetDepart().equals(aSupprimer)){ //Si l'arc est lié au sommet à supprimer
-						graphe[i][j] = null;
+		for(int i = 0; i<this.graphe.length; i++){
+			for(int j = 0; j<this.graphe.length; j++){
+				if(this.graphe[i][j] != null){
+					if(this.graphe[i][j].getSommetArrivee().equals(aSupprimer) || this.graphe[i][j].getSommetDepart().equals(aSupprimer)){ //Si l'arc est lié au sommet à supprimer
+						this.graphe[i][j] = null;
 						this.setNbArcs(getNbArcs()-1);
 					}
 				}
@@ -180,9 +203,23 @@ public class GrapheMatrice extends Graphe {
 		}
 		
 		//Et on supprime le sommet de la liste des sommets du graphe
-		sommets.remove(aSupprimer);
-		
-		
+		this.sommets.remove(aSupprimer);
+		this.setNbSommets(this.getNbSommets()-1);
+		//On redéfinit les IDs de tous les sommets de 0 à nombre de sommets-1
+				for(int i = 0; i <this.sommets.size(); i++){
+					this.sommets.get(i).setID(i);
+				}
+		//On redéfinit les IDs de tous les arcs de 0 à nombre de arcs-1
+		for(int n=0, i = 0; i < this.graphe.length && n!=this.getNbArcs(); i++){
+			for(int j = 0; j<this.graphe[0].length; j++){
+				if(this.graphe[i][j] != null ){
+					this.graphe[i][j].setID(n);
+					n++;
+				}
+			}
+		}
+		//this.setNbSommets(sommets.size());
+		/*
 		//On stocke temporairement tous les arcs de la matrice
 		ArrayList<Arc> arcTemp = new ArrayList<Arc>();
 		for(int i = 0; i < graphe.length; i++){
@@ -192,12 +229,6 @@ public class GrapheMatrice extends Graphe {
 				}
 			}
 		}
-		
-		//On redéfinit les IDs de tous les sommets de 0 à nombre de sommets-1
-		for(int i = 0; i < sommets.size(); i++){
-			sommets.get(i).setID(i);
-		}
-		
 		//Initialisation de la nouvelle matrice d'adjacence
 		Arc[][] tableauTemp = new Arc[sommets.size()][sommets.size()];		
 		for(int i = 0; i<sommets.size(); i++){
@@ -205,14 +236,20 @@ public class GrapheMatrice extends Graphe {
 				tableauTemp[i][j] = null; 
 			}
 		}
-		
 		//Et on remet les arcs à leur place dans la matrice d'adjacence
 		for(Arc act : arcTemp){
 			tableauTemp[act.getSommetDepart().getId()][act.getSommetArrivee().getId()] = act;
 		}
-
-		this.setNbSommets(sommets.size());
-		System.out.println(this.getNbSommets());
+		*/
+		System.out.println("--------------------*deleteSommet(id)------------------\nNombre de sommet : "+this.getNbSommets());
+		System.out.println("Nombre d'arcs : "+this.getNbArcs());
+		if(this.getNbSommets()>0){
+		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
+		}
+		if(this.getNbArcs()>0){
+		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
+		}
+		
 	}
 	
 	/**
@@ -744,11 +781,88 @@ this.reset_couleur_graph();
 		return true;
 	}
 
+	 private ArrayList<Arc> getSortants(Sommet s, Graphe graph) {
+		 
+			//Fonction rajouté pour obtenir les arcs sortant d'un sommet
+			ArrayList<Arc> arcSortant = new ArrayList<Arc>();
+			
+			for(Arc a : graph.get_liste_arc()){
+				if(a.getSommetDepart().equals(s)){
+					arcSortant.add(a);
+				}
+			}
+			return arcSortant;
+		}
+	 
+	 private void DFS(Sommet s,ArrayList<Sommet> visited,Stack<Sommet> stack)  {
+		 
+		 visited.add(s);
+		 for (Arc a : getSortants(s, this)) {
+	        	Sommet v = a.getSommetArrivee();
+	            if (visited.contains(v)) {
+	                continue;
+	            }
+	            DFS(v, visited, stack);
+	        }
+		  stack.push(s);
+		 }	
+	 private void DFSRenverse(Sommet s,ArrayList<Sommet> visited,Stack<Sommet> stack,List<Sommet> res)  {
+		 visited.add(s);
+		  res.add(s);
+		 System.out.print(s.getId() + "  ");
+		  for (Arc a : getSortants(s, this)) {
+	        	Sommet v = a.getSommetArrivee();
+	            if (visited.contains(v)) {
+	                continue;
+	            }
+	            DFSRenverse(v, visited, stack, res);
+	        }
+	    }
+		 
 	@Override
 	public boolean kosaraju() {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
-		return false;
+		
+		Stack<Sommet> stack = new Stack<Sommet>();
+       ArrayList<Sommet> visited = new ArrayList<Sommet>(this.getNbSommets());
+  
+       visited.clear();
+       for (Sommet vertex : this.get_liste_de_sommet()) {
+           if (visited.contains(vertex)) {
+               continue;
+           }
+           DFS(vertex, visited, stack);
+       }
+     
+           Graphe reverseGraph = new GrapheMatrice();
+
+           for (Sommet s : this.get_liste_de_sommet()){
+        	   reverseGraph.addSommet(s);
+           	}
+           	for (Arc a : this.get_liste_arc()){
+           		reverseGraph.addArc(a.getSommetArrivee(), a.getSommetDepart());
+       		}
+            visited.clear();
+            List<List<Sommet>> components = new ArrayList<>();
+            while (!stack.isEmpty()) {
+           				 List<Sommet> component = new ArrayList<>();
+           				Sommet x = reverseGraph.getSommet(stack.pop().getId());
+           				if(visited.contains(x)){
+        	                continue;
+        	            }
+                	    
+           				((GrapheMatrice) reverseGraph).DFSRenverse(x,visited,stack,component);
+                	    components.add(component);
+                	    System.out.println();
+                }
+           				components.forEach(component ->{
+           					Random rand = new Random();
+           		        	float r = rand.nextFloat();
+           					float h = rand.nextFloat();
+           					float b = rand.nextFloat();
+           					component.forEach(p -> p.setCouleur(new Color(r,h,b)));
+           				});
+		return true;
 	}
 	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
 		int min=num[x]= ++j;
