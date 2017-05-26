@@ -412,10 +412,19 @@ public class GrapheMatrice extends Graphe {
 				if(enTraitement != null){
 					
 					//Création de la liste d'arc sortants de traitement
+//					ArrayList<Arc> sortants = new ArrayList<Arc>();
+//					for(int i = 0; i<this.graphe.length; i++){
+//						if(graphe[enTraitement.getId()][i] != null){
+//							sortants.add(graphe[enTraitement.getId()][i]);
+//						}
+//					}
+					
+					
+					//Fix temporaire puisque la matrice est fausse
 					ArrayList<Arc> sortants = new ArrayList<Arc>();
-					for(int i = 0; i<this.graphe.length; i++){
-						if(graphe[enTraitement.getId()][i] != null){
-							sortants.add(graphe[enTraitement.getId()][i]);
+					for(Arc act : get_liste_arc()){
+						if(act.getSommetDepart().equals(enTraitement)){
+							sortants.add(act);
 						}
 					}
 					
