@@ -700,7 +700,8 @@ this.reset_couleur_graph();
 		/*initialiser la couleur de tous les arcs et des sommets en noir
 		 * */
 		this.reset_couleur_graph();
-		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommet isolé)
+		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
+		int SommetIsole=0;
 		for(Sommet s : this.get_liste_de_sommet()){
 			existeSommetIsole=true;
 		for(Arc t : this.get_liste_arc()){
@@ -708,7 +709,8 @@ this.reset_couleur_graph();
 				existeSommetIsole=false;
 			}
 		}
-		if(existeSommetIsole) {
+		if(existeSommetIsole  && ArcsNonTries.size()>0) {
+			SommetIsole++;
 			s.setCouleur(Color.RED);
 			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
 			//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
@@ -716,7 +718,7 @@ this.reset_couleur_graph();
 					}
 		}
 		
-		if(ArcsNonTries.isEmpty() || existeSommetIsole == true){
+		if(ArcsNonTries.isEmpty() || SommetIsole != 0){
 			return false;
 		}
 
@@ -1044,11 +1046,31 @@ this.reset_couleur_graph();
 	public boolean tarjan() {
 		this.reset_couleur_graph();
 		int numOrdre=0,n;
-		
 		n=this.getNbSommets();
 		int num[]=new int[n];
-		//id=-1;
 		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
+		boolean existeSommetIsole=false;
+		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
+		int SommetIsole=0;
+				for(Sommet s : this.get_liste_de_sommet()){
+					existeSommetIsole=true;
+				for(Arc t : this.get_liste_arc()){
+					if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
+						existeSommetIsole=false;
+					}
+				}
+				if(existeSommetIsole && this.getNbArcs()>0 ) {
+					SommetIsole++;
+					s.setCouleur(Color.RED);
+					System.out.println("le sommet num : "+s.getId()+" est isolé"); 
+					//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
+					//appliquer l'algo sinon il crée un nouveau sous graphe
+				}
+				}
+				if(this.getNbSommets()<3 || SommetIsole!=0){
+					return false;// TODO : distinguer entre 1)==>Nombre de sommet = 1 ou 2 (impossible d'appliquer l'algo)
+					//et 2)==> le cas ou on a plus que 2 sommets mais il y a pas des arcs entre eux ou ils sont isolés (il faut pas l'exécuter)
+				}
 		for(int x=0;x<n;++x)
 			num[x]=-1;
 		for(int x=0;x<n;++x)
@@ -1065,11 +1087,14 @@ this.reset_couleur_graph();
 				}
 			if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
 		}
+		
 		  for (Sommet t : PointsArticulation){
         	t.setCouleur(Color.red);
 		}
-
-		return false;
+		  if(PointsArticulation.isEmpty()) {
+			  return false;//TODO : Message : y a pas aucun point d'articulation
+		  }
+		return true;
 	}
 
 	@Override
