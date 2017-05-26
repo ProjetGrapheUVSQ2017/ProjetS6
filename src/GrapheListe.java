@@ -534,6 +534,8 @@ public class GrapheListe extends Graphe {
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
 		this.reset_couleur_graph();
+		//TODO: Vérification !(existPoidsNégatif)
+		
 		double capacite[][] = new double[getNbSommets()][getNbSommets()];
 		
 		//Liste pour tenir compte des flots totale pour chaque arc pour pouvoir ajouter les variables sur l'arc plus tard
@@ -622,7 +624,8 @@ public class GrapheListe extends Graphe {
 			float flot = flotArc.get(act.getId());
 			act.addVar(new VarFloat(flot));
 		}
-		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
+		a.addVar(new VarFloat((float)flotMax));
+//		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
 
 		return true;
 	}

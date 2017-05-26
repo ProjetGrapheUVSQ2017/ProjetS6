@@ -647,7 +647,8 @@ this.reset_couleur_graph();
 			float flot = flotArc.get(act.getId());
 			act.addVar(new VarFloat(flot));
 		}
-		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
+		a.addVar(new VarFloat((float)flotMax));
+//		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
 
 		return true;
 	}
