@@ -165,14 +165,15 @@ public class GrapheMatrice extends Graphe {
 				}
 			}
 		}
-		System.out.println("--------------------*delete Arc(id)------------------\nNombre de sommet : "+this.getNbSommets());
-		System.out.println("Nombre d'arcs : "+this.getNbArcs());
-		if(this.getNbSommets()>0){
-		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
-		}
-		if(this.getNbArcs()>0){
-		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
-		}
+		
+//		System.out.println("--------------------*delete Arc(id)------------------\nNombre de sommet : "+this.getNbSommets());
+//		System.out.println("Nombre d'arcs : "+this.getNbArcs());
+//		if(this.getNbSommets()>0){
+//		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
+//		}
+//		if(this.getNbArcs()>0){
+//		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
+//		}
 	}
 
 	/**
@@ -219,7 +220,7 @@ public class GrapheMatrice extends Graphe {
 			}
 		}
 		//this.setNbSommets(sommets.size());
-		/*
+		
 		//On stocke temporairement tous les arcs de la matrice
 		ArrayList<Arc> arcTemp = new ArrayList<Arc>();
 		for(int i = 0; i < graphe.length; i++){
@@ -240,15 +241,17 @@ public class GrapheMatrice extends Graphe {
 		for(Arc act : arcTemp){
 			tableauTemp[act.getSommetDepart().getId()][act.getSommetArrivee().getId()] = act;
 		}
-		*/
-		System.out.println("--------------------*deleteSommet(id)------------------\nNombre de sommet : "+this.getNbSommets());
-		System.out.println("Nombre d'arcs : "+this.getNbArcs());
-		if(this.getNbSommets()>0){
-		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
-		}
-		if(this.getNbArcs()>0){
-		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
-		}
+		
+		graphe = tableauTemp;
+		
+//		System.out.println("--------------------*deleteSommet(id)------------------\nNombre de sommet : "+this.getNbSommets());
+//		System.out.println("Nombre d'arcs : "+this.getNbArcs());
+//		if(this.getNbSommets()>0){
+//		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
+//		}
+//		if(this.getNbArcs()>0){
+//		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
+//		}
 		
 	}
 	
@@ -412,19 +415,10 @@ public class GrapheMatrice extends Graphe {
 				if(enTraitement != null){
 					
 					//Création de la liste d'arc sortants de traitement
-//					ArrayList<Arc> sortants = new ArrayList<Arc>();
-//					for(int i = 0; i<this.graphe.length; i++){
-//						if(graphe[enTraitement.getId()][i] != null){
-//							sortants.add(graphe[enTraitement.getId()][i]);
-//						}
-//					}
-					
-					
-					//Fix temporaire puisque la matrice est fausse
 					ArrayList<Arc> sortants = new ArrayList<Arc>();
-					for(Arc act : get_liste_arc()){
-						if(act.getSommetDepart().equals(enTraitement)){
-							sortants.add(act);
+					for(int i = 0; i<this.graphe.length; i++){
+						if(graphe[enTraitement.getId()][i] != null){
+							sortants.add(graphe[enTraitement.getId()][i]);
 						}
 					}
 					
