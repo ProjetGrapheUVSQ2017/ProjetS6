@@ -336,7 +336,8 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
-		
+		//Reinitialise toute les couleurs des arcs et sommets en noir
+				this.reset_couleur_graph();
 		boolean presenceArcNeg = false;
 		for(Arc act : arcs){
 			if(act.getVarPoids() < 0){
@@ -358,8 +359,7 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> pere = new ArrayList<Sommet>();
 		ArrayList<Boolean> traiter = new ArrayList<Boolean>();
 
-		//Reinitialise toute les couleurs des arcs et sommets en noir
-		this.reset_couleur_graph();
+		
 
 
 		
@@ -667,22 +667,34 @@ public class GrapheListe extends Graphe {
 
 	@Override
 	public boolean kruskall() {
-//		ArrayList<Arc> ListeSommets =new ArrayList<Arc>(get_liste_de_sommet());
+
 		ArrayList<Arc> ArcsNonTries=new ArrayList<Arc>(get_liste_arc());
 		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
 		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>(get_liste_de_sommet());
+		boolean existeSommetIsole=false;
+		this.reset_couleur_graph();
+		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommet isolé)
+		for(Sommet s : this.get_liste_de_sommet()){
+			existeSommetIsole=true;
+		for(Arc t : this.get_liste_arc()){
+			if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
+				existeSommetIsole=false;
+			}
+		}
+		if(existeSommetIsole) {
+			s.setCouleur(Color.RED);
+			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
+			//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
+			//appliquer l'algo de Kruskall, sinon il crée un nouveau sous graphe
+					}
+		}
+		if(ArcsNonTries.isEmpty() || existeSommetIsole == true){
+			return false;
+		}
 		/*
 		 * trier les poids des arcs par ordre croissant
 		 * */
-
-		this.reset_couleur_graph();
-
-		if(ArcsNonTries.isEmpty()){
-			return false;
-		}
-		
 		int idArc=0;
-		
 		while (ArcsTries.size()!=this.getNbArcs()){
 			Arc ArcMin= ArcsNonTries.get(0);
 			idArc=0;
