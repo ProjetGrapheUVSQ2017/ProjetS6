@@ -679,6 +679,7 @@ public class GrapheListe extends Graphe {
 		boolean existeSommetIsole=false;
 		this.reset_couleur_graph();
 		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommet isolé)
+		int SommetIsole=0;
 		for(Sommet s : this.get_liste_de_sommet()){
 			existeSommetIsole=true;
 		for(Arc t : this.get_liste_arc()){
@@ -686,14 +687,15 @@ public class GrapheListe extends Graphe {
 				existeSommetIsole=false;
 			}
 		}
-		if(existeSommetIsole) {
+		if(existeSommetIsole && ArcsNonTries.size()>0) {
+			SommetIsole++;
 			s.setCouleur(Color.RED);
 			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
 			//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
 			//appliquer l'algo de Kruskall, sinon il crée un nouveau sous graphe
 					}
 		}
-		if(ArcsNonTries.isEmpty() || existeSommetIsole == true){
+		if(ArcsNonTries.isEmpty() || SommetIsole != 0 ){
 			return false;
 		}
 		/*
