@@ -353,6 +353,8 @@ public class GrapheMatrice extends Graphe {
 
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
+		//Reinitialise toute les couleurs des arcs et sommets en noir
+				this.reset_couleur_graph();
 		boolean presenceArcNeg = false;
 		
 		for(int i = 0; i<graphe.length; i++){
@@ -377,8 +379,7 @@ public class GrapheMatrice extends Graphe {
 		ArrayList<Sommet> pere = new ArrayList<Sommet>();
 		ArrayList<Boolean> traiter = new ArrayList<Boolean>();
 
-		//Reinitialise toute les couleurs des arcs et sommets en noir
-		this.reset_couleur_graph();
+		
 
 
 		
@@ -554,12 +555,27 @@ this.reset_couleur_graph();
 	public boolean kruskall() {
 		ArrayList<Arc> ArcsNonTries=get_liste_arc();
 		ArrayList<Arc> ArcsTries=new ArrayList<Arc>();
-
+		boolean existeSommetIsole=false;
 		/*initialiser la couleur de tous les arcs et des sommets en noir
 		 * */
 		this.reset_couleur_graph();
-
-		if(ArcsNonTries.isEmpty()){
+		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommet isolé)
+		for(Sommet s : this.get_liste_de_sommet()){
+			existeSommetIsole=true;
+		for(Arc t : this.get_liste_arc()){
+			if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
+				existeSommetIsole=false;
+			}
+		}
+		if(existeSommetIsole) {
+			s.setCouleur(Color.RED);
+			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
+			//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
+			//appliquer l'algo sinon il crée un nouveau sous graphe
+					}
+		}
+		
+		if(ArcsNonTries.isEmpty() || existeSommetIsole == true){
 			return false;
 		}
 
@@ -603,6 +619,7 @@ this.reset_couleur_graph();
 		for (Sommet t : sommets){
 			t.removeVar(t.getList().size()-1);
 		}
+		
 		return true;
 	}
 	
