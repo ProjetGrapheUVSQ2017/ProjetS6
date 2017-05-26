@@ -1,8 +1,15 @@
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 import java.util.Stack;
 /**
  * Classe implémentant un graphe sous forme de matrice d'adjacence.
@@ -41,6 +48,7 @@ public class GrapheMatrice extends Graphe {
 		}
 		
 		//Puis on récupère les arcs et on copie leurs données 
+		int newID = 0;
 		for(Arc a : graphe.get_liste_arc()){
 			this.addArc(a.getSommetDepart(),a.getSommetArrivee());
 			Arc arcTemp = this.getArc(a.getSommetDepart(), a.getSommetArrivee());
@@ -49,7 +57,7 @@ public class GrapheMatrice extends Graphe {
 			for(int i=1; i < a.getList().size();i++){
 				arcTemp.addVar(a.getVar(i));
 			}
-			
+			arcTemp.setID(newID); newID++;
 			//et on recopie sa couleur
 			arcTemp.setCouleur(a.getCouleur());
 		}
@@ -546,10 +554,142 @@ this.reset_couleur_graph();
 
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
-		return false;
+		double capacite[][] = new double[getNbSommets()][getNbSommets()];
+		
+		//Liste pour tenir compte des flots totale pour chaque arc pour pouvoir ajouter les variables sur l'arc plus tard
+		List<Float> flotArc = new ArrayList<Float>();
+		for(int i = 0; i < getNbArcs(); i++){
+			flotArc.add((float) 0);
+		}
+
+		
+		//Initialisation du tableau de capacité à 0 pour les arcs qui n'existe pas dans la matrice
+		for(int i = 0; i<capacite.length; i++){
+			for(int j = 0; j<capacite[i].length; j++){
+				capacite[i][j] = 0;
+			}
+		}
+
+		//On crée la matrice des capacités (c'est à dire ce que chaque arc peut recevoir comme flot)
+		for(int i = 0; i<getNbSommets(); i++){
+			for(int j = 0; j<getNbSommets(); j++){
+				if(graphe[i][j] != null){
+					capacite[i][j] = graphe[i][j].getVarPoids();
+				}
+			}
+		}
+
+		//Initialisation de la matrice de capacité résiduel
+		double capaciteResiduel[][] = new double[capacite.length][capacite[0].length];
+		for (int i = 0; i < capacite.length; i++) {
+			for (int j = 0; j < capacite[0].length; j++) {
+				capaciteResiduel[i][j] = capacite[i][j];
+			}
+		}
+
+		//this is parent map for storing BFS parent
+		Map<Integer,Integer> parent = new HashMap<>();
+
+		//Permet de stocker les arcs et sommet du chemin augmentant pour les afficher après la boucle principale
+		List<List<Arc>> cheminsAugmentant = new ArrayList<>();
+		List<Sommet> sommetsAugmentant = new ArrayList<>();
+
+		//Flot maximum de d à a
+		double flotMax = 0;
+
+		//Tant qu'il existe un chemin augmentant
+		while(BFS(capaciteResiduel, parent, d.getId(), a.getId())){
+			List<Arc> cheminAugmentant = new ArrayList<>();
+			float flot = Float.MAX_VALUE;
+			//find minimum residual capacity in augmented path
+			//also add vertices to augmented path list
+			int v = a.getId();
+			while(v != d.getId()){
+				int u = parent.get(v);
+				Arc tmp = getArc(getSommet(u), getSommet(v));
+				if (flot > capaciteResiduel[u][v]) {
+					flot = (float) capaciteResiduel[u][v];
+				}
+				v = u;
+				
+				cheminAugmentant.add(tmp);
+				sommetsAugmentant.add(getSommet(u));
+				flotArc.set(tmp.getId(), flotArc.get(tmp.getId())+flot);
+			}
+			Collections.reverse(cheminAugmentant);
+			cheminsAugmentant.add(cheminAugmentant);
+
+			//add min capacity to max flow
+			flotMax += flot;
+
+			//decrease residual capacity by min capacity from u to v in augmented path
+			// and increase residual capacity by min capacity from v to u
+			v = a.getId();
+			while(v != d.getId()){
+				int u = parent.get(v);
+				capaciteResiduel[u][v] -= flot;
+				capaciteResiduel[v][u] += flot;
+				v = u;
+			}
+		}
+		sommetsAugmentant.add(a);
+		
+		//Coloration des chemins augmentant et des sommets augmentant
+		cheminsAugmentant.forEach(path -> {
+            path.forEach(i -> i.setCouleur(Color.CYAN));
+        });
+		for(Sommet s : sommetsAugmentant){
+			s.setCouleur(Color.CYAN);
+		}
+		//Ajout des variables sur les arcs
+		for(Arc act : get_liste_arc()){
+			float flot = flotArc.get(act.getId());
+			act.addVar(new VarFloat(flot));
+		}
+		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
+
+		return true;
 	}
+	
+	/**
+	 * Parcours le graphe de capacité résiduel en largeur pour trouver si une chaine améliorante existe entre la source et le puit
+	 * @param capaciteResiduel : graphe sous forme de matrice d'adjacence de la capacité résiduel
+	 * @param parent
+	 * @param source : ID du sommet source (de départ) dans le graphe de capacité résiduel
+	 * @param puit : ID du sommet puit (d'arrivée) dans le graphe de capacité résiduel
+	 * @return true si il y a un chemin augmentant dans le graphe de capacité résiduel
+	 */
+	private boolean BFS(double[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(source);
+        visited.add(source);
+        boolean foundAugmentedPath = false;
+        //see if we can find augmented path from source to sink
+        while(!queue.isEmpty()){
+            int u = queue.poll();
+            for(int v = 0; v < capaciteResiduel.length; v++){
+                //explore the vertex only if it is not visited and its residual capacity is
+                //greater than 0
+                if(!visited.contains(v) &&  capaciteResiduel[u][v] > 0){
+                    //add in parent map saying v got explored by u
+                    parent.put(v, u);
+                    //add v to visited
+                    visited.add(v);
+                    //add v to queue for BFS
+                    queue.add(v);
+                    //if sink is found then augmented path is found
+                    if ( v == puit) {
+                        foundAugmentedPath = true;
+                        break;
+                    }
+                }
+            }
+        }
+        //returns if augmented path is found from source to sink or not
+        return foundAugmentedPath;
+    }
 
 	@Override
 	public boolean kruskall() {

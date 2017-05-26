@@ -528,13 +528,15 @@ public class GrapheListe extends Graphe {
 		return false;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
 		double capacite[][] = new double[getNbSommets()][getNbSommets()];
 		
-		//Liste pour tenir compte des flots totale pour chaque arc
+		//Liste pour tenir compte des flots totale pour chaque arc pour pouvoir ajouter les variables sur l'arc plus tard
 		List<Float> flotArc = new ArrayList<Float>();
 		for(Arc act : arcs){
 			flotArc.add((float) 0);
@@ -564,14 +566,14 @@ public class GrapheListe extends Graphe {
 		//this is parent map for storing BFS parent
 		Map<Integer,Integer> parent = new HashMap<>();
 
-		//stores all the augmented paths
+		//Permet de stocker les arcs et sommet du chemin augmentant pour les afficher après la boucle principale
 		List<List<Arc>> cheminsAugmentant = new ArrayList<>();
 		List<Sommet> sommetsAugmentant = new ArrayList<>();
 
-		//max flow we can get in this network
+		//Flot maximum de d à a
 		double flotMax = 0;
 
-		//see if augmented path can be found from source to sink.
+		//Tant qu'il existe un chemin augmentant
 		while(BFS(capaciteResiduel, parent, d.getId(), a.getId())){
 			List<Arc> cheminAugmentant = new ArrayList<>();
 			float flot = Float.MAX_VALUE;
@@ -628,11 +630,11 @@ public class GrapheListe extends Graphe {
 	
 	/**
 	 * Parcours le graphe de capacité résiduel en largeur pour trouver si une chaine améliorante existe entre la source et le puit
-	 * @param capaciteResiduel
+	 * @param capaciteResiduel : graphe sous forme de matrice d'adjacence de la capacité résiduel
 	 * @param parent
-	 * @param source
-	 * @param puit
-	 * @return
+	 * @param source : ID du sommet source (de départ) dans le graphe de capacité résiduel
+	 * @param puit : ID du sommet puit (d'arrivée) dans le graphe de capacité résiduel
+	 * @return true si il y a un chemin augmentant dans le graphe de capacité résiduel
 	 */
 	private boolean BFS(double[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
         Set<Integer> visited = new HashSet<>();
