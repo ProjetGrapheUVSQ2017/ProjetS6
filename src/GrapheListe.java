@@ -533,8 +533,15 @@ public class GrapheListe extends Graphe {
 		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
 		double capacite[][] = new double[getNbSommets()][getNbSommets()];
+		
+		//Liste pour tenir compte des flots totale pour chaque arc
+		List<Float> flotArc = new ArrayList<Float>();
+		for(Arc act : arcs){
+			flotArc.add((float) 0);
+		}
 
-
+		
+		//Initialisation du tableau de capacité à 0 pour les arcs qui n'existe pas dans la matrice
 		for(int i = 0; i<capacite.length; i++){
 			for(int j = 0; j<capacite[i].length; j++){
 				capacite[i][j] = 0;
@@ -567,18 +574,21 @@ public class GrapheListe extends Graphe {
 		//see if augmented path can be found from source to sink.
 		while(BFS(capaciteResiduel, parent, d.getId(), a.getId())){
 			List<Arc> cheminAugmentant = new ArrayList<>();
-			double flot = Double.MAX_VALUE;
+			float flot = Float.MAX_VALUE;
 			//find minimum residual capacity in augmented path
 			//also add vertices to augmented path list
 			int v = a.getId();
 			while(v != d.getId()){
 				int u = parent.get(v);
-				cheminAugmentant.add(getArc(getSommet(u), getSommet(v)));
-				sommetsAugmentant.add(getSommet(u));
+				Arc tmp = getArc(getSommet(u), getSommet(v));
 				if (flot > capaciteResiduel[u][v]) {
-					flot = capaciteResiduel[u][v];
+					flot = (float) capaciteResiduel[u][v];
 				}
 				v = u;
+				
+				cheminAugmentant.add(tmp);
+				sommetsAugmentant.add(getSommet(u));
+				flotArc.set(tmp.getId(), flotArc.get(tmp.getId())+flot);
 			}
 			Collections.reverse(cheminAugmentant);
 			cheminsAugmentant.add(cheminAugmentant);
@@ -605,13 +615,26 @@ public class GrapheListe extends Graphe {
 		for(Sommet s : sommetsAugmentant){
 			s.setCouleur(Color.CYAN);
 		}
-		
+		//Ajout des variables sur les arcs
+		for(Arc act : arcs){
+			float flot = flotArc.get(act.getId());
+			act.addVar(new VarFloat(flot));
+		}
 		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
 
 		return true;
 	}
 	
-	private boolean BFS(double[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int sink){
+	
+	/**
+	 * Parcours le graphe de capacité résiduel en largeur pour trouver si une chaine améliorante existe entre la source et le puit
+	 * @param capaciteResiduel
+	 * @param parent
+	 * @param source
+	 * @param puit
+	 * @return
+	 */
+	private boolean BFS(double[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
         Set<Integer> visited = new HashSet<>();
         Queue<Integer> queue = new LinkedList<>();
         queue.add(source);
@@ -631,7 +654,7 @@ public class GrapheListe extends Graphe {
                     //add v to queue for BFS
                     queue.add(v);
                     //if sink is found then augmented path is found
-                    if ( v == sink) {
+                    if ( v == puit) {
                         foundAugmentedPath = true;
                         break;
                     }
