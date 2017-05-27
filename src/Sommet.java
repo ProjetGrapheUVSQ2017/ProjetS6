@@ -4,18 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Classe repr�sentant un sommet du graphe
+ * Classe représentant un sommet du graphe
  * @author Damien
  *
  */
 public class Sommet implements Serializable{
 	/**
-	 * Coordonn�es du sommet dans l'espace d'affichage
+	 * Coordonnées du sommet dans l'espace d'affichage
 	 */
 	private Point coords;
 	/**
-	 * ID unique identifiant le sommet</br>
-	 * ATTENTION : L'id n'est pas utilis� dans l'int�gration de liste directement, mais il est extr�mement important dans l'int�gration matricielle.
+	 * ID unique identifiant le sommet
 	 */
 	private int id;
 	/**
@@ -23,7 +22,7 @@ public class Sommet implements Serializable{
 	 */
 	private Color couleur;
 	/**
-	 * Liste des variables rattach� au sommet.
+	 * Liste des variables rattaché au sommet.
 	 */
 	private ArrayList<Variable> variables;
 	
