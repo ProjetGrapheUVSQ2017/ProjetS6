@@ -71,8 +71,8 @@ public class Interface extends JComponent {
         g.fillRect(0,0,getWidth(),getHeight());
 
         g.setColor(Color.BLACK);
-        String type_graphe = new String();
-        if(graphe.getClass().getName()=="GrapheListe"){
+        String type_graphe;
+        if(graphe.getClass().getName().equals("GrapheListe")){
             type_graphe="Liste";
         }else{
             type_graphe="Matrice";
@@ -106,6 +106,27 @@ public class Interface extends JComponent {
         for(Sommet s : SommetSelec){
             g2.setColor(Color.GRAY);
             g2.drawRect(s.getPoint().x-rayon_sommet, s.getPoint().y-rayon_sommet, rayon_sommet*2, rayon_sommet*2);
+        }
+
+        g.setColor(Color.BLACK);
+        if(type_graphe.equals("Matrice")){
+            if(graphe.getNbSommets()<8){
+                g2.setStroke(new BasicStroke(1));
+                g2.drawLine(10,67, 35+15*graphe.getNbSommets(),67);
+                g2.drawLine(22,55, 22,65+15*graphe.getNbSommets());
+                g.drawString("Matrice d'adjacence",10,50);
+                for(int i=0; i<graphe.getNbSommets(); i++){
+                    g.drawString(String.valueOf(i),25+i*15,65);
+                    g.drawString(String.valueOf(i), 10, 80+i*15);
+                    for(int j=0; j<graphe.getNbSommets();j++){
+                        if(graphe.getArc(graphe.getSommet(j), graphe.getSommet(i))!=null){
+                            g.drawString("1", 25+i*15, 80+j*15);
+                        }else{
+                            g.drawString("0", 25+i*15, 80+j*15);
+                        }
+                    }
+                }
+            }
         }
 
         g.setColor(Color.darkGray);
@@ -194,7 +215,7 @@ public class Interface extends JComponent {
                             } else if(algo_en_cours == "bellman") {
                                 jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés ou il existe un cycle de poids négatif.", "Information", JOptionPane.INFORMATION_MESSAGE);
                             }else{
-                                jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                                jop.showMessageDialog(f, "L'algorithme n'a pas pu s'executer, il n'existe pas de chemin entre les deux Sommets sélectionnés ou il existe un arc négatif.", "Information", JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
                         algo_en_cours = null;
@@ -816,13 +837,26 @@ public class Interface extends JComponent {
                 terminer.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
+                        boolean error=false;
                         for (int i = 0; i < liste_input.size(); i++) {
                             if (s != null) {
                                 if (s.getVar(i).getTypeVar() == "Int") {
-                                    s.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                    try{
+                                        int int_parse = Integer.parseInt(liste_input.get(i).getText());
+                                        s.setVar(i, new VarInt(int_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                 }
                                 if (s.getVar(i).getTypeVar() == "Float") {
-                                    s.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                    try{
+                                        float float_parse = Float.valueOf(liste_input.get(i).getText());
+                                        s.setVar(i, new VarFloat(float_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                 }
                                 if (s.getVar(i).getTypeVar() == "String") {
                                     s.setVar(i, new VarString(liste_input.get(i).getText()));
@@ -830,10 +864,22 @@ public class Interface extends JComponent {
                             }
                             else{
                                 if (a.getVar(i).getTypeVar() == "Int") {
-                                    a.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                    try{
+                                        int int_parse = Integer.parseInt(liste_input.get(i).getText());
+                                        a.setVar(i, new VarInt(int_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                 }
                                 if (a.getVar(i).getTypeVar() == "Float") {
-                                    a.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                    try{
+                                        float float_parse = Float.valueOf(liste_input.get(i).getText());
+                                        a.setVar(i, new VarFloat(float_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                     if(i==0){
                                         a.getVar(i).setPoids(true);
                                     }
@@ -842,24 +888,43 @@ public class Interface extends JComponent {
                                     a.setVar(i, new VarString(liste_input.get(i).getText()));
                                 }
                             }
-
                         }
-                        repaint();
-                        VariableWindow.setVisible(false);
-                        VariableWindow.dispose();
+                        if(error){
+                            JOptionPane jop = new JOptionPane();
+                            jop.showMessageDialog(VariableWindow, "Au moins une des Variables que vous avez entré n'est pas du bon type!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            VariableWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                        }else{
+                            repaint();
+                            VariableWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            VariableWindow.setVisible(false);
+                            VariableWindow.dispose();
+                        }
                     }
                 });
 
                 VariableWindow.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                        boolean error=false;
                         for (int i = 0; i < liste_input.size(); i++) {
                             if (s != null) {
                                 if (s.getVar(i).getTypeVar() == "Int") {
-                                    s.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                    try{
+                                        int int_parse = Integer.parseInt(liste_input.get(i).getText());
+                                        s.setVar(i, new VarInt(int_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                 }
                                 if (s.getVar(i).getTypeVar() == "Float") {
-                                    s.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                    try{
+                                        float float_parse = Float.valueOf(liste_input.get(i).getText());
+                                        s.setVar(i, new VarFloat(float_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                 }
                                 if (s.getVar(i).getTypeVar() == "String") {
                                     s.setVar(i, new VarString(liste_input.get(i).getText()));
@@ -867,10 +932,22 @@ public class Interface extends JComponent {
                             }
                             else{
                                 if (a.getVar(i).getTypeVar() == "Int") {
-                                    a.setVar(i, new VarInt(Integer.parseInt(liste_input.get(i).getText())));
+                                    try{
+                                        int int_parse = Integer.parseInt(liste_input.get(i).getText());
+                                        a.setVar(i, new VarInt(int_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                 }
                                 if (a.getVar(i).getTypeVar() == "Float") {
-                                    a.setVar(i, new VarFloat(Float.valueOf(liste_input.get(i).getText())));
+                                    try{
+                                        float float_parse = Float.valueOf(liste_input.get(i).getText());
+                                        a.setVar(i, new VarFloat(float_parse));
+                                    }
+                                    catch(NumberFormatException e) {
+                                        error=true;
+                                    }
                                     if(i==0){
                                         a.getVar(i).setPoids(true);
                                     }
@@ -880,9 +957,16 @@ public class Interface extends JComponent {
                                 }
                             }
                         }
-                        repaint();
-                        VariableWindow.setVisible(false);
-                        VariableWindow.dispose();
+                        if(error){
+                            JOptionPane jop = new JOptionPane();
+                            jop.showMessageDialog(VariableWindow, "Au moins une des Variables que vous avez entré n'est pas du bon type!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            VariableWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                        }else{
+                            repaint();
+                            VariableWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            VariableWindow.setVisible(false);
+                            VariableWindow.dispose();
+                        }
                     }
                 });
 
