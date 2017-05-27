@@ -558,9 +558,9 @@ this.reset_couleur_graph();
 		double capacite[][] = new double[getNbSommets()][getNbSommets()];
 		
 		//Liste pour tenir compte des flots totale pour chaque arc pour pouvoir ajouter les variables sur l'arc plus tard
-		List<Float> flotArc = new ArrayList<Float>();
-		for(int i = 0; i < getNbArcs(); i++){
-			flotArc.add((float) 0);
+		float flotArc[] = new float[getNbArcs()];
+		for(Arc act : get_liste_arc()){
+			flotArc[act.getId()] = 0;
 		}
 
 		
@@ -615,11 +615,15 @@ this.reset_couleur_graph();
 				
 				cheminAugmentant.add(tmp);
 				sommetsAugmentant.add(getSommet(u));
-				flotArc.set(tmp.getId(), flotArc.get(tmp.getId())+flot);
 			}
 			Collections.reverse(cheminAugmentant);
 			cheminsAugmentant.add(cheminAugmentant);
 
+			//On set le flot minimum des arcs comme étant celui que le chemin porte
+			for(Arc act : cheminAugmentant){
+				flotArc[act.getId()] += flot;
+			}
+			
 			//add min capacity to max flow
 			flotMax += flot;
 
@@ -644,7 +648,7 @@ this.reset_couleur_graph();
 		}
 		//Ajout des variables sur les arcs
 		for(Arc act : get_liste_arc()){
-			float flot = flotArc.get(act.getId());
+			float flot = flotArc[act.getId()];
 			act.addVar(new VarFloat(flot));
 		}
 		a.addVar(new VarFloat((float)flotMax));
