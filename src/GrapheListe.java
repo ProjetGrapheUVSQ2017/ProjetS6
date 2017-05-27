@@ -536,15 +536,7 @@ public class GrapheListe extends Graphe {
 		this.reset_couleur_graph();
 		//TODO: Vérification !(existPoidsNégatif)
 		
-		double capacite[][] = new double[getNbSommets()][getNbSommets()];
-		
-		//Liste pour tenir compte des flots totale pour chaque arc pour pouvoir ajouter les variables sur l'arc plus tard
-		List<Float> flotArc = new ArrayList<Float>();
-		for(Arc act : arcs){
-			flotArc.add((float) 0);
-		}
-
-		
+		float capacite[][] = new float[getNbSommets()][getNbSommets()];
 		//Initialisation du tableau de capacité à 0 pour les arcs qui n'existe pas dans la matrice
 		for(int i = 0; i<capacite.length; i++){
 			for(int j = 0; j<capacite[i].length; j++){
@@ -558,45 +550,54 @@ public class GrapheListe extends Graphe {
 		}
 
 		//Initialisation de la matrice de capacité résiduel
-		double capaciteResiduel[][] = new double[capacite.length][capacite[0].length];
+		float capaciteResiduel[][] = new float[capacite.length][capacite[0].length];
 		for (int i = 0; i < capacite.length; i++) {
 			for (int j = 0; j < capacite[0].length; j++) {
 				capaciteResiduel[i][j] = capacite[i][j];
 			}
 		}
 
-		//this is parent map for storing BFS parent
+		//Map utilisé pour lier l'ID d'un sommet à l'ID d'un de ses fils
 		Map<Integer,Integer> parent = new HashMap<>();
 
 		//Permet de stocker les arcs et sommet du chemin augmentant pour les afficher après la boucle principale
 		List<List<Arc>> cheminsAugmentant = new ArrayList<>();
 		List<Sommet> sommetsAugmentant = new ArrayList<>();
+		float flotArc[] = new float[getNbArcs()];
+		
+		for(Arc act : arcs){
+			flotArc[act.getId()] = 0;
+		}
 
 		//Flot maximum de d à a
-		double flotMax = 0;
+		float flotMax = 0;
 
 		//Tant qu'il existe un chemin augmentant
 		while(BFS(capaciteResiduel, parent, d.getId(), a.getId())){
 			List<Arc> cheminAugmentant = new ArrayList<>();
 			float flot = Float.MAX_VALUE;
-			//find minimum residual capacity in augmented path
-			//also add vertices to augmented path list
+			//Trouve la capacité résiduel minimal dans le graphe de capacité résiduel
+			//et ajoute le chemin augmentant à liste de chemins augmentant finaux
 			int v = a.getId();
 			while(v != d.getId()){
 				int u = parent.get(v);
 				Arc tmp = getArc(getSommet(u), getSommet(v));
 				if (flot > capaciteResiduel[u][v]) {
-					flot = (float) capaciteResiduel[u][v];
+					flot = capaciteResiduel[u][v];
 				}
 				v = u;
 				
 				cheminAugmentant.add(tmp);
 				sommetsAugmentant.add(getSommet(u));
-				flotArc.set(tmp.getId(), flotArc.get(tmp.getId())+flot);
 			}
 			Collections.reverse(cheminAugmentant);
 			cheminsAugmentant.add(cheminAugmentant);
 
+			//On set le flot minimum des arcs comme étant celui que le chemin porte
+			for(Arc act : cheminAugmentant){
+				flotArc[act.getId()] += flot;
+			}
+			
 			//add min capacity to max flow
 			flotMax += flot;
 
@@ -613,18 +614,20 @@ public class GrapheListe extends Graphe {
 		sommetsAugmentant.add(a);
 		
 		//Coloration des chemins augmentant et des sommets augmentant
-		cheminsAugmentant.forEach(path -> {
-            path.forEach(i -> i.setCouleur(Color.CYAN));
-        });
-		for(Sommet s : sommetsAugmentant){
-			s.setCouleur(Color.CYAN);
+		for(List<Arc> l : cheminsAugmentant){
+			for(Arc act : l){
+				act.setCouleur(Color.cyan);
+			}
 		}
-		//Ajout des variables sur les arcs
+		
 		for(Arc act : arcs){
-			float flot = flotArc.get(act.getId());
-			act.addVar(new VarFloat(flot));
+			act.addVar(new VarFloat(flotArc[act.getId()])); //Ajout des variables sur les arcs
 		}
-		a.addVar(new VarFloat((float)flotMax));
+		for(Sommet s : sommetsAugmentant){
+			s.setCouleur(Color.CYAN); //Coloration des sommets appartenant à un chemin augmentant
+		}
+		
+		a.addVar(new VarFloat(flotMax));//Affichage du résultat final sur le sommet d'arrivée
 //		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
 
 		return true;
@@ -639,7 +642,7 @@ public class GrapheListe extends Graphe {
 	 * @param puit : ID du sommet puit (d'arrivée) dans le graphe de capacité résiduel
 	 * @return true si il y a un chemin augmentant dans le graphe de capacité résiduel
 	 */
-	private boolean BFS(double[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
+	private boolean BFS(float[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
         Set<Integer> visited = new HashSet<>();
         Queue<Integer> queue = new LinkedList<>();
         queue.add(source);
