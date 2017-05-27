@@ -555,6 +555,19 @@ this.reset_couleur_graph();
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
 		this.reset_couleur_graph();
+		
+		//Vérification de la présence de poids négatifs
+		boolean presenceArcNeg = false;
+		for(int i = 0; i<graphe.length; i++){
+			for(int j = 0; j<graphe.length; j++){
+				if(graphe[i][j] != null && graphe[i][j].getVarPoids() < 0){
+					graphe[i][j].setCouleur(Color.RED);
+					presenceArcNeg = true;
+				}
+			}
+		}
+		if(presenceArcNeg) return false;
+		
 		double capacite[][] = new double[getNbSommets()][getNbSommets()];
 		
 		//Liste pour tenir compte des flots totale pour chaque arc pour pouvoir ajouter les variables sur l'arc plus tard
