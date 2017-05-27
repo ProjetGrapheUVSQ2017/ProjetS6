@@ -73,23 +73,25 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public void addSommet(Sommet s) {
-		Arc temp[][] = new Arc[graphe.length+1][graphe.length+1];
-		
-		for(int i = 0; i<temp.length; i++){
-			for(int j = 0; j<temp.length; j++){
-				temp[i][j] = null;
+		if(s != null){
+			Arc temp[][] = new Arc[graphe.length+1][graphe.length+1];
+
+			for(int i = 0; i<temp.length; i++){
+				for(int j = 0; j<temp.length; j++){
+					temp[i][j] = null;
+				}
 			}
+
+			for(int i = 0; i<graphe.length; i++){
+				System.arraycopy(graphe[i], 0, temp[i], 0, graphe[i].length);
+			}
+
+			graphe = temp;
+			graphe[graphe.length-1][graphe.length-1] = null;
+			s.setID(graphe.length-1);
+			sommets.add(s);
+			this.setNbSommets(this.getNbSommets()+1);
 		}
-		
-		for(int i = 0; i<graphe.length; i++){
-			System.arraycopy(graphe[i], 0, temp[i], 0, graphe[i].length);
-		}
-		
-		graphe = temp;
-		graphe[graphe.length-1][graphe.length-1] = null;
-		s.setID(graphe.length-1);
-		sommets.add(s);
-		this.setNbSommets(this.getNbSommets()+1);
 	}
 
 	/**
@@ -119,7 +121,7 @@ public class GrapheMatrice extends Graphe {
 			if(graphe[d.getId()][a.getId()] == null){
 				graphe[d.getId()][a.getId()] = new Arc(d, a);
 				this.setNbArcs(this.getNbArcs()+1);
-				graphe[d.getId()][a.getId()].setID(getNbArcs());
+				graphe[d.getId()][a.getId()].setID(getNbArcs()-1);
 			}
 		}
 		

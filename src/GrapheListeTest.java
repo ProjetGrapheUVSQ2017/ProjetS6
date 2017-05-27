@@ -23,7 +23,7 @@ public class GrapheListeTest {
 	@Test
 	public void testAjoutsommetNull(){
 		graphe.addSommet((Sommet)null);
-		assertTrue("Sommet null ajout�", graphe.getNbSommets() == 0);
+		assertTrue("Sommet null ajouté", graphe.getNbSommets() == 0);
 	}
 	
 	@Test
@@ -59,17 +59,16 @@ public class GrapheListeTest {
 		Sommet d = graphe.getSommet(0);
 		Sommet a = graphe.getSommet(1);
 		
-		//TODO: Le Syst�me d'ID non fonctionnel sur les sommets fausse les r�sultats !
 		
 		assertNotNull("d est null", d);
 		assertNotNull("a est null", a);
 		
-		assertFalse("Sommet d�part et sommet arriv�e sont les m�mes", d.equals(a));
+		assertFalse("Sommet départ et sommet arrivée sont les mêmes", d.equals(a));
 		
 		graphe.addArc(d, a);
-		assertTrue("Arc non cr�e correctement", graphe.existArc(d, a));
+		assertTrue("Arc non crée correctement", graphe.existArc(d, a));
 		graphe.deleteArc(d, a);
-		assertFalse("Arc non supprim� correctement", graphe.existArc(d, a));
+		assertFalse("Arc non supprimé correctement", graphe.existArc(d, a));
 	}
 	
 	@Test
@@ -92,6 +91,49 @@ public class GrapheListeTest {
 		graphe.addSommet(s2);
 		graphe.addArc(s1, s2);
 		assertTrue("Plus court chemin non trouvé", graphe.dijkstra(s1, s2));
+	}
+	
+	@Test
+	public void testBellmanFord(){
+		Sommet s1 = new Sommet(new Point(10, 10));
+		Sommet s2 = new Sommet(new Point(12, 12));
+		Sommet s3 = new Sommet(new Point(14, 14));
+		
+		graphe.addSommet(s1);
+		graphe.addSommet(s2);
+		graphe.addSommet(s3);
+		
+		assertTrue("s1 est dans le graphe", graphe.getSommet(0).equals(s1));
+		assertTrue("s2 est dans le graphe", graphe.getSommet(1).equals(s2));
+		assertTrue("s3 est dans le graphe", graphe.getSommet(2).equals(s3));
+		
+		graphe.addArc(s1, s2);
+		graphe.addArc(s2, s3);
+		graphe.addArc(s1, s3);
+		
+		assertTrue("Le plus court chemin est trouver", graphe.bellman_ford(s1, s2));
+	}
+	
+	@Test
+	public void testFordFulkerson(){
+		Sommet s1 = new Sommet(new Point(10, 10));
+		Sommet s2 = new Sommet(new Point(12, 12));
+		Sommet s3 = new Sommet(new Point(14, 14));
+		
+		graphe.addSommet(s1);
+		graphe.addSommet(s2);
+		graphe.addSommet(s3);
+		
+		assertTrue("s1 est dans le graphe", graphe.getSommet(0).equals(s1));
+		assertTrue("s2 est dans le graphe", graphe.getSommet(1).equals(s2));
+		assertTrue("s3 est dans le graphe", graphe.getSommet(2).equals(s3));
+		
+		graphe.addArc(s1, s2);
+		graphe.addArc(s2, s3);
+		graphe.addArc(s1, s3);
+		
+		assertTrue("Ford-Fulkerson réussi", graphe.ford_fulkerson(s1, s3));
+		assertTrue("Le poids maximal est faux", s3.getVar(0).getFloat() == 2.0);
 	}
 
 }
