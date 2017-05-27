@@ -426,7 +426,7 @@ public class GrapheListe extends Graphe {
 	 * Fonction affichant le plus court chemin en le sommet d et le sommet a
 	 * @param d : Sommet de départ pour le plus court chemin
 	 * @param a : Sommet d'arrivée pour le plus court chemin
-	 * @author Damien
+	 * @author Damien, Madeleine
 	 */
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
@@ -647,6 +647,12 @@ public class GrapheListe extends Graphe {
         return cheminAugmentantTrouver;
     }
 
+	/**
+	 * Permet de trouver l'arbre couvrant de poids minimum dans un graphe
+	 * @return true : si aucun problème
+	 * @return false : s'il n'existe aucun arc dans le graphe
+	 * @author Madeleine, Aziz
+	 */
 	@Override
 	public boolean kruskall() {
 
@@ -655,8 +661,7 @@ public class GrapheListe extends Graphe {
 		ArrayList<Sommet> SommetSelectionnes=new ArrayList<Sommet>(get_liste_de_sommet());
 		boolean existeSommetIsole=false;
 		this.reset_couleur_graph();
-		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommet isolé)
-		int SommetIsole=0;
+		//test si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommet isolé)
 		for(Sommet s : this.get_liste_de_sommet()){
 			existeSommetIsole=true;
 		for(Arc t : this.get_liste_arc()){
@@ -664,14 +669,13 @@ public class GrapheListe extends Graphe {
 				existeSommetIsole=false;
 			}
 		}
+		//colorie en rouge les sommets isolés qui ne seront pas traitré
 		if(existeSommetIsole && ArcsNonTries.size()>0) {
-			SommetIsole++;
 			s.setCouleur(Color.RED);
-			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
-			//appliquer l'algo de Kruskall, sinon il crée un nouveau sous graphe
 					}
 		}
-		if(ArcsNonTries.isEmpty() || SommetIsole != 0 ){
+		//renvoit une erreur s'il n'existe aucun arc
+		if(ArcsNonTries.isEmpty()){
 			return false;
 		}
 		/*
@@ -691,7 +695,7 @@ public class GrapheListe extends Graphe {
 			ArcsTries.add(ArcMin);
 
 		}
-		int i, n, num1, num2,poids=0;
+		int i, n, num1, num2;
 		n = SommetSelectionnes.size();
 		ListIterator<Sommet> z = SommetSelectionnes.listIterator();
 		while (z.hasNext()) {
@@ -719,7 +723,6 @@ public class GrapheListe extends Graphe {
 				ArcsTries.get(i).setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
-				poids+=ArcsTries.get(i).getVarPoids();
 				arcajoute.add(a);
 				for (Sommet s : SommetSelectionnes)
 					if (s.getVar(s.getList().size()-1).getInt() == num2) 
@@ -740,6 +743,12 @@ public class GrapheListe extends Graphe {
 
 			return true;
 	}
+	
+	/**
+	 * Permet de colorier le graphe avec le nombre de couleur différente minimum par rapport au nombre d'arcs par sommet.
+	 * @return true : si aucun problème
+	 * @author Madeleine
+	 */
 	@Override
 	public boolean welsh_powell() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
@@ -752,11 +761,11 @@ public class GrapheListe extends Graphe {
 		
 		this.reset_couleur_graph();
 		
-		
+		//on ajoute une variable qui va nous permettre de stocker les couleurs de chaque sommet
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
 		}
-		
+		//Tant que la liste des sommets à colorier n'est pas vide
 		while (!acolo.isEmpty()) {
 			nbarcmax=0;
 			max=null;
@@ -776,12 +785,14 @@ public class GrapheListe extends Graphe {
 				}
 			
 			}
+			//on a trouvé le sommet à colorier, maintenant on regarde de quelle couleur on peut le colorier
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
 			color=0;
 			while (change) {
 				change =false;
 				for (int k=0; k<liste_voisins.size();k++){
+					//on regarde la couleur des voisins du sommet
 					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
 					if (compare==color){
 						color=color+1;
@@ -818,6 +829,11 @@ public class GrapheListe extends Graphe {
 		return true;
 	}
 
+	/**
+	 * Permet de colorier le graphe avec le nombre de couleur différente minimum par rapport au nombre de sommets qui sont coloriés autour d'un sommet
+	 * @return true : si aucun problème
+	 * @author Madeleine
+	 */
 	@Override
 	public boolean dsatur() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
@@ -832,11 +848,11 @@ public class GrapheListe extends Graphe {
 	
 
 		this.reset_couleur_graph();
-
+		//on ajoute une variable qui va nous permettre de stocker les couleurs de chaque sommets
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
 		}
-		
+		//tant que les sommets ne sont pas tous colorés
 		while (!acolo.isEmpty()) {
 			
 			nbcolormax=0;
@@ -862,7 +878,7 @@ public class GrapheListe extends Graphe {
 					nbarcmax=nbarc;
 					max=actu;
 				}
-				
+				//pour les sommets qui n'ont pas d'arcs
 				if (nbarc==0){
 					max=actu;
 				}
@@ -871,7 +887,7 @@ public class GrapheListe extends Graphe {
 			}
 			
 
-
+			//on a trouvé le sommet à colorer, maintenant on regarde avec ses voisins quelle couleur peut-on lui donner
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
 			color=0;
@@ -970,8 +986,10 @@ public class GrapheListe extends Graphe {
 	        
 	        return true;
 }
-
-		//parcours en profondeur normal
+	/**
+	 * Permet de faire un parcours en profondeur pour Kosaraju
+	 * @author Madeleine
+	 */
 	    private void DFS(Sommet vertex,Set<Sommet> visited, Deque<Sommet> stack) {
 	        visited.add(vertex);
 	        for (Arc a : getSortants(vertex, this)) {
@@ -983,7 +1001,12 @@ public class GrapheListe extends Graphe {
 	        }
 	        stack.offerFirst(vertex);
 	    }
-	    //parcours en profondeur sur graphe renversé (on ajoute pas a la pile
+		 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non
+		 
+		 /**
+			 * Permet de faire un parcours en profondeur avec un graphe qui a été retourné pour Kosaraju
+			 * @author Madeleine
+			 */
 	    private void DFSRenverse(Sommet vertex, Set<Sommet> visited, Set<Sommet> set, Graphe graph) {
 	        visited.add(vertex);
 	        set.add(vertex);
@@ -1003,13 +1026,21 @@ public class GrapheListe extends Graphe {
 		return false;
 	}
 
-
+	 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non
+	 
+	 /**
+	  * Permet de renvoyer la liste des sommets contenu dans le graphe
+	  * @author Madeleine
+	  */
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
 		return this.sommets;
 	
 	}
-	
+	 /**
+	  * Permet de renvoyer la liste des arcs contenu dans le graphe
+	  * @author Madeleine
+	  */
 	@Override
 	public ArrayList<Arc> get_liste_arc() {
 		return this.arcs;

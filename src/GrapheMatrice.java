@@ -360,6 +360,8 @@ public class GrapheMatrice extends Graphe {
 		}
 	}
 
+	
+	
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
 		//Reinitialise toute les couleurs des arcs et sommets en noir
@@ -489,7 +491,15 @@ public class GrapheMatrice extends Graphe {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Permet de trouver le plus court chemin entre un sommet d et un sommet a
+	 * @param sommet d : sommet de départ
+	 * @param sommet a : sommet d'arrivée
+	 * @return false : si présence d'un cycle négatif
+	 * @return true : si aucun problème
+	 * @author Damien, Madeleine
+	 */
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
 this.reset_couleur_graph();
@@ -710,6 +720,12 @@ this.reset_couleur_graph();
         return foundAugmentedPath;
     }
 
+	/**
+	 * Permet de trouver l'arbre couvrant de poids minimum dans un graphe
+	 * @return true : si aucun problème
+	 * @return false : s'il n'existe aucun arc dans le graphe
+	 * @author Madeleine, Aziz
+	 */
 	@Override
 	public boolean kruskall() {
 		ArrayList<Arc> ArcsNonTries=get_liste_arc();
@@ -719,7 +735,6 @@ this.reset_couleur_graph();
 		 * */
 		this.reset_couleur_graph();
 		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
-		int SommetIsole=0;
 		for(Sommet s : this.get_liste_de_sommet()){
 			existeSommetIsole=true;
 		for(Arc t : this.get_liste_arc()){
@@ -727,16 +742,14 @@ this.reset_couleur_graph();
 				existeSommetIsole=false;
 			}
 		}
+		
+		//colorie les sommets isolés en rouge
 		if(existeSommetIsole  && ArcsNonTries.size()>0) {
-			SommetIsole++;
 			s.setCouleur(Color.RED);
-			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
-			//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
-			//appliquer l'algo sinon il crée un nouveau sous graphe
 					}
 		}
-		
-		if(ArcsNonTries.isEmpty() || SommetIsole != 0){
+		//si le graphe est vide ou il n'existe aucun arc, on return false.
+		if(ArcsNonTries.isEmpty()){
 			return false;
 		}
 
@@ -756,7 +769,7 @@ this.reset_couleur_graph();
 		/*colorer les arcs et les sommets qui consruisent l'arbre couvrant minimal
 		 * 
 		 * */
-		int i, num1, num2,poids=0;
+		int i, num1, num2;
 		for (i = 0; i < this.getNbSommets(); i++)
 			sommets.get(i).addVar(new VarInt(i));
 		i = 0;
@@ -768,7 +781,6 @@ this.reset_couleur_graph();
 				ArcsTries.get(i).setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
-				poids+=ArcsTries.get(i).getVarPoids();
 				for (Sommet s : sommets)
 					if (s.getVar(s.getList().size()-1).getInt() == num2) 
 						{
@@ -784,6 +796,11 @@ this.reset_couleur_graph();
 		return true;
 	}
 	
+	/**
+	 * Permet de colorier le graphe avec le nombre de couleur différente minimum par rapport au nombre d'arcs par sommet.
+	 * @return true : si aucun problème
+	 * @author Madeleine
+	 */
 	@Override
 	public boolean welsh_powell() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
@@ -796,11 +813,12 @@ this.reset_couleur_graph();
 
 		this.reset_couleur_graph();
 		
-		
+		//on ajoute une variable qui va nous permettre de stocker les couleurs de chaque sommet
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
 		}
 		
+		//Tant que la liste des sommets à colorier n'est pas vide
 		while (!acolo.isEmpty()) {
 			nbarcmax=0;
 			max=null;
@@ -814,18 +832,20 @@ this.reset_couleur_graph();
 				nbarcmax=nbarc;
 				max=actu;
 				}
-			
+			//pour les sommets qui n'ont pas d'arcs
 			if (nbarc==0){
 				max=actu;
 				}
 			
 			}
+			//on a trouvé le sommet à colorier, maintenant on regarde de quelle couleur on peut le colorier
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
 			color=0;
 			while (change) {
 				change =false;
 				for (int k=0; k<liste_voisins.size();k++){
+					//on regarde la couleur des voisins du sommet
 					compare=liste_voisins.get(k).getVar(liste_voisins.get(k).getList().size()-1).getInt();
 					if (compare==color){
 						color=color+1;
@@ -842,7 +862,7 @@ this.reset_couleur_graph();
 			}
 		}
 
-		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là où je stockais la couleur)
 		ArrayList<Color> liste_id_color = new ArrayList<Color>();
 		for (Sommet s: sommets) {
 			Random rand = new Random();
@@ -861,6 +881,12 @@ this.reset_couleur_graph();
 	
 		return true;
 	}
+	
+	/**
+	 * Permet de colorier le graphe avec le nombre de couleur différente minimum par rapport au nombre de sommets qui sont coloriés autour d'un sommet
+	 * @return true : si aucun problème
+	 * @author Madeleine
+	 */
 
 	@Override
 	public boolean dsatur() {
@@ -877,10 +903,12 @@ this.reset_couleur_graph();
 
 		this.reset_couleur_graph();
 
+		//on ajoute une variable qui va nous permettre de stocker les couleurs de chaque sommets
 		for(Sommet s: sommets){
 			s.addVar(new VarInt(-1));
 		}
 		
+		//tant que les sommets ne sont pas tous colorés
 		while (!acolo.isEmpty()) {
 			
 			nbcolormax=0;
@@ -906,7 +934,7 @@ this.reset_couleur_graph();
 					nbarcmax=nbarc;
 					max=actu;
 				}
-				
+				//pour les sommets qui n'ont pas d'arcs
 				if (nbarc==0){
 					max=actu;
 				}
@@ -915,7 +943,7 @@ this.reset_couleur_graph();
 			}
 			
 
-
+			//on a trouvé le sommet à colorer, maintenant on regarde avec ses voisins quelle couleur peut-on lui donner
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
 			color=0;
@@ -942,7 +970,7 @@ this.reset_couleur_graph();
 			
 
 		
-		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (l� o� je stockais la couleur)
+		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là  où je stockais la couleur)
 		ArrayList<Color> liste_id_color = new ArrayList<Color>();
 		for (Sommet s: sommets) {
 			Random rand = new Random();
@@ -975,8 +1003,12 @@ this.reset_couleur_graph();
 			return arcSortant;
 		}
 	 
+		/**
+		 * Permet de faire un parcours en profondeur pour Kosaraju
+		 * @author Madeleine
+		 */
 	 private void DFS(Sommet s,ArrayList<Sommet> visited,Stack<Sommet> stack)  {
-		 
+		 //fait un parcours en profondeur, si un sommet est dans "visited", on continue le parcours. Si on ne peut plus, c'est qu'on a fini de traité le sommet, et on l'ajoute dans la pile
 		 visited.add(s);
 		 for (Arc a : getSortants(s, this)) {
 	        	Sommet v = a.getSommetArrivee();
@@ -986,7 +1018,14 @@ this.reset_couleur_graph();
 	            DFS(v, visited, stack);
 	        }
 		  stack.push(s);
-		 }	
+	 }	
+	 
+	 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non
+	 
+	 /**
+		 * Permet de faire un parcours en profondeur avec un graphe qui a été retourné pour Kosaraju
+		 * @author Madeleine
+		 */
 	 private void DFSRenverse(Sommet s,ArrayList<Sommet> visited,Stack<Sommet> stack,List<Sommet> res)  {
 		 visited.add(s);
 		  res.add(s);
@@ -999,15 +1038,19 @@ this.reset_couleur_graph();
 	            DFSRenverse(v, visited, stack, res);
 	        }
 	    }
-		 
+		
+	 
+	 /**
+		 * Permet de trouver les composantes fortement connexe dans un graphe. Les composantes fortement connexe seront colorés de la même couleur
+		 * @author Madeleine
+		 */
 	@Override
 	public boolean kosaraju() {
 		this.reset_couleur_graph();
-		
 		Stack<Sommet> stack = new Stack<Sommet>();
-       ArrayList<Sommet> visited = new ArrayList<Sommet>(this.getNbSommets());
-  
-       visited.clear();
+        ArrayList<Sommet> visited = new ArrayList<Sommet>();
+
+        //pour tous les sommets, on va faire un parcours en profondeur. Si un sommet est dans "visited", on continue si on peut le parcours en profondeur
        for (Sommet vertex : this.get_liste_de_sommet()) {
            if (visited.contains(vertex)) {
                continue;
@@ -1016,15 +1059,17 @@ this.reset_couleur_graph();
        }
      
            Graphe reverseGraph = new GrapheMatrice();
-
+           //on créer un graphe qui est le même que notre graphe, mais ses arcs sont renversés.
            for (Sommet s : this.get_liste_de_sommet()){
         	   reverseGraph.addSommet(s);
            	}
            	for (Arc a : this.get_liste_arc()){
            		reverseGraph.addArc(a.getSommetArrivee(), a.getSommetDepart());
        		}
+           	//on clear notre liste des sommets visited
             visited.clear();
             List<List<Sommet>> components = new ArrayList<>();
+            //on fait un parcours en profondeur sur le graphe inversé, pour chaque sommet de la pile.
             while (!stack.isEmpty()) {
            				 List<Sommet> component = new ArrayList<>();
            				Sommet x = reverseGraph.getSommet(stack.pop().getId());
@@ -1034,8 +1079,8 @@ this.reset_couleur_graph();
                 	    
            				((GrapheMatrice) reverseGraph).DFSRenverse(x,visited,stack,component);
                 	    components.add(component);
-                	    System.out.println();
-                }
+           }
+            //pour chaque composantes fortement connexe (qui a été stocké dans une liste de liste), on lui attribut une couleur
            				components.forEach(component ->{
            					Random rand = new Random();
            		        	float r = rand.nextFloat();
@@ -1115,6 +1160,12 @@ this.reset_couleur_graph();
 		return true;
 	}
 
+	/**
+	 * Permet de renvoyer la liste de tous les voisins d'un sommet
+	 * @param sommet : le sommet qu'on veut traiter
+	 * @return ArrayList<Sommet> : la liste de sommets voisins
+	 * @author Damien
+	 */
 	@Override
 	public ArrayList<Sommet> liste_voisins_pere_et_fils(Sommet s) {
 		ArrayList<Sommet> res = new ArrayList<Sommet>();
@@ -1137,6 +1188,11 @@ this.reset_couleur_graph();
 		return res;
 	}
 	
+	/**
+	 * Permet de renvoyer la liste des sommets du graphe
+	 * @return ArrayList<Sommet> : la liste des sommets du graphe
+	 * @author Madeline
+	 */
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
 		return sommets;
