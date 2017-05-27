@@ -65,8 +65,8 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Ajoute un sommet au graphe</br>
-	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
+	 * Ajoute un sommet au graphe
+	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.
 	 * Et ajoute le sommet Ã  notre liste de sommets composant le graphe.
 	 * @param s : Sommet ajouté au graphe
 	 * @author damien
@@ -95,9 +95,9 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Ajoute un sommet au graphe</br>
-	 * Appel addSommet(Sommet) qui agrandit le tableau en le copiant dans un tableau plus grand de 1.</br>
-	 * Et ajoute le sommet à notre liste de sommets composant le graphe.</br>
+	 * Ajoute un sommet au graphe
+	 * Appel addSommet(Sommet) qui agrandit le tableau en le copiant dans un tableau plus grand de 1.
+	 * Et ajoute le sommet à notre liste de sommets composant le graphe.
 	 * De plus, cette méthode crée le sommet avec l'adresse donné.
 	 * @param p : Adresse du nouveau sommet
 	 * @author damien
@@ -108,8 +108,8 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Crée un arc entre les sommets d et a.</br>
-	 * Ne fais rien si l'arc existe déjà.</br>
+	 * Crée un arc entre les sommets d et a.
+	 * Ne fais rien si l'arc existe déjà.
 	 * Ne fais rien si les sommets ne se trouvent pas dans le graphe.
 	 * @param d : Sommet de départ de l'arc
 	 * @param a : Sommet d'arrivée de l'arc
@@ -129,7 +129,7 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Supprime l'arc du tableau.
-	 * </br>Ne fais rien si les sommets d et a n'appartiennent pas au graphe.
+	 * Ne fais rien si les sommets d et a n'appartiennent pas au graphe.
 	 * @param d : Sommet de départ de l'arc
 	 * @param a : Sommet d'arrivée de l'arc
 	 * @author damien
@@ -151,8 +151,8 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Supprime l'arc par ID</br>
-	 * Recherche tous le graphe à la recherche de l'arc</br>
+	 * Supprime l'arc par ID
+	 * Recherche tous le graphe à la recherche de l'arc
 	 * Demande plus de ressources que la suppression en donnant les sommets.
 	 * @param id : Identifiant de l'arc à supprimer
 	 * @author damien
@@ -266,7 +266,7 @@ public class GrapheMatrice extends Graphe {
 	}
 	
 	/**
-	 * Envoi true si l'arc existe dans le graphe, et false sinon</br>
+	 * Envoi true si l'arc existe dans le graphe, et false sinon
 	 * Renvoi false aussi si les sommets spécifiés ne font pas partie du graphe.
 	 * @param d : Sommet de départ de l'arc
 	 * @param a : Sommet d'arrivée de l'arc
@@ -284,7 +284,7 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Renvoie le sommet identifié.
-	 * </br>Renvoie null si le sommet n'existe pas dans le graphe.
+	 * Renvoie null si le sommet n'existe pas dans le graphe.
 	 * @param id : Identifiant du sommet recherché
 	 * @author damien
 	 * @return Sommet : Sommet recherché identifié
@@ -300,7 +300,7 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Renvoie l'arc identifié par les sommets d et a.</br>
+	 * Renvoie l'arc identifié par les sommets d et a.
 	 * Renvoie null si l'arc n'existe pas ou si les sommets d ou a ne font pas partie du graphe
 	 * @param d : Sommet de départ de l'arc recherché
 	 * @param a : Sommet d'arrivée de l'arc recherché
@@ -318,11 +318,10 @@ public class GrapheMatrice extends Graphe {
 	}
 
 	/**
-	 * Renvoie l'arc identifié par l'identifiant.</br>
+	 * Renvoie l'arc identifié par l'identifiant.
 	 * Renvoie null si l'arc n'existe pas.
-	 * </br>Parcours le graphe pour obtenir l'arc concerné, la recherche en donnant les sommets de départ et d'arrivée est moins couteuses.
-	 * @param d : Sommet de départ de l'arc recherché
-	 * @param a : Sommet d'arrivée de l'arc recherché
+	 * Parcours le graphe pour obtenir l'arc concerné, la recherche en donnant les sommets de départ et d'arrivée est moins couteuses.
+	 * @param id : int identifiant l'arc recherché
 	 * @return Arc
 	 * @author damien
 	 */

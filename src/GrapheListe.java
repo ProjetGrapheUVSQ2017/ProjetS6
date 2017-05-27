@@ -25,13 +25,18 @@ import java.util.Set;
  */
 public class GrapheListe extends Graphe {
 
-	
+	/**
+	 * Liste des sommets composant le graphe
+	 */
 	private ArrayList<Sommet> sommets;
+	/**
+	 * Liste des arcs composant le graphe
+	 */
 	private ArrayList<Arc> arcs;
 	private static final long serialVersionUID = -1405896813221493308L;
 	
 	/**
-	 * Cr�e un Graphe sous forme de liste vide
+	 * Crée un Graphe sous forme de liste vide
 	 * @author Damien
 	 */
 	public GrapheListe(){
@@ -39,6 +44,11 @@ public class GrapheListe extends Graphe {
 		arcs = new ArrayList<Arc>();
 	}
 	
+	/**
+	 * Crée un graphe de type liste depuis n'importe quel autre type de graphe
+	 * Attention, ce constructeur ne fait pas une copie mais récupère les mêmes arcs et sommets que l'ancien graphe (old)
+	 * @param old Ancien graphe
+	 */
 	public GrapheListe(Graphe old){
 		sommets = new ArrayList<Sommet>(old.get_liste_de_sommet());
 		arcs = new ArrayList<Arc>(old.get_liste_arc());
@@ -49,26 +59,10 @@ public class GrapheListe extends Graphe {
 	/**
 	 * Ajoute le sommet s au graphe
 	 * @author Damien, Madeleine
+	 * @param s : Sommet à ajouté
 	 */
 	@Override
-	public void addSommet(Sommet s) {
-		/*int id = 0;
-		boolean change = true;
-		if(s != null){
-			while(change){
-				change=false;
-				for(Sommet se : sommets){
-					if(id==se.getId()) {
-						id++;
-						change=true;
-					}
-				}
-			}
-			sommets.add(s);
-			this.setNbSommets(getNbSommets()+1);
-			sommets.get(getNbSommets()-1).setID(getNbSommets());
-		}*/
-		
+	public void addSommet(Sommet s) {		
 		if(s != null){
 			sommets.add(s);
 			this.setNbSommets(getNbSommets()+1);
@@ -79,28 +73,12 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Ajoute un sommet se trouvant � l'adresse p au graphe
+	 * Ajoute un sommet se trouvant l'adresse p au graphe
+	 * @param p : Point où sera ajouté le sommet
 	 * @author Damien, Madeleine
 	 */
 	@Override
-	public void addSommet(Point p) {
-//		int id = 0;
-//		boolean change = true;
-//		while(change){
-//			change=false;
-//			for(Sommet s : sommets){
-//				if(id==s.getId()) {
-//					id++;
-//					change=true;
-//				}
-//			}
-//		}
-//
-//
-//		sommets.add(new Sommet(p));
-//		this.setNbSommets(getNbSommets()+1);
-//		sommets.get(getNbSommets()-1).setID(id);
-		
+	public void addSommet(Point p) {		
 		if(p != null){
 			this.setNbSommets(getNbSommets()+1);
 			sommets.add(new Sommet(p));
@@ -111,11 +89,10 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Ajoute un arc entre le Sommet d et le Sommet a au graphe</br>
+	 * Ajoute un arc entre le Sommet d et le Sommet a au graphe
 	 * Vérifie si les sommets d et a font partie du graphe.
-	 * @param d : Sommet de d�part de l'arc
-	 * @param a : Sommet d'arriv�e de l'arc
-	 * @author Damien
+	 * @param d : Sommet de départ de l'arc
+	 * @param a : Sommet d'arrivée de l'arc
 	 */
 	@Override
 	public void addArc(Sommet d, Sommet a) {
@@ -140,8 +117,8 @@ public class GrapheListe extends Graphe {
 
 	/**
 	 * On cherche l'arc correspondant et on le supprime de la liste d'arcs, le GC s'occupe du reste.
-	 * @param d : Sommet de d�part de l'arc � supprimer
-	 * @param a : Sommet d'arriv� de l'arc � supprimer
+	 * @param d : Sommet de départ de l'arc à supprimer
+	 * @param a : Sommet d'arrivé de l'arc à supprimer
 	 * @author Damien
 	 */
 	@Override
@@ -165,7 +142,7 @@ public class GrapheListe extends Graphe {
 
 	/**
 	 * Supprime l'arc id dans le graphe
-	 * @param id : Identifiant de l'arc � supprimer
+	 * @param id : Identifiant de l'arc à supprimer
 	 * @author Damien
 	 */
 	@Override
@@ -179,14 +156,6 @@ public class GrapheListe extends Graphe {
 		}
 		for(int i = 0; i <this.arcs.size(); i++){
 			this.arcs.get(i).setID(i);
-		}
-		System.out.println("--------------------*deleteArc(id)------------------\nNombre de sommet : "+this.getNbSommets());
-		System.out.println("Nombre d'arcs : "+this.getNbArcs());
-		if(this.getNbSommets()>0){
-		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
-		}
-		if(this.getNbArcs()>0){
-		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
 		}
 	}
 
@@ -219,20 +188,12 @@ public class GrapheListe extends Graphe {
 		for(int i = 0; i <this.arcs.size(); i++){
 			this.arcs.get(i).setID(i);
 		}
-		System.out.println("--------------------*deleteSommet(id)------------------\nNombre de sommet : "+this.getNbSommets());
-		System.out.println("Nombre d'arcs : "+this.getNbArcs());
-		if(this.getNbSommets()>0){
-		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
-		}
-		if(this.getNbArcs()>0){
-		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
-		}
 	}
 
 	/**
 	 * Renvoie vrai si l'arc existe dans le graphe, faux sinon
-	 * @param d : Sommet de d�part de l'arc
-	 * @param a : Sommet d'arriv�e de l'arc
+	 * @param d : Sommet de départ de l'arc
+	 * @param a : Sommet d'arrivée de l'arc
 	 * @return boolean
 	 * @author Damien
 	 */
@@ -247,31 +208,24 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Renvoie le sommet identifi� par id.</br>
+	 * Renvoie le sommet identifié par id.
 	 * Renvoi null si le sommet n'existe pas dans le graphe.
 	 * @param id : Identifiant du sommet recherch� dans la liste
 	 * @return Sommet
 	 * @author Damien
 	 */
 	@Override
-	public Sommet getSommet(int id) {
-//		for(Sommet s : sommets){
-//			if(s.getId()==id){
-//				return s;
-//			}
-//		}
-//		return null;
-		
+	public Sommet getSommet(int id) {		
 		return sommets.get(id);
 	}
 
 
 
 	/**
-	 * Renvoi l'arc identifi� par d et a.</br>
+	 * Renvoi l'arc identifié par d et a.
 	 * Renvoi null si l'arc n'existe pas.
-	 * @param d : Sommet de d�part de l'arc
-	 * @param a : Sommet d'arriv�e de l'arc
+	 * @param d : Sommet de départ de l'arc
+	 * @param a : Sommet d'arrivée de l'arc
 	 * @return Arc
 	 * @author Damien
 	 */
@@ -286,7 +240,7 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Renvoi l'arc identifi� par id.</br>
+	 * Renvoi l'arc identifié par id.
 	 * Renvoi null si l'arc n'existe pas.
 	 * @param id : Identifiant de l'arc
 	 * @return Arc
@@ -303,14 +257,13 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * Changement du format du graphe vers le format GrapheMatrice, repr�sentant le graphe sous forme de matrice d'adjacence.
+	 * Changement du format du graphe vers le format GrapheMatrice, représentant le graphe sous forme de matrice d'adjacence.
 	 * @return Graphe : Le nouveau graphe sous forme de GrapheMatrice
 	 * @see GrapheMatrice
 	 * @author Damien
 	 */
 	@Override
 	public Graphe changement_format() {
-    
 		return new GrapheMatrice(this);
 	}
 
@@ -334,10 +287,14 @@ public class GrapheListe extends Graphe {
 		}
 	}
 
+	/**
+	 * Donne le plus court chemin en d et a s'il n'y a pas de poids négatif sur le graphe
+	 * @return boolean true si le chemin a été trouver, false s'il n'y a pas de chemin ou si il y a un poids négatif sur le graphe
+	 * @author Damien
+	 */
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
-		//Reinitialise toute les couleurs des arcs et sommets en noir
-				this.reset_couleur_graph();
+		this.reset_couleur_graph();
 		boolean presenceArcNeg = false;
 		for(Arc act : arcs){
 			if(act.getVarPoids() < 0){
@@ -464,7 +421,13 @@ public class GrapheListe extends Graphe {
 		
 		return arcSortant;
 	}
-
+	
+	/**
+	 * Fonction affichant le plus court chemin en le sommet d et le sommet a
+	 * @param d : Sommet de départ pour le plus court chemin
+	 * @param a : Sommet d'arrivée pour le plus court chemin
+	 * @author Damien
+	 */
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
 		this.reset_couleur_graph();
@@ -514,7 +477,6 @@ public class GrapheListe extends Graphe {
 		if(cheminExiste){
 		act = a;
 		while(act != null){
-//			System.err.println(act.toString()+ " id : "+ act.getId() + " pere : " + pere.get(act.getId())+" , " + aColorier.get(act.getId()));
 			act.setCouleur(Color.GREEN);
 			Arc tmp = aColorier.get(act.getId());
 			if(tmp != null){//L'arc a colorié est l'arc qui arrive à act or le sommet départ n'a pas forcément celui là
@@ -529,10 +491,17 @@ public class GrapheListe extends Graphe {
 	}
 
 	/**
-	 * 
+	 * Cette méthode prend un sommet d et un sommet a.
+	 * Le sommet d sera le sommet source et le sommet a le sommet puit.
+	 * La méthode calculera le flot maximal sur le graphe et affichera les résultats directement dessus.
+	 * Elle utilise la méthode BFS qui permet de savoir si il existe encore un chemin augmentant sur le graphe des capacité résiduel en utilisant un parcours en largeur.
+	 * @author Damien
+	 * @see BFS
 	 */
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
+		Color affichageRes = Color.cyan; //Couleur d'affichage des résultats
+		
 		this.reset_couleur_graph();
 		
 		//Vérification de la présence de poids négatif sur le graphe
@@ -610,8 +579,8 @@ public class GrapheListe extends Graphe {
 			//add min capacity to max flow
 			flotMax += flot;
 
-			//decrease residual capacity by min capacity from u to v in augmented path
-			// and increase residual capacity by min capacity from v to u
+			//Met à jour la capacité résiduel entre u et v
+			//et l'augmente dans le sens inverse
 			v = a.getId();
 			while(v != d.getId()){
 				int u = parent.get(v);
@@ -625,7 +594,7 @@ public class GrapheListe extends Graphe {
 		//Coloration des chemins augmentant et des sommets augmentant
 		for(List<Arc> l : cheminsAugmentant){
 			for(Arc act : l){
-				act.setCouleur(Color.cyan);
+				act.setCouleur(affichageRes);
 			}
 		}
 		
@@ -633,12 +602,10 @@ public class GrapheListe extends Graphe {
 			act.addVar(new VarFloat(flotArc[act.getId()])); //Ajout des variables sur les arcs
 		}
 		for(Sommet s : sommetsAugmentant){
-			s.setCouleur(Color.CYAN); //Coloration des sommets appartenant à un chemin augmentant
+			s.setCouleur(affichageRes); //Coloration des sommets appartenant à un chemin augmentant
 		}
 		
 		a.addVar(new VarFloat(flotMax));//Affichage du résultat final sur le sommet d'arrivée
-//		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
-
 		return true;
 	}
 	
@@ -652,34 +619,32 @@ public class GrapheListe extends Graphe {
 	 * @return true si il y a un chemin augmentant dans le graphe de capacité résiduel
 	 */
 	private boolean BFS(float[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
-        Set<Integer> visited = new HashSet<>();
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(source);
-        visited.add(source);
-        boolean foundAugmentedPath = false;
-        //see if we can find augmented path from source to sink
-        while(!queue.isEmpty()){
-            int u = queue.poll();
+        Set<Integer> visiter = new HashSet<>();
+        Queue<Integer> file = new LinkedList<>();
+        file.add(source);
+        visiter.add(source);
+        boolean cheminAugmentantTrouver = false;
+        //Recherche si l'on trouve un chemin augmentant
+        while(!file.isEmpty()){
+            int u = file.poll();
             for(int v = 0; v < capaciteResiduel.length; v++){
-                //explore the vertex only if it is not visited and its residual capacity is
-                //greater than 0
-                if(!visited.contains(v) &&  capaciteResiduel[u][v] > 0){
-                    //add in parent map saying v got explored by u
+            	//Explore les sommets non visités et dont la capacité résiduel est plus grande que 0 et donc qu'on est une possibilité d'amélioration sur cet arc
+                if(!visiter.contains(v) &&  capaciteResiduel[u][v] > 0){
                     parent.put(v, u);
-                    //add v to visited
-                    visited.add(v);
-                    //add v to queue for BFS
-                    queue.add(v);
-                    //if sink is found then augmented path is found
+                    //On met le sommet en tant que visité
+                    visiter.add(v);
+                    //et on ajoute v dans la file d'attente
+                    file.add(v);
+                    //Si l'on peut accéder au puit alors on a un chemin augmentant
                     if ( v == puit) {
-                        foundAugmentedPath = true;
+                        cheminAugmentantTrouver = true;
                         break;
                     }
                 }
             }
         }
-        //returns if augmented path is found from source to sink or not
-        return foundAugmentedPath;
+        //Retourne vrai si on a trouver un chemin augmentant entre la source et le puit
+        return cheminAugmentantTrouver;
     }
 
 	@Override
@@ -703,7 +668,6 @@ public class GrapheListe extends Graphe {
 			SommetIsole++;
 			s.setCouleur(Color.RED);
 			System.out.println("le sommet num : "+s.getId()+" est isolé"); 
-			//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
 			//appliquer l'algo de Kruskall, sinon il crée un nouveau sous graphe
 					}
 		}
@@ -744,7 +708,7 @@ public class GrapheListe extends Graphe {
 		
 		
 		i = 0;
-		ArrayList<Arc> arcajouté=new ArrayList<Arc>();
+		ArrayList<Arc> arcajoute=new ArrayList<Arc>();
 		boolean change=true;
 		while (change) {
 			change=false;
@@ -756,7 +720,7 @@ public class GrapheListe extends Graphe {
 				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
 				poids+=ArcsTries.get(i).getVarPoids();
-				arcajouté.add(a);
+				arcajoute.add(a);
 				for (Sommet s : SommetSelectionnes)
 					if (s.getVar(s.getList().size()-1).getInt() == num2) 
 						{
