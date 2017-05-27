@@ -20,7 +20,13 @@ public class GrapheMatrice extends Graphe {
 
 	private static final long serialVersionUID = 7980039478265577744L;
 	
+	/**
+	 * Matrice d'adjacence du graphe
+	 */
 	private Arc graphe[][];
+	/**
+	 * Liste des sommets dans le graphe
+	 */
 	private ArrayList<Sommet> sommets;
 	
 	/**
@@ -32,11 +38,15 @@ public class GrapheMatrice extends Graphe {
 		this.sommets = new ArrayList<Sommet>();
 	}
 
+	/**
+	 * Constructeur à partir d'un graphe donnée.
+	 * Attention, ne fais pas de copie mais peut travailler à partir de n'importe quel type de graphe
+	 * @param graphe Ancien graphe
+	 */
 	public GrapheMatrice(Graphe graphe) {
 		this.sommets = new ArrayList<Sommet>();
 		this.graphe = new Arc[0][0];
 		
-		//J'ai dû refaire cette méthode pour respecter l'encapsulation et éviter des erreurs
 		//On parcourt les sommets de l'ancien graphe et on les ajoute dans ce GrapheMatrice
 		for(Sommet s : graphe.get_liste_de_sommet()){
 			try{
@@ -175,15 +185,6 @@ public class GrapheMatrice extends Graphe {
 				}
 			}
 		}
-		
-//		System.out.println("--------------------*delete Arc(id)------------------\nNombre de sommet : "+this.getNbSommets());
-//		System.out.println("Nombre d'arcs : "+this.getNbArcs());
-//		if(this.getNbSommets()>0){
-//		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
-//		}
-//		if(this.getNbArcs()>0){
-//		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
-//		}
 	}
 
 	/**
@@ -229,7 +230,6 @@ public class GrapheMatrice extends Graphe {
 				}
 			}
 		}
-		//this.setNbSommets(sommets.size());
 		
 		//On stocke temporairement tous les arcs de la matrice
 		ArrayList<Arc> arcTemp = new ArrayList<Arc>();
@@ -253,16 +253,7 @@ public class GrapheMatrice extends Graphe {
 		}
 		
 		graphe = tableauTemp;
-		
-//		System.out.println("--------------------*deleteSommet(id)------------------\nNombre de sommet : "+this.getNbSommets());
-//		System.out.println("Nombre d'arcs : "+this.getNbArcs());
-//		if(this.getNbSommets()>0){
-//		System.out.println("dernière id de sommet : "+this.get_liste_de_sommet().get(this.getNbSommets()-1).getId());
-//		}
-//		if(this.getNbArcs()>0){
-//		System.out.println("dernière id d'arc : "+this.get_liste_arc().get(this.getNbArcs()-1).getId()+"\n");
-//		}
-		
+				
 	}
 	
 	/**
@@ -337,13 +328,17 @@ public class GrapheMatrice extends Graphe {
 		return null;
 	}
 
+	/**
+	 * Fonction changeant le format à la liste en appelant le constructeur de GrapheListe avec ce graphe
+	 * @return Graphe retourne le graphe en liste
+	 */
 	@Override
 	public Graphe changement_format() {
 		return new GrapheListe(this);
 	}
 
 	/**
-	 * Supprimme tous les sommets n'appartenant pas à s ainsi que les arcs liés
+	 * Supprime tous les sommets n'appartenant pas à s ainsi que les arcs liés
 	 * @author Damien
 	 */
 	@Override
@@ -364,8 +359,7 @@ public class GrapheMatrice extends Graphe {
 	
 	@Override
 	public boolean dijkstra(Sommet d, Sommet a) {
-		//Reinitialise toute les couleurs des arcs et sommets en noir
-				this.reset_couleur_graph();
+		this.reset_couleur_graph();
 		boolean presenceArcNeg = false;
 		
 		for(int i = 0; i<graphe.length; i++){
@@ -502,7 +496,7 @@ public class GrapheMatrice extends Graphe {
 	 */
 	@Override
 	public boolean bellman_ford(Sommet d, Sommet a) {
-this.reset_couleur_graph();
+		this.reset_couleur_graph();
 		
 		ArrayList<Arc> aColorier = new ArrayList<Arc>();
 		ArrayList<Double> distance = new ArrayList<Double>();
@@ -549,7 +543,6 @@ this.reset_couleur_graph();
 		if(cheminExiste){
 		act = a;
 		while(act != null){
-//			System.err.println(act.toString()+ " id : "+ act.getId() + " pere : " + pere.get(act.getId())+" , " + aColorier.get(act.getId()));
 			act.setCouleur(Color.GREEN);
 			Arc tmp = aColorier.get(act.getId());
 			if(tmp != null){//L'arc a colorié est l'arc qui arrive à act or le sommet départ n'a pas forcément celui là
@@ -562,7 +555,13 @@ this.reset_couleur_graph();
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Méthode donnant le flot maximal entre le sommet source (d) et le sommet puit (a) et affiche le résultats sur le graphe
+	 * @param d Sommet source du flot
+	 * @param a Sommet puit du flot
+	 * @return réussite de la méthode, renvoi false si il y a un poids négatif
+	 */
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
 		this.reset_couleur_graph();
@@ -612,7 +611,6 @@ this.reset_couleur_graph();
 			}
 		}
 
-		//this is parent map for storing BFS parent
 		Map<Integer,Integer> parent = new HashMap<>();
 
 		//Permet de stocker les arcs et sommet du chemin augmentant pour les afficher après la boucle principale
@@ -626,8 +624,6 @@ this.reset_couleur_graph();
 		while(BFS(capaciteResiduel, parent, d.getId(), a.getId())){
 			List<Arc> cheminAugmentant = new ArrayList<>();
 			float flot = Float.MAX_VALUE;
-			//find minimum residual capacity in augmented path
-			//also add vertices to augmented path list
 			int v = a.getId();
 			while(v != d.getId()){
 				int u = parent.get(v);
@@ -651,8 +647,6 @@ this.reset_couleur_graph();
 			//add min capacity to max flow
 			flotMax += flot;
 
-			//decrease residual capacity by min capacity from u to v in augmented path
-			// and increase residual capacity by min capacity from v to u
 			v = a.getId();
 			while(v != d.getId()){
 				int u = parent.get(v);
@@ -676,7 +670,6 @@ this.reset_couleur_graph();
 			act.addVar(new VarFloat(flot));
 		}
 		a.addVar(new VarFloat((float)flotMax));
-//		System.out.println("Flot maximum sur le graphe : "+ flotMax);//Print d'affichage du flot maximal trouver
 
 		return true;
 	}
@@ -690,34 +683,26 @@ this.reset_couleur_graph();
 	 * @return true si il y a un chemin augmentant dans le graphe de capacité résiduel
 	 */
 	private boolean BFS(double[][] capaciteResiduel, Map<Integer,Integer> parent, int source, int puit){
-        Set<Integer> visited = new HashSet<>();
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(source);
-        visited.add(source);
-        boolean foundAugmentedPath = false;
-        //see if we can find augmented path from source to sink
-        while(!queue.isEmpty()){
-            int u = queue.poll();
+        Set<Integer> visiter = new HashSet<>();
+        Queue<Integer> file = new LinkedList<>();
+        file.add(source);
+        visiter.add(source);
+        boolean cheminAugmentantTrouver = false;
+        while(!file.isEmpty()){
+            int u = file.poll();
             for(int v = 0; v < capaciteResiduel.length; v++){
-                //explore the vertex only if it is not visited and its residual capacity is
-                //greater than 0
-                if(!visited.contains(v) &&  capaciteResiduel[u][v] > 0){
-                    //add in parent map saying v got explored by u
+                if(!visiter.contains(v) &&  capaciteResiduel[u][v] > 0){
                     parent.put(v, u);
-                    //add v to visited
-                    visited.add(v);
-                    //add v to queue for BFS
-                    queue.add(v);
-                    //if sink is found then augmented path is found
+                    visiter.add(v);
+                    file.add(v);
                     if ( v == puit) {
-                        foundAugmentedPath = true;
+                        cheminAugmentantTrouver = true;
                         break;
                     }
                 }
             }
         }
-        //returns if augmented path is found from source to sink or not
-        return foundAugmentedPath;
+        return cheminAugmentantTrouver;
     }
 
 	/**
@@ -887,7 +872,6 @@ this.reset_couleur_graph();
 	 * @return true : si aucun problème
 	 * @author Madeleine
 	 */
-
 	@Override
 	public boolean dsatur() {
 		ArrayList<Sommet> acolo = new ArrayList<Sommet>(this.get_liste_de_sommet());
@@ -1003,10 +987,11 @@ this.reset_couleur_graph();
 			return arcSortant;
 		}
 	 
-		/**
-		 * Permet de faire un parcours en profondeur pour Kosaraju
-		 * @author Madeleine
-		 */
+		
+	 /**
+	  * Permet de faire un parcours en profondeur pour Kosaraju
+	  * @author Madeleine
+	  */
 	 private void DFS(Sommet s,ArrayList<Sommet> visited,Stack<Sommet> stack)  {
 		 //fait un parcours en profondeur, si un sommet est dans "visited", on continue le parcours. Si on ne peut plus, c'est qu'on a fini de traité le sommet, et on l'ajoute dans la pile
 		 visited.add(s);
@@ -1090,6 +1075,7 @@ this.reset_couleur_graph();
            				});
 		return true;
 	}
+	
 	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
 		int min=num[x]= ++j;
 		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
@@ -1105,6 +1091,7 @@ this.reset_couleur_graph();
 		}
 		return min;
 	}
+	
 	@Override
 	public boolean tarjan() {
 		this.reset_couleur_graph();
@@ -1155,7 +1142,7 @@ this.reset_couleur_graph();
         	t.setCouleur(Color.red);
 		}
 		  if(PointsArticulation.isEmpty()) {
-			  return false;//TODO : Message : y a pas aucun point d'articulation
+			  return false;
 		  }
 		return true;
 	}
@@ -1198,6 +1185,10 @@ this.reset_couleur_graph();
 		return sommets;
 	}
 
+	/**
+	 * Fabrique et donne une liste des arcs appartenant au graphe
+	 * @return ArrayList
+	 */
 	@Override
 	public ArrayList<Arc> get_liste_arc() {
 		ArrayList<Arc> arcs=new ArrayList<Arc>();
@@ -1209,19 +1200,5 @@ this.reset_couleur_graph();
 			}
 		}
 		return arcs;
-	}
-	
-	@Override
-	public String toString(){
-		String tmp = new String();
-		
-		for(int i = 0; i<graphe.length; i++){
-			for(int j = 0; j<graphe.length; j++){
-				tmp += "[" + graphe[i][j].toString() + "]";
-			}
-			tmp += "\n";
-		}
-		
-		return tmp;
 	}
 }
