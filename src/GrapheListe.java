@@ -534,7 +534,16 @@ public class GrapheListe extends Graphe {
 	@Override
 	public boolean ford_fulkerson(Sommet d, Sommet a) {
 		this.reset_couleur_graph();
-		//TODO: Vérification !(existPoidsNégatif)
+		
+		//Vérification de la présence de poids négatif sur le graphe
+		boolean presenceArcNeg = false;
+		for(Arc act : arcs){
+			if(act.getVarPoids() < 0){
+				act.setCouleur(Color.red);
+				presenceArcNeg = true;
+			}
+		}
+		if(presenceArcNeg) return false;
 		
 		float capacite[][] = new float[getNbSommets()][getNbSommets()];
 		//Initialisation du tableau de capacité à 0 pour les arcs qui n'existe pas dans la matrice
