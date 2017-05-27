@@ -618,7 +618,7 @@ public class Interface extends JComponent {
                             liste_delete_button.add(new JButton());
                             liste_delete_button.get(0).setVisible(false);
                         }else{
-                            liste_Label.add(new JLabel("Variable " + (i + 1) + " (" + s.getList().get(i).getTypeVar() + ") : "));
+                            liste_Label.add(new JLabel("Variable " + (i + 1) + " (" + a.getList().get(i).getTypeVar() + ") : "));
                             p1.add(liste_Label.get(i), gbc);
                             p1.add(liste_input.get(i), gbc);
                             liste_delete_button.add(new JButton("Supprimer"));
