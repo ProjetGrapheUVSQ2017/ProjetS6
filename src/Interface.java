@@ -632,7 +632,7 @@ public class Interface extends JComponent {
                                     liste_delete_button.remove(j);
                                     liste_input.remove(j);
                                     liste_Label.remove(j);
-                                    s.removeVar(j);
+                                    a.removeVar(j);
                                     VariableWindow.setSize(300, s.getList().size() * 100 + 200);
                                     VariableWindow.repaint();
                                 }
