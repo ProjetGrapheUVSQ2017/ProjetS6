@@ -1019,11 +1019,75 @@ public class GrapheListe extends Graphe {
 	        }
 	    }
 
+	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
+		int min=num[x]= ++j;
+		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
+			int y=s.getId();int m;
+			if(num[y]==-1){
+				m=attache(num,g,y,PointsArticulation,j);
+				if(m>=num[x]){
+					PointsArticulation.add(this.get_liste_de_sommet().get(x));
+				}
+			}else
+				m=num[y];
+			min=Math.min(min,m);
+		}
+		return min;
+	} 
+
 	@Override
 	public boolean tarjan() {
-		// TODO Auto-generated method stub
 		this.reset_couleur_graph();
-		return false;
+		int numOrdre=0,n;
+		n=this.getNbSommets();
+		int num[]=new int[n];
+		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
+		boolean existeSommetIsole=false;
+		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
+		int SommetIsole=0;
+		for(Sommet s : this.get_liste_de_sommet()){
+			existeSommetIsole=true;
+			for(Arc t : this.get_liste_arc()){
+				if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
+					existeSommetIsole=false;
+				}
+			}
+			if(existeSommetIsole && this.getNbArcs()>0 ) {
+				SommetIsole++;
+				s.setCouleur(Color.RED);
+				System.out.println("le sommet num : "+s.getId()+" est isolé");
+				//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour
+				//appliquer l'algo sinon il crée un nouveau sous graphe
+			}
+		}
+		if(this.getNbSommets()<3 || SommetIsole!=0){
+			return false;// TODO : distinguer entre 1)==>Nombre de sommet = 1 ou 2 (impossible d'appliquer l'algo)
+			//et 2)==> le cas ou on a plus que 2 sommets mais il y a pas des arcs entre eux ou ils sont isolés (il faut pas l'exécuter)
+		}
+		for(int x=0;x<n;++x)
+			num[x]=-1;
+		for(int x=0;x<n;++x)
+			if(num[x]== -1){
+				num[x]=++numOrdre;
+				int nfils=0;
+				for(Sommet s: this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
+					int y=s.getId();
+					if(num[y]==-1){
+						++nfils;
+
+						int m=attache(num,this,y,PointsArticulation,numOrdre);
+					}
+				}
+				if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
+			}
+
+		for (Sommet t : PointsArticulation){
+			t.setCouleur(Color.red);
+		}
+		if(PointsArticulation.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 
 	 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non
