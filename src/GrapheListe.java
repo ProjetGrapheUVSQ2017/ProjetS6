@@ -1081,6 +1081,12 @@ public class GrapheListe extends Graphe {
 				//on teste le où un sommet est la racine de l'arbre de parcours en profondeur ayant plus qu'un sommet adjacent
 				if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
 			}
+
+		if(PointsArticulation.isEmpty()){
+			return false;
+		}
+
+
 		//on colore les points d'articulation en rouge
 
 
