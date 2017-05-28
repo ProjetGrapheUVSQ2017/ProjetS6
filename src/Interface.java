@@ -549,7 +549,7 @@ public class Interface extends JComponent {
                             "\t   Complexité : (sommets²)\n" +
                             "Kosaraju : Permet de trouver les composantes fortement connexes (les sommets de la même couleur son fortement connexe entre-eux)\n" +
                             "\t   Complexité : (sommets+arcs)\n" +
-                            "Tarjan : Permet de trouver les points d'accumulations dans un graphe\n" +
+                            "Tarjan : Permet de trouver les points d'articulations dans un graphe\n" +
                             "\t   Complexité : (sommets+arcs)\n");
                     JScrollPane scrollPane = new JScrollPane(textArea);
                     textArea.setLineWrap(true);
@@ -777,7 +777,7 @@ public class Interface extends JComponent {
      * Sous-Classe de l'Interface qui définie l'action à effectuer avec kosarajuAction.
      * -Redéfinis toutes les couleurs du graphe par defaut.
      * -Applique l'algorithme de Kosaraju qui recherche les points d'accumultation du graphe.
-     * -Affiche une fenêtre d'information si il n'existe pas de poinrs d'accumulation dans le graphe.
+     * -Affiche une fenêtre d'information si il n'existe pas de poinrs d'articulation dans le graphe.
      */
 
     class tarjanAction extends AbstractAction{
@@ -790,7 +790,7 @@ public class Interface extends JComponent {
 
             if(!graphe.tarjan()){
                 JOptionPane jop = new JOptionPane();
-                jop.showMessageDialog(f, "Il n'existe pas de point d'accumulation dans ce Graphe.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                jop.showMessageDialog(f, "Il n'existe pas de point d'articulation dans ce Graphe.", "Information", JOptionPane.INFORMATION_MESSAGE);
             }
             repaint();
         }
