@@ -9,6 +9,9 @@ compile: createBinDir
 package: compile
 	jar cmfv manifest graphe.jar  bin/*.class
 
+run:
+	java -jar graphe.jar
+
 clean:
 	rm -rf bin
 	rm graphe.jar
