@@ -1153,7 +1153,7 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Permet de renvoyer la liste de tous les voisins d'un sommet
-	 * @param Sommet : le sommet qu'on veut traiter
+	 * @param s le sommet qu'on veut traiter
 	 * @return ArrayList la liste de sommets voisins
 	 * @author Damien
 	 */
