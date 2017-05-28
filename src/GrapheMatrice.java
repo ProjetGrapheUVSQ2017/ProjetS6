@@ -78,7 +78,7 @@ public class GrapheMatrice extends Graphe {
 	 * Ajoute un sommet au graphe
 	 * Agrandit le tableau en le copiant dans un tableau plus grand de 1.
 	 * Et ajoute le sommet Ã  notre liste de sommets composant le graphe.
-	 * @param s : Sommet ajouté au graphe
+	 * @param s Sommet ajouté au graphe
 	 * @author damien
 	 */
 	@Override
@@ -109,7 +109,7 @@ public class GrapheMatrice extends Graphe {
 	 * Appel addSommet(Sommet) qui agrandit le tableau en le copiant dans un tableau plus grand de 1.
 	 * Et ajoute le sommet à notre liste de sommets composant le graphe.
 	 * De plus, cette méthode crée le sommet avec l'adresse donné.
-	 * @param p : Adresse du nouveau sommet
+	 * @param p Adresse du nouveau sommet
 	 * @author damien
 	 */
 	@Override
@@ -121,8 +121,8 @@ public class GrapheMatrice extends Graphe {
 	 * Crée un arc entre les sommets d et a.
 	 * Ne fais rien si l'arc existe déjà.
 	 * Ne fais rien si les sommets ne se trouvent pas dans le graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d Sommet de départ de l'arc
+	 * @param a Sommet d'arrivée de l'arc
 	 * @author damien
 	 */
 	@Override
@@ -140,8 +140,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Supprime l'arc du tableau.
 	 * Ne fais rien si les sommets d et a n'appartiennent pas au graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d Sommet de départ de l'arc
+	 * @param a Sommet d'arrivée de l'arc
 	 * @author damien
 	 */
 	@Override
@@ -164,7 +164,7 @@ public class GrapheMatrice extends Graphe {
 	 * Supprime l'arc par ID
 	 * Recherche tous le graphe à la recherche de l'arc
 	 * Demande plus de ressources que la suppression en donnant les sommets.
-	 * @param id : Identifiant de l'arc à supprimer
+	 * @param id Identifiant de l'arc à supprimer
 	 * @author damien
 	 */
 	@Override
@@ -189,7 +189,7 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Supprime un sommet et refait les ID de tous les autres pour qu'ils corresondent.
-	 * @param id : Identifiant du sommet
+	 * @param id Identifiant du sommet
 	 * @author damien
 	 */
 	@Override
@@ -259,8 +259,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Envoi true si l'arc existe dans le graphe, et false sinon
 	 * Renvoi false aussi si les sommets spécifiés ne font pas partie du graphe.
-	 * @param d : Sommet de départ de l'arc
-	 * @param a : Sommet d'arrivée de l'arc
+	 * @param d Sommet de départ de l'arc
+	 * @param a Sommet d'arrivée de l'arc
 	 * @author damien
 	 */
 	@Override
@@ -276,7 +276,7 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Renvoie le sommet identifié.
 	 * Renvoie null si le sommet n'existe pas dans le graphe.
-	 * @param id : Identifiant du sommet recherché
+	 * @param id Identifiant du sommet recherché
 	 * @author damien
 	 * @return Sommet : Sommet recherché identifié
 	 */
@@ -293,8 +293,8 @@ public class GrapheMatrice extends Graphe {
 	/**
 	 * Renvoie l'arc identifié par les sommets d et a.
 	 * Renvoie null si l'arc n'existe pas ou si les sommets d ou a ne font pas partie du graphe
-	 * @param d : Sommet de départ de l'arc recherché
-	 * @param a : Sommet d'arrivée de l'arc recherché
+	 * @param d Sommet de départ de l'arc recherché
+	 * @param a Sommet d'arrivée de l'arc recherché
 	 * @return Arc
 	 * @author damien
 	 */
@@ -312,7 +312,7 @@ public class GrapheMatrice extends Graphe {
 	 * Renvoie l'arc identifié par l'identifiant.
 	 * Renvoie null si l'arc n'existe pas.
 	 * Parcours le graphe pour obtenir l'arc concerné, la recherche en donnant les sommets de départ et d'arrivée est moins couteuses.
-	 * @param id : int identifiant l'arc recherché
+	 * @param id int identifiant l'arc recherché
 	 * @return Arc
 	 * @author damien
 	 */
@@ -492,10 +492,10 @@ public class GrapheMatrice extends Graphe {
 	
 	/**
 	 * Permet de trouver le plus court chemin entre un sommet d et un sommet a
-	 * @param sommet d : sommet de départ
-	 * @param sommet a : sommet d'arrivée
-	 * @return false : si présence d'un cycle négatif
-	 * @return true : si aucun problème
+	 * @param d sommet de départ
+	 * @param a sommet d'arrivée
+	 * @return false si présence d'un cycle négatif
+	 * @return true si aucun problème
 	 * @author Damien, Madeleine
 	 */
 	@Override
@@ -1153,8 +1153,8 @@ public class GrapheMatrice extends Graphe {
 
 	/**
 	 * Permet de renvoyer la liste de tous les voisins d'un sommet
-	 * @param sommet : le sommet qu'on veut traiter
-	 * @return ArrayList<Sommet> : la liste de sommets voisins
+	 * @param Sommet : le sommet qu'on veut traiter
+	 * @return ArrayList la liste de sommets voisins
 	 * @author Damien
 	 */
 	@Override
@@ -1181,7 +1181,7 @@ public class GrapheMatrice extends Graphe {
 	
 	/**
 	 * Permet de renvoyer la liste des sommets du graphe
-	 * @return ArrayList<Sommet> : la liste des sommets du graphe
+	 * @return ArrayList : la liste des sommets du graphe
 	 * @author Madeline
 	 */
 	@Override
