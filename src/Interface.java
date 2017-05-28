@@ -366,7 +366,7 @@ public class Interface extends JComponent {
             this.popup.add(new JMenuItem(action_supprimerSommet));
             this.popup.add(new JMenuItem(action_ModifierVariable));
 
-            
+
             String[] modeMouseString = { "Mode Selection", "Mode Arc", "Mode Sommet"};
             modeMouse = new JComboBox(modeMouseString);
             this.add(modeMouse);
@@ -382,13 +382,13 @@ public class Interface extends JComponent {
                             "\n" +
                             "Création/Modification/Suppression d'un sommet : Clic droit sur le sommet\n" +
                             "\n" +
-                            "Création d'un arc : Mettez-vous en mode d'édition \"Arcs\" et avec le clic gauche, glissez la souris d'un sommet vers un autre.\n" +
+                            "Création d'un arc : Mettez-vous en mode \"Arcs\" et avec le clic gauche, glissez la souris d'un sommet vers un autre.\n" +
                             "\n" +
                             "Modification/Suppression d'un arc : Clic droit sur l'arc\n" +
                             "\n" +
-                            "Selection d'un sommet : Mettez-vous en mode d'édition \"Selection\" et cliquez sur un sommet. Pour en selectionner plusieurs, appuyez sur MAj et cliquez sur vos sommets. Vous pouvez également faire glisser la souris tout en restant appuyer pour créer un rectangle de sélection.\n" +
+                            "Selection d'un sommet : Mettez-vous en mode \"Selection\" et cliquez sur un sommet. Pour en selectionner plusieurs, appuyez sur MAj et cliquez sur vos sommets. Vous pouvez également faire glisser la souris tout en restant appuyer pour créer un rectangle de sélection.\n" +
                             "\n" +
-                            "Déplacer un sommet : Mettez-vous en mode d'édition \"Sommets\" et cliquez sur un sommet pour en déplacer. Pour déplacer plusieurs sommets, mettez-vous en mode d'édition \"selection\", selectionnez vos sommets avec Maj et passez en mode d'édition \"Sommets\".\n" +
+                            "Déplacer un sommet : Mettez-vous en mode \"Sommets\" et cliquez sur un sommet pour en déplacer. Pour déplacer plusieurs sommets, mettez-vous en mode \"selection\", selectionnez vos sommets avec Maj et passez en mode d'édition \"Sommets\".\n" +
                             "\n" +
                             "Pour charger un fichier : Choississez dans la liste \"Fichier\" le mode \"Charger\" et choississez le fichier à charger (les fichiers compatibles sont en /graphe)\n" +
                             "\n" +
