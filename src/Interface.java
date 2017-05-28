@@ -209,7 +209,7 @@ public class Interface extends JComponent {
                         SommetSelec.clear();
                     }
                 }else{
-                    if(modeMouse.getSelectedItem()=="Selection"){
+                    if(modeMouse.getSelectedItem()=="Mode Selection"){
                         if (e.isShiftDown()) {
                             SommetSelec.add(getSommetFromPoint(ptSouris));
                         }else{
@@ -217,7 +217,7 @@ public class Interface extends JComponent {
                             SommetSelec.add(getSommetFromPoint(ptSouris));
                         }
                     }
-                    else if(modeMouse.getSelectedItem()=="Sommet"){
+                    else if(modeMouse.getSelectedItem()=="Mode Sommet"){
                         if(SommetSelec.isEmpty()){
                             SommetSelec.clear();
                             SommetSelec.add(getSommetFromPoint(ptSouris));
@@ -229,7 +229,7 @@ public class Interface extends JComponent {
                     }
                 }
             }else{
-                if(modeMouse.getSelectedItem()=="Selection"){
+                if(modeMouse.getSelectedItem()=="Mode Selection"){
                     SommetSelec.clear();
                 }
             }
@@ -242,12 +242,12 @@ public class Interface extends JComponent {
             if (e.isPopupTrigger()) {
                 showPopup(e);
             }
-            if(modeMouse.getSelectedItem()=="Arcs"){
+            if(modeMouse.getSelectedItem()=="Mode Arc"){
                 if(getSommetFromPoint(depart) != getSommetFromPoint(arrive)){
                     graphe.addArc(getSommetFromPoint(depart), getSommetFromPoint(arrive));
                 }
             }
-            if(modeMouse.getSelectedItem()=="Selection"){
+            if(modeMouse.getSelectedItem()=="Mode Selection"){
                 rectangleSouris = new Rectangle();
 
             }
@@ -264,7 +264,7 @@ public class Interface extends JComponent {
         @Override
         public void mouseDragged(MouseEvent e) {
             Point p = new Point();
-            if(modeMouse.getSelectedItem()=="Sommet"){
+            if(modeMouse.getSelectedItem()=="Mode Sommet"){
                 p.setLocation(e.getX() - ptSouris.x, e.getY() - ptSouris.y);
                 for(Sommet s: SommetSelec){
                     s.getPoint().x += p.x;
@@ -272,7 +272,7 @@ public class Interface extends JComponent {
                 }
                 ptSouris = e.getPoint();
             }
-            if(modeMouse.getSelectedItem()=="Selection"){
+            if(modeMouse.getSelectedItem()=="Mode Selection"){
                 SommetSelec.clear();
                 rectangleSouris.setBounds(Math.min(ptSouris.x, e.getX()), Math.min(ptSouris.y, e.getY()), Math.abs(ptSouris.x - e.getX()), Math.abs(ptSouris.y - e.getY()));
                 for (Sommet s : graphe.get_liste_de_sommet()) {
@@ -290,7 +290,7 @@ public class Interface extends JComponent {
 
     public class ModeMouseComboBox implements ActionListener{
         public void actionPerformed(ActionEvent e) {
-            if(modeMouse.getSelectedItem()=="Arcs"){
+            if(modeMouse.getSelectedItem()=="Mode Arc"){
                 SommetSelec.clear();
                 repaint();
             }
@@ -369,8 +369,9 @@ public class Interface extends JComponent {
 
             String[] modeMouseString = { "Mode Selection", "Mode Arc", "Mode Sommet"};
             modeMouse = new JComboBox(modeMouseString);
-            this.add(modeMouse);
             modeMouse.addActionListener(new ModeMouseComboBox());
+            this.add(modeMouse);
+
 
 
 
