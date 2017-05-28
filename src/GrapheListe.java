@@ -6,7 +6,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.awt.Color;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -1001,12 +1000,11 @@ public class GrapheListe extends Graphe {
 	        }
 	        stack.offerFirst(vertex);
 	    }
-		 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non
-		 
+		 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non	 
 		 /**
-			 * Permet de faire un parcours en profondeur avec un graphe qui a été retourné pour Kosaraju
-			 * @author Madeleine
-			 */
+		 * Permet de faire un parcours en profondeur avec un graphe qui a été retourné pour Kosaraju
+		 * @author Madeleine
+		 */
 	    private void DFSRenverse(Sommet vertex, Set<Sommet> visited, Set<Sommet> set, Graphe graph) {
 	        visited.add(vertex);
 	        set.add(vertex);
@@ -1018,12 +1016,17 @@ public class GrapheListe extends Graphe {
 	            DFSRenverse(v, visited, set, graph);
 	        }
 	    }
-
+	    /**
+		 * Permet de faire un parcours en profondeur avec un graphe pour extraire les points d'articulation
+		 * @author Aziz, Maxence
+		 */
 	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
 		int min=num[x]= ++j;
 		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
-			int y=s.getId();int m;
-			if(num[y]==-1){
+			int y=s.getId();// y stock le id du sommet adjacent du sommet courant
+			int m;
+			//si le sommet n'est pas visité on fait l'appel récursif de parcours en profondeur sur ce sommet
+			if(num[y]==-1){ 
 				m=attache(num,g,y,PointsArticulation,j);
 				if(m>=num[x]){
 					PointsArticulation.add(this.get_liste_de_sommet().get(x));
@@ -1034,38 +1037,24 @@ public class GrapheListe extends Graphe {
 		}
 		return min;
 	} 
-
+	/**
+	 * Permet de trouver les points d'articulation et les colorer
+	 * @return true : si l'algorithme trouve au moins un point d'articulation
+	 * @return false : s'il n y a pas aucun point d'articulation
+	 * @author Aziz, Maxence
+	 */
 	@Override
 	public boolean tarjan() {
 		this.reset_couleur_graph();
 		int numOrdre=0,n;
 		n=this.getNbSommets();
+		//Tableau indexé par les identifiants des sommets
 		int num[]=new int[n];
 		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
-		boolean existeSommetIsole=false;
-		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
-		int SommetIsole=0;
-		for(Sommet s : this.get_liste_de_sommet()){
-			existeSommetIsole=true;
-			for(Arc t : this.get_liste_arc()){
-				if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
-					existeSommetIsole=false;
-				}
-			}
-			if(existeSommetIsole && this.getNbArcs()>0 ) {
-				SommetIsole++;
-				s.setCouleur(Color.RED);
-				System.out.println("le sommet num : "+s.getId()+" est isolé");
-				//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour
-				//appliquer l'algo sinon il crée un nouveau sous graphe
-			}
-		}
-		if(this.getNbSommets()<3 || SommetIsole!=0){
-			return false;// TODO : distinguer entre 1)==>Nombre de sommet = 1 ou 2 (impossible d'appliquer l'algo)
-			//et 2)==> le cas ou on a plus que 2 sommets mais il y a pas des arcs entre eux ou ils sont isolés (il faut pas l'exécuter)
-		}
+		//On initialise tous les sommets comme non visités
 		for(int x=0;x<n;++x)
 			num[x]=-1;
+		//faire un parcours en profondeur pour tous les sommets du graphe
 		for(int x=0;x<n;++x)
 			if(num[x]== -1){
 				num[x]=++numOrdre;
@@ -1073,25 +1062,23 @@ public class GrapheListe extends Graphe {
 				for(Sommet s: this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
 					int y=s.getId();
 					if(num[y]==-1){
-						++nfils;
-
+						++nfils;// on incrémente le nombre de sommets adjacents du sommet courant
 						int m=attache(num,this,y,PointsArticulation,numOrdre);
 					}
 				}
+				//on teste le où un sommet est la racine de l'arbre de parcours en profondeur ayant plus qu'un sommet adjacent
 				if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
 			}
-
+		//on colore les points d'articulation en rouge
 		for (Sommet t : PointsArticulation){
 			t.setCouleur(Color.red);
 		}
+		//on retourne false si aucun point d'articulation est trouvé
 		if(PointsArticulation.isEmpty()) {
 			return false;
 		}
 		return true;
 	}
-
-	 //la différence entre les deux parcours en profondeur est que le 1er met dans la pile les sommets qu'on a fini de visité alors que l'autre non
-	 
 	 /**
 	  * Permet de renvoyer la liste des sommets contenu dans le graphe
 	  * @author Madeleine
@@ -1099,7 +1086,6 @@ public class GrapheListe extends Graphe {
 	@Override
 	public ArrayList<Sommet> get_liste_de_sommet() {
 		return this.sommets;
-	
 	}
 	 /**
 	  * Permet de renvoyer la liste des arcs contenu dans le graphe
@@ -1108,9 +1094,7 @@ public class GrapheListe extends Graphe {
 	@Override
 	public ArrayList<Arc> get_liste_arc() {
 		return this.arcs;
-}
-
-
+	}
 	/**
 	 * Renvoie une liste de Sommet contenant les sommets reli�s par un arc � s
 	 * La liste est vide si s n'a aucuns voisins.
@@ -1133,7 +1117,4 @@ public class GrapheListe extends Graphe {
 		}
 		return res;
 	}
-
 }
-
-
