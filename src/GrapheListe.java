@@ -709,21 +709,18 @@ public class GrapheListe extends Graphe {
 		for (i = 0; i < n; i++){
 			SommetSelectionnes.get(i).addVar(new VarInt(i));
 		}
-		
-		
+				
 		i = 0;
-		ArrayList<Arc> arcajoute=new ArrayList<Arc>();
 		boolean change=true;
 		while (change) {
 			change=false;
 			Arc a = ArcsTries.get(i);
 			num1 = a.getSommetDepart().getVar(a.getSommetDepart().getList().size()-1).getInt();
-			num2 = a.getSommetArrivee().getVar(a.getSommetDepart().getList().size()-1).getInt();
+			num2 = a.getSommetArrivee().getVar(a.getSommetArrivee().getList().size()-1).getInt();
 			if (num1 != num2) {
 				ArcsTries.get(i).setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetArrivee().setCouleur(Color.BLUE);
 				ArcsTries.get(i).getSommetDepart().setCouleur(Color.BLUE);
-				arcajoute.add(a);
 				for (Sommet s : SommetSelectionnes)
 					if (s.getVar(s.getList().size()-1).getInt() == num2) 
 						{
