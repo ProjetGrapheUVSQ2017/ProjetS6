@@ -934,6 +934,10 @@ public class GrapheListe extends Graphe {
 		return true;
 	}
 
+	/**
+	 * Permet de trouver les composantes fortement connexe dans un graphe. Les composantes fortement connexe seront colorés de la même couleur
+	 * @author Madeleine
+	 */
 	@Override
 	public boolean kosaraju() {
 		this.reset_couleur_graph();
@@ -1019,10 +1023,17 @@ public class GrapheListe extends Graphe {
 	        }
 	    }
 
+	/**
+	 * Permet de faire un parcours en profondeur à partir d'un sommet pour extraire les points d'articulation
+	 * @author Aziz
+	 */
+
 	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
 		int min=num[x]= ++j;
 		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
-			int y=s.getId();int m;
+			int y=s.getId(); // y stock le id du sommet adjacent du sommet courant
+			int m;
+			//si le sommet n'est pas visité on fait l'appel récursif de parcours en profondeur sur ce sommet
 			if(num[y]==-1){
 				m=attache(num,g,y,PointsArticulation,j);
 				if(m>=num[x]){
@@ -1033,17 +1044,25 @@ public class GrapheListe extends Graphe {
 			min=Math.min(min,m);
 		}
 		return min;
-	} 
+	}
+
+	/**
+	 *  Permet de trouver les points d'articulation et les colorer
+	 *  @return true : si l'algorithme trouve au moins un point d'articulation
+	 *  @return false : s'il n y a pas aucun point d'articulation
+	 *  @author Aziz
+	 */
 
 	@Override
 	public boolean tarjan() {
 		this.reset_couleur_graph();
 		int numOrdre=0,n;
 		n=this.getNbSommets();
+		//Tableau indexé par les identifiants des sommets
 		int num[]=new int[n];
 		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
 		boolean existeSommetIsole=false;
-		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
+		//On initialise tous les sommets comme non visités
 		int SommetIsole=0;
 		for(Sommet s : this.get_liste_de_sommet()){
 			existeSommetIsole=true;
@@ -1054,18 +1073,13 @@ public class GrapheListe extends Graphe {
 			}
 			if(existeSommetIsole && this.getNbArcs()>0 ) {
 				SommetIsole++;
-				s.setCouleur(Color.RED);
-				System.out.println("le sommet num : "+s.getId()+" est isolé");
-				//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour
-				//appliquer l'algo sinon il crée un nouveau sous graphe
+				s.setCouleur(Color.BLUE);
 			}
-		}
-		if(this.getNbSommets()<3 || SommetIsole!=0){
-			return false;// TODO : distinguer entre 1)==>Nombre de sommet = 1 ou 2 (impossible d'appliquer l'algo)
-			//et 2)==> le cas ou on a plus que 2 sommets mais il y a pas des arcs entre eux ou ils sont isolés (il faut pas l'exécuter)
 		}
 		for(int x=0;x<n;++x)
 			num[x]=-1;
+
+		//faire un parcours en profondeur pour tous les sommets du graphe
 		for(int x=0;x<n;++x)
 			if(num[x]== -1){
 				num[x]=++numOrdre;
@@ -1073,19 +1087,19 @@ public class GrapheListe extends Graphe {
 				for(Sommet s: this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
 					int y=s.getId();
 					if(num[y]==-1){
-						++nfils;
+						++nfils;// on incrémente le nombre de sommets adjacents du sommet courant
 
 						int m=attache(num,this,y,PointsArticulation,numOrdre);
 					}
 				}
+				//on teste le où un sommet est la racine de l'arbre de parcours en profondeur ayant plus qu'un sommet adjacent
 				if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
 			}
+		//on colore les points d'articulation en rouge
+
 
 		for (Sommet t : PointsArticulation){
 			t.setCouleur(Color.red);
-		}
-		if(PointsArticulation.isEmpty()) {
-			return false;
 		}
 		return true;
 	}
