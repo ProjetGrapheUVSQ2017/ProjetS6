@@ -5,7 +5,9 @@ import java.awt.Point;
 import org.junit.Before;
 import org.junit.Test;
 
-public class GrapheMatriceTest {
+import junit.framework.TestCase;
+
+public class GrapheMatriceTest extends TestCase{
 
 	private Graphe graphe;
 	

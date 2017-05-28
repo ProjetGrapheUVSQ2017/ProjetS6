@@ -5,8 +5,10 @@ import java.awt.Point;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.TestCase;
 
-public class GrapheListeTest {
+
+public class GrapheListeTest extends TestCase{
 
 	private Graphe graphe;
 	
@@ -135,5 +137,4 @@ public class GrapheListeTest {
 		assertTrue("Ford-Fulkerson réussi", graphe.ford_fulkerson(s1, s3));
 		assertTrue("Le poids maximal est faux", s3.getVar(0).getFloat() == 2.0);
 	}
-
 }
