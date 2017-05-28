@@ -648,7 +648,6 @@ public class GrapheMatrice extends Graphe {
 				flotArc[act.getId()] += flot;
 			}
 			
-			//add min capacity to max flow
 			flotMax += flot;
 
 			v = a.getId();

@@ -576,7 +576,7 @@ public class GrapheListe extends Graphe {
 				flotArc[act.getId()] += flot;
 			}
 			
-			//add min capacity to max flow
+			//Ajout du flot trouver au flot totale
 			flotMax += flot;
 
 			//Met à jour la capacité résiduel entre u et v
