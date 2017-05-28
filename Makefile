@@ -1,4 +1,4 @@
-all: run
+all: package
 
 createBinDir:
 	mkdir -p bin
