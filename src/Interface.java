@@ -8,23 +8,82 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+/**
+ * Classe héritée de JComponent qui permet d'afficher un fenêtre affichant un graphe isssu de la classe Graphe.
+ * Cette fenêtre est composée d'un menu permettant d'acceder aux fonctions définies dans la classe Graphe, ainsi que d'une espace graphique le representant.
+ * @see Graphe
+ * @author Maxence
+ *
+ */
+
 public class Interface extends JComponent {
 
+    /**
+     * largeur et hauteur donnent la taille de la fenêtre à son ouverture.
+     */
     private static int largeur = 1000;
     private static int hauteur = 600;
+
+    /**
+     * SommetSelec contient la liste des Sommets qui ont été séléctionné par l'utilisateur.
+     */
     private ArrayList<Sommet> SommetSelec = new ArrayList<Sommet>();
+
+    /**
+     * ptSouris la position de la souris dans l'espace.
+     */
     private Point ptSouris;
+
+    /**
+     * rectangleSouris représente l'ensemble des points dans le plan que l'utilisateur est en train de selectionner.
+     */
     private Rectangle rectangleSouris = new Rectangle();
+
+    /**
+     * selectionEnCours est un booléen permettant de savoir si l'utilisateur est en train de sélectionner des sommets.
+     */
     private boolean selectionEnCours;
+
+    /**
+     * selectDeuxSommet est un booléen permettant de savoir si l'utilisateur est en train de sélectionner des sommets pour l'execution d'algorithme en nécessitant, tel que Dijkstra.
+     */
     private boolean selectDeuxSommet = false;
+
+    /**
+     * algo_en_cours permet de savoir quel algorithme nécéssitant deux sommets à séléctionner est en cours.
+     */
     private String algo_en_cours = new String();
+
+    /**
+     * control contient le Menu de l'Interface.
+     */
     private MenuPanel control = new MenuPanel();
+
+    /**
+     * graphe contient le Graphe utilisé par l'Interface.
+     */
     private static Graphe graphe;
+
+    /**
+     * rayon_sommet permet de définir la taille du rayon des cercles représentant les Sommets du Graphe.
+     */
     private static int rayon_sommet = 15;
-    private Sommet sommet_selection;
+
+    /**
+     * f contient la fenêtre du programme.
+     */
     private JFrame f = new JFrame("Graphe");
+
+    /**
+     * modeMouse contient le systeme de séléction de Mode d'édition du Graphe.
+     */
     private JComboBox modeMouse;
 
+
+    /**
+     * Fonction appelée au démarrage du programme.
+     * ELle crée une Interface et un Graphe vide qui est par défaut de type Liste.
+     */
     public static void main(String[] args) throws Exception{
         EventQueue.invokeLater(new Runnable() {
 
@@ -37,6 +96,21 @@ public class Interface extends JComponent {
         });
     }
 
+    /**
+     * Construteur de la classe Interface.
+     * -Donne comme opération par défaut de fermeture de la fenêtre la fin du Programme.
+     * -Ajoute le menu à l'interface et le place en haut de la fenêtre.
+     * -Ajoute la zone de dessin au milieu de la fenêtre.
+     * -Définis la taille de la fenêtre selon les attributs largeur et hauteur.
+     * -Définis la taille minimum de la fenêtre selon les attributs largeur et hauteur afin de ne pas avoir des chevauchement dans le Menu du Programme.
+     * -Modifie toutes les tailles des éléments composant l'Interface si nécessaire.
+     * -Rends la Fenêtre visible.
+     * -Rends la Fenêtre opaque.
+     * -Ajoute la surveillance des clics de souris à l'Interface.
+     * @see GestionSouris
+     * -Ajoute la surveillance des mouvements de souris à l'Interface.
+     * @see SelectionViaClic
+     */
     public Interface(){
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(this.control,BorderLayout.NORTH);
@@ -52,6 +126,18 @@ public class Interface extends JComponent {
         this.addMouseMotionListener(new SelectionViaClic());
 
     }
+
+    /**
+     * Méthode appelée par la fenêtre à son démarrage ainsi qu'à chaque appel de la fonction repaint().
+     *
+     * -Recolorie la fenêtre en Blanc.
+     * -Affiche le type de Graphe utilisé actuellement en haut à gauche.
+     * -Affiche chaque sommet selon sa Position et sa Couleur, ainsi que l'ensemble des ses variables associées.
+     * -Affiche chaque arc selon son orientation et sa Couleur, ainsi que l'ensemble des ses variables associées. On utilise ici une méthode qui créer des fléches afin d'afficher le sens de l'arc entre deux Sommets, drawArrow().
+     * -Affiche un carré gris autour de chaque sommet sélectionné.
+     * -Affiche la Matrice si le graphe actuel est de type Matrice.
+     * -Affiche le rectangle de selection.
+     */
 
     public void paintComponent(Graphics g){
         g.setColor(Color.WHITE);
@@ -122,6 +208,16 @@ public class Interface extends JComponent {
 
     }
 
+    /**
+     * Méthode appelée par paintCompoment afin d'afficher des flèches entre deux points.
+     * @param g1 Graphics : Donne le composant de dessin de la fenêtre.
+     * @param x1 int : Position sur l'axe X du point d'origine de la flèche.
+     * @param y1 int : Position sur l'axe Y du point d'origine de la flèche.
+     * @param x2 int : Position sur l'axe X du point d'arrivée de la flèche.
+     * @param y2 int : Position sur l'axe Y du point d'arriveée de la flèche.
+     * @param a Arc : L'arc que l'on souhaite dessiner afin d'en récuperer les variables.
+     */
+
     void drawArrow(Graphics g1, int x1, int y1, int x2, int y2, Arc a) {
         int ARR_SIZE = 12;
         Graphics2D g = (Graphics2D) g1.create();
@@ -157,6 +253,15 @@ public class Interface extends JComponent {
             i++;
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface définissant les actions à effectuer en cas de clic de la souris.
+     * -Récupère la position du clic de souris et la place dans l'attribut ptSouris de l'Interface.
+     * -Affiche le Menu Popup suite à un clic droit de la souris.
+     * -Ajoute un sommet à la liste des Sommets Selectionnés si l'on clique sur celui çi. A chque nouveau clic sur un sommet, les autres sommets sont déselectionnés. Maj+Clic permet de ne pas les deselectionner.
+     * -Gère si i l'utilisateur a lancé l'un des algorithmes nécessitant deux sommets pour s'executer, demande à l'utilisateur deux sommets puis lance les algorithmes. Affiche des fenêtre d'information en cas d'erreur sur l'execution de ceux çi.
+     * -Ajoute un arc entre deux sommets si l'utilisateur a déplacé sa souris entre deux sommets en restant appuyé sur le clic gauche en Mode Arc.
+     */
 
     private class GestionSouris extends MouseAdapter {
         Point depart;
@@ -235,7 +340,6 @@ public class Interface extends JComponent {
             }
             repaint();
         }
-
         @Override
         public void mouseReleased(MouseEvent e) {
             arrive = e.getPoint();
@@ -259,6 +363,13 @@ public class Interface extends JComponent {
         }
 
     }
+
+    /**
+     * Sous-Classe de l'Interface définissant les actions à effectuer en cas de déplacement de la souris tout en restant appuyé sur le clic gauche.
+     * -Déplace un sommet sur lequel on a cliqué en Mode Sommet.
+     * -Déplace les sommets contenus dans la liste des sommets selectionnés en Mode Sommet.
+     * -Ajoute les sommets contenus dans le rectangle créer par l'utilisateur au cours de son mouvement à la liste des sommets sélectionnés en Mode Selection.
+     */
 
     private class SelectionViaClic extends MouseMotionAdapter {
         @Override
@@ -288,6 +399,11 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface définissant les actions à effectuer en cas de selection d'un nouvel élément dans le menu déroulant des Modes d'Edition.
+     * -Si l'utilisateur passe en Mode Arc, la liste des sommets selectionnés est vidée.
+     */
+
     public class ModeMouseComboBox implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             if(modeMouse.getSelectedItem()=="Mode Arc"){
@@ -296,6 +412,10 @@ public class Interface extends JComponent {
             }
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui créer le Menu permetant d'effectuer diverses opérations sur le Graphe. Cette classe est dérivée de la classe Java JMenuBar.
+     */
 
     class MenuPanel extends JMenuBar {
         private Action action_dsatur = new dsaturAction("Dsatur");
@@ -339,7 +459,16 @@ public class Interface extends JComponent {
         private JMenu fichier = new JMenu("Fichier");
         private JMenu analyse = new JMenu("Analyse de Graphe");
 
-
+        /**
+         * Construteur de la classe MenuPanel.
+         * -Définis l'organisation des élements du Menu à gauche.
+         * -Définis la couleur du fond du Menu en Gris.
+         * -Ajoute le sous menu Fichier qui contient les actions Ouvrir, Sauvegarder, Transformation, Creation d'un Sous Graphe et Suppression totale sur le Graphe.
+         * -Ajoute le sous menu Analyse de Graphe qui contient les actions d'analyse des graphes via différents algorithmes.
+         * -Creer le Menu Popup contenant les actions d'ajout, de suppression, de modification des Arcs et des Sommets ainsi que de leur variables.
+         * -Ajoute le Menu déroulant de selection du mode d'édition.
+         * -Ajoute le bouton d'affichage de la fenêtre d'aide.
+         */
         MenuPanel() {
             this.setLayout(new FlowLayout(FlowLayout.LEFT));
             this.setBackground(Color.lightGray);
@@ -436,6 +565,11 @@ public class Interface extends JComponent {
 
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec creerSommetAction.
+     * -Ajoute un sommet à la position donnée par ptSouris.
+     */
+
     class creerSommetAction extends AbstractAction{
         public creerSommetAction(String name) {
             super(name);
@@ -446,6 +580,12 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec supprimerAction.
+     * -Récupère le sommet à la position donnée par ptSouris et le supprime.
+     * -Récupère l'arc à la position donnée par ptSouris et le supprime.
+     */
 
     class supprimerAction extends AbstractAction{
         public supprimerAction(String name){super(name);}
@@ -468,6 +608,11 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec transformationAction.
+     * -Change le format du Graphe. GrapheListe vers GrapheMatrice  et inversement.
+     */
+
     class transformationAction extends AbstractAction{
         public transformationAction(String name){super(name);}
 
@@ -477,6 +622,12 @@ public class Interface extends JComponent {
 
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec dsaturAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Applique l'algorithme DSatur de coloration de graphe.
+     */
 
     class dsaturAction extends AbstractAction{
         public dsaturAction(String name) {
@@ -489,6 +640,13 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec dsaturAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Affiche une fenêtre demandant à l'utilisateur de cliquer sur 2 Sommets du graphe.
+     * -Définis l'algorithme à effectuer une fois les 2 sommets selectionnés à "dijkstra".
+     */
 
     class dijkstraAction extends AbstractAction{
         public dijkstraAction(String name) {
@@ -505,6 +663,13 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec bellman_fordAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Affiche une fenêtre demandant à l'utilisateur de cliquer sur 2 Sommets du graphe.
+     * -Définis l'algorithme à effectuer une fois les 2 sommets selectionnés à "bellman".
+     */
 
     class bellman_fordAction extends AbstractAction{
         public bellman_fordAction(String name) {
@@ -523,6 +688,13 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec ford_ferkulsonAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Affiche une fenêtre demandant à l'utilisateur de cliquer sur 2 Sommets du graphe.
+     * -Définis l'algorithme à effectuer une fois les 2 sommets selectionnés à "ford".
+     */
+
     class ford_fulkersonAction extends AbstractAction{
         public ford_fulkersonAction(String name) {
             super(name);
@@ -539,6 +711,13 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec krukallAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Applique l'algorithme de Krukall, qui recherche l'arbre couvrant de poid minimum sur le graphe.
+     * -Affiche une fenêtre d'information si le graphe ne contient pas d'arc et empechant ainsi l'algorithme de s'executer.
+     */
 
     class kruskallAction extends AbstractAction{
         public kruskallAction(String name) {
@@ -558,6 +737,12 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec welsh_powellAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Applique l'algorithme de Welsh Powell de coloration sur le Graphe.
+     */
+
     class welsh_powellAction extends AbstractAction{
         public welsh_powellAction(String name) {
             super(name);
@@ -570,6 +755,12 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec kosarajuAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Applique l'algorithme de Kosaraju qui recherche les composantes fortement connexes du graphe.
+     */
+
     class kosarajuAction extends AbstractAction{
         public kosarajuAction(String name) {
             super(name);
@@ -581,6 +772,13 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec kosarajuAction.
+     * -Redéfinis toutes les couleurs du graphe par defaut.
+     * -Applique l'algorithme de Kosaraju qui recherche les points d'accumultation du graphe.
+     * -Affiche une fenêtre d'information si il n'existe pas de poinrs d'accumulation dans le graphe.
+     */
 
     class tarjanAction extends AbstractAction{
         public tarjanAction(String name) {
@@ -597,6 +795,17 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec modifierVariableAction.
+     * -Affiche une fenêtre contenant les outils nécessaires à l'ajout, la modification et la suppression des variables associées aux arcs et sommets.
+     * -A chaque variable est associé un zone d'édition du contenu de celle ci, un texte indiquant son type et un bouton de suppression.
+     * -A la fermeture de la fenetre ou via le clic sur le bouton "Terminer", elle vérifie que chaque variable modifiée contient bien le bon type de donnée, sinon empehce la fermeture et affiche un message indiquant le problème.
+     * -Bouton pour ajouter une variable de type Entier (Integer).
+     * -Bouton pour ajouter une variable de type Decimale (Float).
+     * -Bouton pour ajouter une variable de type Texte (String).
+     * -La fenêtre change de taille dynamiquement selon le nombre de variable.
+     */
 
     class modifierVariableAction extends AbstractAction{
         public modifierVariableAction(String name) {
@@ -1043,6 +1252,11 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec suppressionTotaleAction.
+     * -Supprime tout les sommets (et donc les arcs associés
+     */
+
     class suppressionTotaleAction extends AbstractAction{
         public suppressionTotaleAction(String name){
             super(name);
@@ -1056,6 +1270,12 @@ public class Interface extends JComponent {
             repaint();
         }
     }
+
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec ouvrirAction.
+     * -Affiche une fenêtre demandant le fichier de type *.graphe que l'on souhaite ouvrir.
+     * -Charge le nouveau graphe donné par le fichier.
+     */
 
     class ouvrirAction extends AbstractAction{
         public ouvrirAction(String name) {
@@ -1075,6 +1295,12 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec sauvegarderAction.
+     * -Affiche une fenêtre demandant le nom et l'emplacement du fichier dans lequel on souhaite sauvegarder le graphe.
+     * -Sauvegarde le graphe actuel dans un fichier de type *.graphe à l'emplacement donné.
+     */
+
     class sauvegarderAction extends AbstractAction{
         public sauvegarderAction(String name) {
             super(name);
@@ -1093,6 +1319,11 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Sous-Classe de l'Interface qui définie l'action à effectuer avec creerSousGraphe.
+     * -Creer un sous-graphe à partir de la liste des sommets selectinonés et les deselectionne.
+     */
+
     class creerSousGrapheAction extends AbstractAction{
         public creerSousGrapheAction(String name) {
             super(name);
@@ -1106,12 +1337,23 @@ public class Interface extends JComponent {
         }
     }
 
+    /**
+     * Méthode de la classe Interface qui permet de renvoyer true si un Point est dans un sommet du Graphe, false sinon.
+     * @param p Point : Point que l'on souhaite vérifier.
+     * @param s Sommet  Sommet que l'on souhaite vériier.
+     */
+
     private static boolean isPointInSommet(Point p, Sommet s){
         if(Math.pow(p.x - s.getPoint().x, 2) + Math.pow(p.y - s.getPoint().y, 2) < Math.pow(rayon_sommet, 2)){
                 return true;
             }
         return false;
     }
+
+    /**
+     * Méthode de la classe Interface qui permet de donner le premier Sommet qui contient le point donné.
+     * @param p Point : Point que l'on souhaite vérifier.
+     */
 
     private static Sommet getSommetFromPoint(Point p){
         for(Sommet s : graphe.get_liste_de_sommet()){
@@ -1121,6 +1363,11 @@ public class Interface extends JComponent {
         }
         return null;
     }
+
+    /**
+     * Méthode de la classe Interface qui permet de donner l'arc le plus proche et à moins de 20 pixel de distance du point donné.
+     * @param p Point : Point que l'on souhaite vérifier.
+     */
 
     private static Arc getArcFromPoint(Point p){
         double min=Double.MAX_VALUE;
