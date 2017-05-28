@@ -1117,7 +1117,7 @@ public class GrapheMatrice extends Graphe {
 		//Tableau indexé par les identifiants des sommets
 		int num[]=new int[n];
 		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
-		
+
 		for(int x=0;x<n;++x)
 			num[x]=-1;
 
@@ -1137,12 +1137,18 @@ public class GrapheMatrice extends Graphe {
 				//on teste le où un sommet est la racine de l'arbre de parcours en profondeur ayant plus qu'un sommet adjacent
 			if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
 		}
+
+		if(PointsArticulation.isEmpty()){
+			return false;
+		}
 		//on colore les points d'articulation en rouge
 
 
 		for (Sommet t : PointsArticulation){
         	t.setCouleur(Color.red);
 		}
+
+
 		return true;
 	}
 

@@ -588,7 +588,11 @@ public class Interface extends JComponent {
 
         public void actionPerformed(ActionEvent e) {
             graphe.reset_couleur_graph();
-            graphe.tarjan();
+
+            if(!graphe.tarjan()){
+                JOptionPane jop = new JOptionPane();
+                jop.showMessageDialog(f, "Il n'existe pas de point d'accumulation dans ce Graphe.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            }
             repaint();
         }
     }
