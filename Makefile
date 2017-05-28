@@ -6,7 +6,7 @@ createBinDir:
 compile: createBinDir
 	javac src/Interface.java -cp src/ -d bin/ -g:none
 
-package: compile graphe.jar
+package: compile
 	jar cmfv manifest graphe.jar  bin/*.class
 
 run: package
