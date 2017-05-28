@@ -32,20 +32,6 @@ public class Interface extends JComponent {
 
                 Interface inter = new Interface();
                 graphe = new GrapheListe();
-                graphe.addSommet(new Point(50,50));
-                graphe.addSommet(new Point(250,50));
-                graphe.addSommet(new Point(50,350));
-                graphe.addSommet(new Point(250,350));
-                graphe.addSommet(new Point(300,400));
-                
-
-
-                graphe.addArc(graphe.getSommet(0),graphe.getSommet(2));
-                graphe.addArc(graphe.getSommet(0),graphe.getSommet(1));
-                graphe.addArc(graphe.getSommet(0),graphe.getSommet(3));
-                graphe.addArc(graphe.getSommet(1),graphe.getSommet(3));
-                graphe.addArc(graphe.getSommet(2),graphe.getSommet(3));
-                graphe.addArc(graphe.getSommet(1), graphe.getSommet(4));
             }
 
         });
@@ -347,6 +333,8 @@ public class Interface extends JComponent {
         private JMenuItem transformation = new JMenuItem(action_transformation);
         private JPopupMenu popup = new JPopupMenu();
 
+        private JButton information = new JButton();
+
         private JMenu fichier = new JMenu("Fichier");
         private JMenu analyse = new JMenu("Analyse de Graphe");
 
@@ -383,6 +371,66 @@ public class Interface extends JComponent {
             modeMouse = new JComboBox(modeMouseString);
             this.add(modeMouse);
             modeMouse.addActionListener(new ModeMouseComboBox());
+
+
+
+            information.setText("Mode d'emploi");
+            information.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    JTextArea textArea = new JTextArea("Mode d'emploi :\n" +
+                            "\n" +
+                            "Création/Modification/Suppression d'un sommet : Clic droit sur le sommet\n" +
+                            "\n" +
+                            "Création d'un arc : Mettez-vous en mode d'édition \"Arcs\" et avec le clic gauche, glissez la souris d'un sommet vers un autre.\n" +
+                            "\n" +
+                            "Modification/Suppression d'un arc : Clic droit sur l'arc\n" +
+                            "\n" +
+                            "Selection d'un sommet : Mettez-vous en mode d'édition \"Selection\" et cliquez sur un sommet. Pour en selectionner plusieurs, appuyez sur MAj et cliquez sur vos sommets. Vous pouvez également faire glisser la souris tout en restant appuyer pour créer un rectangle de sélection.\n" +
+                            "\n" +
+                            "Déplacer un sommet : Mettez-vous en mode d'édition \"Sommets\" et cliquez sur un sommet pour en déplacer. Pour déplacer plusieurs sommets, mettez-vous en mode d'édition \"selection\", selectionnez vos sommets avec Maj et passez en mode d'édition \"Sommets\".\n" +
+                            "\n" +
+                            "Pour charger un fichier : Choississez dans la liste \"Fichier\" le mode \"Charger\" et choississez le fichier à charger (les fichiers compatibles sont en /graphe)\n" +
+                            "\n" +
+                            "Pour sauvegarder un fichier : Choississez dans la liste \"Fichier\" le mode \"Sauvegarder\" et choississez le dossier de destination ainsi que le nom de votre fichier.\n" +
+                            "\n" +
+                            "Pour changer de type de graphe : Choississez dans la liste \"Fichier\" le mode \"Changement de type de graphe\".\n" +
+                            "\n" +
+                            "Pour créer un sous-graphe : Choississez les sommets que vous voulez garder avec le mode d'édition \"Selection\" et choississez dans la liste \"Fichier\" le mode \"Creer sous graphe\".\n" +
+                            "\n" +
+                            "Pour supprimer entièrement le graphe : Choississez dans la liste \"Fichier\" le mode \"Tout supprimer\".\n" +
+                            "\n" +
+                            "Pour lancer un algorithme sur le graphe : Choississez l'algorithme dans \"Analyse de graphe\". Si l'algorithme choisit est Dijsktra/Bellman-Ford/Ford-Fulkerson, le programme vous demandera un sommet de départ et un sommet d'arrivée.\n" +
+                            "\n" +
+                            "\n" +
+                            "Algorithmes :\n" +
+                            "\n" +
+                            "Kruskal : Permet de trouver l'arbre couvrant de poids minimum dans un graphe\n" +
+                            "\t   Compléxite : (arcs x log(arcs))\n" +
+                            "Dijsktra : Permet de trouver le plus courts chemins entre 2 sommets d'un graphe\n" +
+                            "\t   Compléxité : (arcs²)\n" +
+                            "Bellman-Ford : Permet de trouver le plus courts chemins entre 2 sommets d'un graphe qui ont des arcs de poids négatifs\n" +
+                            "\t   Compléxité : (sommets²)\n" +
+                            "Ford-Fulkerson : Permet de trouver le flot maximum d'un point A à un point B\n" +
+                            "\t   Complexité : (sommets x arcs²)\n" +
+                            "Welsh-Powell : Permet de trouver la coloration la plus optimale dans un graphe (ne fonctionne pas à 100%)\n" +
+                            "\t   Complexité : (sommets + arc)\n" +
+                            "DSATUR : Permet de trouver la coloration la plus optimale dans un graphe (ne fonctionne pas à 100%)\n" +
+                            "\t   Complexité : (sommets²)\n" +
+                            "Kosaraju : Permet de trouver les composantes fortement connexes (les sommets de la même couleur son fortement connexe entre-eux)\n" +
+                            "\t   Complexité : (sommets+arcs)\n" +
+                            "Tarjan : Permet de trouver les points d'accumulations dans un graphe\n" +
+                            "\t   Complexité : (sommets+arcs)\n");
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    textArea.setLineWrap(true);
+                    textArea.setWrapStyleWord(true);
+                    scrollPane.setPreferredSize( new Dimension( 500, 500 ) );
+                    JOptionPane.showMessageDialog(null, scrollPane, "Information",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            });
+
+            this.add(information);
         }
 
     }
