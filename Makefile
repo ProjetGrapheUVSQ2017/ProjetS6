@@ -12,6 +12,10 @@ package: compile
 run: package
 	java -jar graphe.jar
 
+doc:
+	javadoc src/* -d doc/
+
 clean:
 	rm -rf bin
+	rm -rf doc
 	rm graphe.jar
