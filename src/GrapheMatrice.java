@@ -719,7 +719,7 @@ public class GrapheMatrice extends Graphe {
 		/*initialiser la couleur de tous les arcs et des sommets en noir
 		 * */
 		this.reset_couleur_graph();
-		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
+		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolés)
 		for(Sommet s : this.get_liste_de_sommet()){
 			existeSommetIsole=true;
 		for(Arc t : this.get_liste_arc()){
@@ -727,7 +727,6 @@ public class GrapheMatrice extends Graphe {
 				existeSommetIsole=false;
 			}
 		}
-		
 		//colorie les sommets isolés en rouge
 		if(existeSommetIsole  && ArcsNonTries.size()>0) {
 			s.setCouleur(Color.RED);
@@ -737,7 +736,6 @@ public class GrapheMatrice extends Graphe {
 		if(ArcsNonTries.isEmpty()){
 			return false;
 		}
-
 		/*
 		 * trier les poids des arcs par ordre croissant
 		 * */
@@ -780,7 +778,6 @@ public class GrapheMatrice extends Graphe {
 		
 		return true;
 	}
-	
 	/**
 	 * Permet de colorier le graphe avec le nombre de couleur différente minimum par rapport au nombre d'arcs par sommet.
 	 * @return true : si aucun problème
@@ -863,10 +860,8 @@ public class GrapheMatrice extends Graphe {
 			s.removeVar(s.getList().size() -1);
 			
 		}
-	
 		return true;
 	}
-	
 	/**
 	 * Permet de colorier le graphe avec le nombre de couleur différente minimum par rapport au nombre de sommets qui sont coloriés autour d'un sommet
 	 * @return true : si aucun problème
@@ -884,7 +879,6 @@ public class GrapheMatrice extends Graphe {
 		boolean change=true;
 		ArrayList<Sommet> liste_voisins;
 	
-
 		this.reset_couleur_graph();
 
 		//on ajoute une variable qui va nous permettre de stocker les couleurs de chaque sommets
@@ -921,12 +915,9 @@ public class GrapheMatrice extends Graphe {
 				//pour les sommets qui n'ont pas d'arcs
 				if (nbarc==0){
 					max=actu;
-				}
-				
-				
+				}	
 			}
 			
-
 			//on a trouvé le sommet à colorer, maintenant on regarde avec ses voisins quelle couleur peut-on lui donner
 			liste_voisins=liste_voisins_pere_et_fils(max);
 			int compare;
@@ -950,10 +941,7 @@ public class GrapheMatrice extends Graphe {
 				}
 			}
 		}
-
-			
-
-		
+	
 		//met la couleur a jour pour chaque sommet et supprime tous les dernieres variables de chaque sommet (là  où je stockais la couleur)
 		ArrayList<Color> liste_id_color = new ArrayList<Color>();
 		for (Sommet s: sommets) {
@@ -986,8 +974,6 @@ public class GrapheMatrice extends Graphe {
 			}
 			return arcSortant;
 		}
-	 
-		
 	 /**
 	  * Permet de faire un parcours en profondeur pour Kosaraju
 	  * @author Madeleine
@@ -1014,7 +1000,6 @@ public class GrapheMatrice extends Graphe {
 	 private void DFSRenverse(Sommet s,ArrayList<Sommet> visited,Stack<Sommet> stack,List<Sommet> res)  {
 		 visited.add(s);
 		  res.add(s);
-		 System.out.print(s.getId() + "  ");
 		  for (Arc a : getSortants(s, this)) {
 	        	Sommet v = a.getSommetArrivee();
 	            if (visited.contains(v)) {
@@ -1023,8 +1008,6 @@ public class GrapheMatrice extends Graphe {
 	            DFSRenverse(v, visited, stack, res);
 	        }
 	    }
-		
-	 
 	 /**
 		 * Permet de trouver les composantes fortement connexe dans un graphe. Les composantes fortement connexe seront colorés de la même couleur
 		 * @author Madeleine
@@ -1075,11 +1058,16 @@ public class GrapheMatrice extends Graphe {
            				});
 		return true;
 	}
-	
+	 /**
+	 * Permet de faire un parcours en profondeur à partir d'un sommet pour extraire les points d'articulation
+	 * @author Aziz
+	 */
 	private int attache(int num[],Graphe g,int x,ArrayList<Sommet> PointsArticulation,int j ){
 		int min=num[x]= ++j;
 		for(Sommet s:this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
-			int y=s.getId();int m;
+			int y=s.getId();// y stock le id du sommet adjacent du sommet courant
+			int m;
+			//si le sommet n'est pas visité on fait l'appel récursif de parcours en profondeur sur ce sommet
 			if(num[y]==-1){
 				m=attache(num,g,y,PointsArticulation,j);
 				if(m>=num[x]){
@@ -1091,38 +1079,25 @@ public class GrapheMatrice extends Graphe {
 		}
 		return min;
 	}
-	
+	/**
+	 * Permet de trouver les points d'articulation et les colorer
+	 * @return true : si l'algorithme trouve au moins un point d'articulation
+	 * @return false : s'il n y a pas aucun point d'articulation
+	 * @author Aziz
+	 */
 	@Override
 	public boolean tarjan() {
+		//initialiser la couleur de tous les arcs et des sommets en noir
 		this.reset_couleur_graph();
 		int numOrdre=0,n;
 		n=this.getNbSommets();
+		//Tableau indexé par les identifiants des sommets
 		int num[]=new int[n];
 		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
-		boolean existeSommetIsole=false;
-		//tester si on a le cas où existe un sommet ou plusieurs qui ne sont attachés à aucun arc (sommets isolé)
-		int SommetIsole=0;
-				for(Sommet s : this.get_liste_de_sommet()){
-					existeSommetIsole=true;
-				for(Arc t : this.get_liste_arc()){
-					if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
-						existeSommetIsole=false;
-					}
-				}
-				if(existeSommetIsole && this.getNbArcs()>0 ) {
-					SommetIsole++;
-					s.setCouleur(Color.RED);
-					System.out.println("le sommet num : "+s.getId()+" est isolé"); 
-					//TODO afficher un message pour informer l'utilisateur qu'il faut relier tous les sommets pour 
-					//appliquer l'algo sinon il crée un nouveau sous graphe
-				}
-				}
-				if(this.getNbSommets()<3 || SommetIsole!=0){
-					return false;// TODO : distinguer entre 1)==>Nombre de sommet = 1 ou 2 (impossible d'appliquer l'algo)
-					//et 2)==> le cas ou on a plus que 2 sommets mais il y a pas des arcs entre eux ou ils sont isolés (il faut pas l'exécuter)
-				}
+		//On initialise tous les sommets comme non visités 
 		for(int x=0;x<n;++x)
 			num[x]=-1;
+		//faire un parcours en profondeur pour tous les sommets du graphe
 		for(int x=0;x<n;++x)
 		if(num[x]== -1){
 			num[x]=++numOrdre;
@@ -1130,23 +1105,23 @@ public class GrapheMatrice extends Graphe {
 			for(Sommet s: this.liste_voisins_pere_et_fils(this.get_liste_de_sommet().get(x))){
 				int y=s.getId();
 				if(num[y]==-1){
-					++nfils;
-					
+					++nfils; // on incrémente le nombre de sommets adjacents du sommet courant
 				int m=attache(num,this,y,PointsArticulation,numOrdre);
 				}
 				}
+			//on teste le où un sommet est la racine de l'arbre de parcours en profondeur ayant plus qu'un sommet adjacent
 			if(nfils>1) PointsArticulation.add(this.get_liste_de_sommet().get(x));
 		}
-		
+		//on colore les points d'articulation en rouge
 		  for (Sommet t : PointsArticulation){
         	t.setCouleur(Color.red);
 		}
+		//on retourne false si aucun point d'articulation est trouvé
 		  if(PointsArticulation.isEmpty()) {
 			  return false;
 		  }
 		return true;
 	}
-
 	/**
 	 * Permet de renvoyer la liste de tous les voisins d'un sommet
 	 * @param sommet : le sommet qu'on veut traiter
