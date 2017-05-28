@@ -8,7 +8,7 @@ import org.junit.Test;
 import junit.framework.TestCase;
 
 
-public class GrapheListeTest extends TestCase{
+public class GrapheListeTest{
 
 	private Graphe graphe;
 	

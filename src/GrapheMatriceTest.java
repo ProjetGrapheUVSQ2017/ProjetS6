@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
-public class GrapheMatriceTest extends TestCase{
+public class GrapheMatriceTest{
 
 	private Graphe graphe;
 	
