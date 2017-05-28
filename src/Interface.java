@@ -42,6 +42,7 @@ public class Interface extends JComponent {
         f.add(this.control,BorderLayout.NORTH);
         f.add(new JScrollPane(this),BorderLayout.CENTER);
         f.setPreferredSize(new Dimension(largeur, hauteur));
+        f.setMinimumSize(new Dimension(largeur,hauteur));
         f.pack();
         f.setVisible(true);
 
