@@ -1117,21 +1117,7 @@ public class GrapheMatrice extends Graphe {
 		//Tableau indexé par les identifiants des sommets
 		int num[]=new int[n];
 		ArrayList<Sommet> PointsArticulation = new ArrayList<Sommet>();
-		boolean existeSommetIsole=false;
-		//On initialise tous les sommets comme non visités
-		int SommetIsole=0;
-				for(Sommet s : this.get_liste_de_sommet()){
-					existeSommetIsole=true;
-				for(Arc t : this.get_liste_arc()){
-					if(t.getSommetArrivee().equals(s) || t.getSommetDepart().equals(s)){
-						existeSommetIsole=false;
-					}
-				}
-				if(existeSommetIsole && this.getNbArcs()>0 ) {
-					SommetIsole++;
-					s.setCouleur(Color.BLUE);
-				}
-				}
+		
 		for(int x=0;x<n;++x)
 			num[x]=-1;
 
