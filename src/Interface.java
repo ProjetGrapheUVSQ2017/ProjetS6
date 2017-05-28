@@ -366,9 +366,8 @@ public class Interface extends JComponent {
             this.popup.add(new JMenuItem(action_supprimerSommet));
             this.popup.add(new JMenuItem(action_ModifierVariable));
 
-
-            this.add(new JLabel("Mode d'édition"));
-            String[] modeMouseString = { "Selection", "Arcs", "Sommet"};
+            
+            String[] modeMouseString = { "Mode Selection", "Mode Arc", "Mode Sommet"};
             modeMouse = new JComboBox(modeMouseString);
             this.add(modeMouse);
             modeMouse.addActionListener(new ModeMouseComboBox());
