@@ -6,12 +6,12 @@ Ce programme permet la représentation de graphes orientés, de les manipuler et
 
 Il implémente aussi un système de sauvegarde des graphes.
 
-Aide à la compilation:
-	-make: compile le projet.
+Java 1.8 est nécessaire au bon fonctionnement de cette application.
+Aide à la compilation :
+	-make : compile le projet.
 	-make run: compile le projet et lance le programme.
-	-make clean: nettoye le résultat des précédentes compilations.
+	-make clean: nettoye le résultat des précédentes compilations, cette option supprime aussi le fichier jar.
 
 Vous pouvez également lancer le programme en executant le fichier "graphe.jar", une fois le projet compilé.
-
-Une fois le projet compilé, il se peut que votre OS vous empèche de lancer le programme dû à sa non fiabilité (Editeur du programme non connu par exemple). Il suffit de changer les permissions dans les paramètres du fichier graphe.jar.
+Toutefois, il se peut que votre OS vous empèche de lancer le programme dû à sa non fiabilité (Editeur du programme non connu par exemple). Il suffit de changer les permissions dans les paramètres du fichier graphe.jar.
 
